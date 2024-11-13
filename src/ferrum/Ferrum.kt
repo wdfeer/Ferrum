@@ -21,7 +21,7 @@ import mindustry.world.blocks.units.Reconstructor
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
     lateinit var iron: Item
-    lateinit var titaniumRefiner: Drill
+    lateinit var titaniumExtractor: Drill
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
 
@@ -37,7 +37,7 @@ class Ferrum : Mod() {
             oreScale = 25f
         }
 
-        titaniumRefiner = object : Drill("titanium-refiner") {
+        titaniumExtractor = object : Drill("titanium-extractor") {
             override fun canMine(tile: Tile?): Boolean {
                 return tile?.drop() == Items.titanium
             }
