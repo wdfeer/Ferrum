@@ -33,11 +33,7 @@ class Ferrum : Mod() {
             cost = 1f
         }
 
-        oreIron = OreBlock(iron).apply {
-            oreDefault = true
-            oreThreshold = 0.85f
-            oreScale = 25f
-        }
+        oreIron = OreBlock(iron)
 
         titaniumExtractor = object : Drill("titanium-extractor") {
             override fun canMine(tile: Tile?): Boolean {
