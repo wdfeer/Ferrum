@@ -2,7 +2,9 @@ package ferrum
 
 import arc.graphics.Color
 import mindustry.content.Blocks
+import mindustry.content.Fx
 import mindustry.content.Items
+import mindustry.content.Liquids
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.gen.Sounds
 import mindustry.mod.Mod
@@ -10,13 +12,16 @@ import mindustry.type.Category
 import mindustry.type.Item
 import mindustry.type.ItemStack
 import mindustry.world.Block
+import mindustry.world.Tile
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
+import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.units.Reconstructor
 
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
     lateinit var iron: Item
+    lateinit var titaniumRefiner: Drill
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
 
@@ -30,6 +35,31 @@ class Ferrum : Mod() {
             oreDefault = true
             oreThreshold = 0.85f
             oreScale = 25f
+        }
+
+        titaniumRefiner = object : Drill("titanium-refiner") {
+            override fun canMine(tile: Tile?): Boolean {
+                return tile?.drop() == Items.titanium
+            }
+
+            override fun countOre(tile: Tile?) {
+                super.countOre(tile)
+                returnItem = iron
+            }
+        }.apply {
+            requirements(
+                Category.production,
+                ItemStack.with(Items.copper, 60, Items.graphite, 45, Items.silicon, 30)
+            )
+            drillTime = 280f
+            size = 3
+            hasPower = true
+            tier = 4
+            updateEffect = Fx.pulverizeMedium
+            drillEffect = Fx.mineBig
+
+            consumePower(1.60f)
+            consumeLiquid(Liquids.cryofluid, 0.08f).boost()
         }
 
         addTurrets()
