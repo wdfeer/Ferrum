@@ -49,7 +49,7 @@ class Ferrum : Mod() {
         }.apply {
             requirements(
                 Category.production,
-                ItemStack.with(Items.copper, 60, Items.graphite, 45, Items.silicon, 30)
+                ItemStack.with(Items.copper, 80, Items.lead, 80, Items.graphite, 30, Items.silicon, 20)
             )
             drillTime = 280f
             size = 3
