@@ -5,6 +5,7 @@ import mindustry.content.Blocks
 import mindustry.mod.Mod
 import mindustry.type.Item
 import mindustry.type.ItemStack
+import mindustry.world.Block
 import mindustry.world.blocks.environment.OreBlock
 
 class Ferrum : Mod(){
@@ -23,29 +24,21 @@ class Ferrum : Mod(){
             oreScale = 25f
         }
 
-        Blocks.steamGenerator.apply {
-            requirements = requirements.plus(ItemStack(iron, 15))
-        }
-        Blocks.thoriumReactor.apply {
-            requirements = requirements.plus(ItemStack(iron, 100))
+
+
+        fun addIronRequirement(block: Block, amount: Int) {
+            block.requirements = block.requirements.plus(ItemStack(iron, amount))
         }
 
-        Blocks.blastDrill.apply {
-            requirements = requirements.plus(ItemStack(iron, 40))
-        }
+        addIronRequirement(Blocks.steamGenerator, 15)
+        addIronRequirement(Blocks.thoriumReactor, 100)
 
-        Blocks.multiPress.apply {
-            requirements = requirements.plus(ItemStack(iron, 25))
-        }
-        Blocks.plastaniumCompressor.apply {
-            requirements = requirements.plus(ItemStack(iron, 30))
-        }
+        addIronRequirement(Blocks.blastDrill, 40)
 
-        Blocks.meltdown.apply {
-            requirements = requirements.plus(ItemStack(iron, 70))
-        }
-        Blocks.spectre.apply {
-            requirements = requirements.plus(ItemStack(iron, 90))
-        }
+        addIronRequirement(Blocks.multiPress, 25)
+        addIronRequirement(Blocks.plastaniumCompressor, 30)
+
+        addIronRequirement(Blocks.meltdown, 70)
+        addIronRequirement(Blocks.spectre, 90)
     }
 }
