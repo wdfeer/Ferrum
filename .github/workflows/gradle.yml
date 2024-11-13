@@ -16,6 +16,10 @@ jobs:
       with:
         java-version: 17
         distribution: temurin
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    - name: Install Android Build Tools
+      run: sdkmanager "build-tools;30.0.1"
     - name: Build mod jar
       run: ./gradlew deploy
     - name: Upload built jar file
