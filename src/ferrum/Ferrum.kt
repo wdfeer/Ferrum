@@ -31,33 +31,30 @@ class Ferrum : Mod() {
         }
 
         canna = ItemTurret("canna").apply {
-            requirements(Category.turret, ItemStack.with(iron, 40, Items.silicon, 8))
+            requirements(Category.turret, ItemStack.with(iron, 35))
             ammo(
-                Items.lead, BasicBulletType(2.5f, 33f).apply {
-                    knockback = 1.4f
-                    lifetime = 50f
+                Items.lead, BasicBulletType(2.5f, 31f).apply {
+                    knockback = 1.6f
+                    lifetime = 60f
                     height = 14f
                     width = height
-
                     pierce = true
                     pierceCap = 2
-
-                    reloadMultiplier = 1.1f
+                    reloadMultiplier = 1.2f
                 }, iron, BasicBulletType(3.5f, 45f).apply {
-                    knockback = 1.4f
+                    knockback = 1.6f
                     lifetime = 50f
                     height = 14f
                     width = height
-
                     pierce = true
                     pierceCap = 3
             },)
             targetAir = false
             reload = 90f
             recoil = 2f
-            range = 135f
-            inaccuracy = 3f
-            shootCone = 12f
+            range = 142f
+            inaccuracy = 2.5f
+            shootCone = 8f
             health = 360
             shootSound = Sounds.cannon
         }
