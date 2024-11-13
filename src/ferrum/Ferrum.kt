@@ -32,6 +32,12 @@ class Ferrum : Mod() {
             oreScale = 25f
         }
 
+        addTurrets()
+
+        modifyVanillaContent()
+    }
+
+    private fun addTurrets() {
         canna = ItemTurret("canna").apply {
             requirements(Category.turret, ItemStack.with(iron, 35))
             ammo(
@@ -110,8 +116,6 @@ class Ferrum : Mod() {
             health = 320
             shootSound = Sounds.cannon
         }
-
-        modifyVanillaContent()
     }
 
     private fun modifyVanillaContent() {
