@@ -12,6 +12,7 @@ import mindustry.type.ItemStack
 import mindustry.world.Block
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
+import mindustry.world.blocks.units.Reconstructor
 
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
@@ -114,19 +115,25 @@ class Ferrum : Mod() {
     }
 
     private fun modifyVanillaContent() {
+        (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
+
         fun addIronRequirement(block: Block, amount: Int) {
             block.requirements = block.requirements.plus(ItemStack(iron, amount))
         }
 
         addIronRequirement(Blocks.steamGenerator, 15)
         addIronRequirement(Blocks.thoriumReactor, 100)
+        addIronRequirement(Blocks.impactReactor, 200)
 
-        addIronRequirement(Blocks.blastDrill, 40)
+        addIronRequirement(Blocks.blastDrill, 25)
 
-        addIronRequirement(Blocks.multiPress, 25)
-        addIronRequirement(Blocks.plastaniumCompressor, 30)
+        addIronRequirement(Blocks.multiPress, 35)
+        addIronRequirement(Blocks.plastaniumCompressor, 40)
 
         addIronRequirement(Blocks.meltdown, 70)
         addIronRequirement(Blocks.spectre, 90)
+
+        addIronRequirement(Blocks.exponentialReconstructor, 300)
+        addIronRequirement(Blocks.tetrativeReconstructor, 800)
     }
 }
