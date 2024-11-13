@@ -17,6 +17,8 @@ import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.units.Reconstructor
+import mindustry.world.meta.Stat
+import mindustry.world.meta.StatValues
 
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
@@ -46,6 +48,14 @@ class Ferrum : Mod() {
                 super.countOre(tile)
                 returnItem = iron
             }
+
+            override fun setStats() {
+                super.setStats()
+
+                stats.remove(Stat.drillTier)
+                stats.add(Stat.drillTier, StatValues.drillables(drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers) { it.itemDrop == Items.titanium })
+            }
         }.apply {
             requirements(
                 Category.production,
@@ -59,7 +69,7 @@ class Ferrum : Mod() {
             drillEffect = Fx.mineBig
 
             consumePower(1.60f)
-            consumeLiquid(Liquids.cryofluid, 0.08f).boost()
+            consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
 
         addTurrets()
