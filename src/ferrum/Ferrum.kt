@@ -37,7 +37,7 @@ class Ferrum : Mod() {
             cost = 1f
         }
 
-        pyrite = Item("pyrite", Color.valueOf("c5b654")).apply {
+        pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
             cost = 1f
         }
 
