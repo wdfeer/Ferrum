@@ -23,7 +23,10 @@ import mindustry.world.meta.StatValues
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
     lateinit var iron: Item
+    lateinit var pyrite: Item // TODO: implement
+
     lateinit var titaniumExtractor: Drill
+    lateinit var pyriteExtractor: Drill
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
 
@@ -65,6 +68,39 @@ class Ferrum : Mod() {
             drillEffect = Fx.mineBig
 
             consumePower(1.60f)
+            consumeLiquid(Liquids.cryofluid, 0.1f).boost()
+        }
+
+	pyriteExtractor = object : Drill("pyrite-extractor") {
+            override fun canMine(tile: Tile?): Boolean {
+                return tile?.drop() == Items.coal
+            }
+
+            override fun countOre(tile: Tile?) {
+                super.countOre(tile)
+                returnItem = pyrite
+            }
+
+            override fun setStats() {
+                super.setStats()
+
+                stats.remove(Stat.drillTier)
+                stats.add(Stat.drillTier, StatValues.drillables(drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers) { it.itemDrop == Items.coal })
+            }
+        }.apply {
+            requirements(
+                Category.production,
+                ItemStack.with(Items.copper, 80, Items.silicon, 40, Items.metaglass, 20)
+            )
+            drillTime = 280f
+            size = 3
+            hasPower = true
+            tier = 4
+            updateEffect = Fx.pulverizeMedium
+            drillEffect = Fx.mineBig
+
+            consumePower(1.80f)
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
 
