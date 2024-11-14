@@ -23,7 +23,7 @@ import mindustry.world.meta.StatValues
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
     lateinit var iron: Item
-    lateinit var pyrite: Item // TODO: implement
+    lateinit var pyrite: Item
 
     lateinit var titaniumExtractor: Drill
     lateinit var pyriteExtractor: Drill
@@ -31,10 +31,15 @@ class Ferrum : Mod() {
     lateinit var clyster: ItemTurret
 
     override fun loadContent() {
-        iron = Item("iron", Color.valueOf("7f786e")).apply {
+	iron = Item("iron", Color.valueOf("7f786e")).apply {
             hardness = 3
             cost = 1f
         }
+       
+	pyrite = Item("pyrite", Color.valueOf("TODO")).apply {
+            cost = 1f
+        }
+
 
         oreIron = OreBlock(iron)
 
