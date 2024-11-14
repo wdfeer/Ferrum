@@ -15,6 +15,7 @@ import mindustry.world.Block
 import mindustry.world.Tile
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
+import mindustry.world.blocks.power.SolarGenerator
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
 import mindustry.world.blocks.units.Reconstructor
@@ -100,7 +101,7 @@ class Ferrum : Mod() {
         }.apply {
             requirements(
                 Category.production,
-                ItemStack.with(Items.copper, 90, Items.silicon, 35, Items.metaglass, 35)
+                ItemStack.with(Items.lead, 120, Items.graphite, 35)
             )
             drillTime = 280f
             size = 3
@@ -201,30 +202,45 @@ class Ferrum : Mod() {
 
     private fun modifyVanillaContent() {
         // Iron
+        run {
+            (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
 
-        (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
+            fun addIronRequirement(block: Block, amount: Int) {
+                block.requirements = block.requirements.plus(ItemStack(iron, amount))
+            }
 
-        fun addIronRequirement(block: Block, amount: Int) {
-            block.requirements = block.requirements.plus(ItemStack(iron, amount))
+            addIronRequirement(Blocks.steamGenerator, 15)
+            addIronRequirement(Blocks.thoriumReactor, 100)
+            addIronRequirement(Blocks.impactReactor, 100)
+
+            addIronRequirement(Blocks.blastDrill, 25)
+
+            addIronRequirement(Blocks.multiPress, 35)
+            addIronRequirement(Blocks.plastaniumCompressor, 40)
+
+            addIronRequirement(Blocks.meltdown, 70)
+            addIronRequirement(Blocks.spectre, 90)
+
+            addIronRequirement(Blocks.exponentialReconstructor, 300)
+            addIronRequirement(Blocks.tetrativeReconstructor, 800)
         }
 
-        addIronRequirement(Blocks.steamGenerator, 15)
-        addIronRequirement(Blocks.thoriumReactor, 100)
-        addIronRequirement(Blocks.impactReactor, 200)
-
-        addIronRequirement(Blocks.blastDrill, 25)
-
-        addIronRequirement(Blocks.multiPress, 35)
-        addIronRequirement(Blocks.plastaniumCompressor, 40)
-
-        addIronRequirement(Blocks.meltdown, 70)
-        addIronRequirement(Blocks.spectre, 90)
-
-        addIronRequirement(Blocks.exponentialReconstructor, 300)
-        addIronRequirement(Blocks.tetrativeReconstructor, 800)
-
         // Pyrite
+        run {
+            (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
+            (Blocks.tetrativeReconstructor as Reconstructor).consumeItems(ItemStack(pyrite, 200))
+            (Blocks.solarPanel as SolarGenerator).powerProduction *= 1.25f
+            (Blocks.largeSolarPanel as SolarGenerator).powerProduction *= 1.25f
 
-        (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
+            fun addPyriteRequirement(block: Block, amount: Int) {
+                block.requirements = block.requirements.plus(ItemStack(pyrite, amount))
+            }
+
+            addPyriteRequirement(Blocks.solarPanel, 1)
+            addPyriteRequirement(Blocks.batteryLarge, 10)
+            addPyriteRequirement(Blocks.largeSolarPanel, 15)
+            addPyriteRequirement(Blocks.impactReactor, 50)
+            addPyriteRequirement(Blocks.foreshadow, 100)
+        }
     }
 }
