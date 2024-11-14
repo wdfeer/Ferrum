@@ -20,7 +20,6 @@ import mindustry.world.blocks.production.GenericCrafter
 import mindustry.world.blocks.units.Reconstructor
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatValues
-import mindustry.world.consumers.ConsumeItems
 
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
@@ -33,12 +32,12 @@ class Ferrum : Mod() {
     lateinit var clyster: ItemTurret
 
     override fun loadContent() {
-	      iron = Item("iron", Color.valueOf("7f786e")).apply {
+        iron = Item("iron", Color.valueOf("7f786e")).apply {
             hardness = 3
             cost = 1f
         }
-       
-      	pyrite = Item("pyrite", Color.valueOf("TODO")).apply {
+
+        pyrite = Item("pyrite", Color.valueOf("c5b654")).apply {
             cost = 1f
         }
 
@@ -58,8 +57,10 @@ class Ferrum : Mod() {
                 super.setStats()
 
                 stats.remove(Stat.drillTier)
-                stats.add(Stat.drillTier, StatValues.drillables(drillTime, hardnessDrillMultiplier,
-                    (size * size).toFloat(), drillMultipliers) { it.itemDrop == Items.titanium })
+                stats.add(Stat.drillTier, StatValues.drillables(
+                    drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers
+                ) { it.itemDrop == Items.titanium })
             }
         }.apply {
             requirements(
@@ -77,7 +78,7 @@ class Ferrum : Mod() {
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
 
-      	pyriteExtractor = object : Drill("pyrite-extractor") {
+        pyriteExtractor = object : Drill("pyrite-extractor") {
             override fun canMine(tile: Tile?): Boolean {
                 return tile?.drop() == Items.coal
             }
@@ -91,13 +92,15 @@ class Ferrum : Mod() {
                 super.setStats()
 
                 stats.remove(Stat.drillTier)
-                stats.add(Stat.drillTier, StatValues.drillables(drillTime, hardnessDrillMultiplier,
-                    (size * size).toFloat(), drillMultipliers) { it.itemDrop == Items.coal })
+                stats.add(Stat.drillTier, StatValues.drillables(
+                    drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers
+                ) { it.itemDrop == Items.coal })
             }
         }.apply {
             requirements(
                 Category.production,
-                ItemStack.with(Items.copper, 80, Items.silicon, 40, Items.metaglass, 20)
+                ItemStack.with(Items.copper, 90, Items.silicon, 35, Items.metaglass, 35)
             )
             drillTime = 280f
             size = 3
@@ -197,8 +200,8 @@ class Ferrum : Mod() {
     }
 
     private fun modifyVanillaContent() {
-	// Iron
-	
+        // Iron
+
         (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
 
         fun addIronRequirement(block: Block, amount: Int) {
@@ -220,9 +223,8 @@ class Ferrum : Mod() {
         addIronRequirement(Blocks.exponentialReconstructor, 300)
         addIronRequirement(Blocks.tetrativeReconstructor, 800)
 
-	// Pyrite
-	
-	(Blocks.pyratiteMixer as GenericCrafter).consumers[1] =
-		ConsumeItems(ItemStack.with(Items.sand, 1, Items.coal, 1, pyrite, 1))
+        // Pyrite
+
+        (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
     }
 }
