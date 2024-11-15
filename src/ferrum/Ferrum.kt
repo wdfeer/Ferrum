@@ -45,6 +45,11 @@ class Ferrum : Mod() {
         oreIron = OreBlock(iron)
 
         ironExtractor = object : Drill("iron-extractor") {
+            init {
+                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 100)
+                alwaysUnlocked = false
+            }
+
             override fun canMine(tile: Tile?): Boolean {
                 return tile?.drop() == Items.titanium
             }
@@ -80,6 +85,11 @@ class Ferrum : Mod() {
         }
 
         pyriteExtractor = object : Drill("pyrite-extractor") {
+            init {
+                researchCost = ItemStack.with(Items.copper, 1200, Items.lead, 1000, Items.graphite, 400)
+                alwaysUnlocked = false
+            }
+
             override fun canMine(tile: Tile?): Boolean {
                 return tile?.drop() == Items.coal
             }
@@ -120,7 +130,10 @@ class Ferrum : Mod() {
     }
 
     private fun addTurrets() {
-        canna = ItemTurret("canna").apply {
+        canna = object : ItemTurret("canna") {
+            researchCost = ItemStack.with(iron, 100)
+            alwaysUnlocked = false
+          }.apply {
             requirements(Category.turret, ItemStack.with(iron, 35))
             ammo(
                 Items.lead,
@@ -155,7 +168,10 @@ class Ferrum : Mod() {
             shootSound = Sounds.cannon
         }
 
-        clyster = ItemTurret("clyster").apply {
+        clyster = object : ItemTurret("clyster") {
+            researchCost = ItemStack.with(Items.metaglass, 400, iron, 80)
+            alwaysUnlocked = false
+          }.apply {
             requirements(Category.turret, ItemStack.with(iron, 25, Items.graphite, 25))
             ammo(
                 Items.metaglass,
