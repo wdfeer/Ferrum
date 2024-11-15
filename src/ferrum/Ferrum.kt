@@ -21,7 +21,7 @@ import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
 import mindustry.world.blocks.units.Reconstructor
 import mindustry.world.draw.DrawDefault
-import mindustry.world.draw.DrawFlame
+import mindustry.world.draw.DrawGlowRegion
 import mindustry.world.draw.DrawMulti
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatValues
@@ -67,7 +67,7 @@ class Ferrum : Mod() {
             size = 2
             hasPower = true
             hasLiquids = false
-            drawer = DrawMulti(DrawDefault(), DrawFlame(Color.valueOf("fff189")))
+            drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
             ambientSound = Sounds.smelter
             ambientSoundVolume = 0.08f
 
