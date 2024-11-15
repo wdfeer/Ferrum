@@ -27,6 +27,7 @@ class Ferrum : Mod() {
 
     lateinit var ironExtractor: Drill
     lateinit var pyriteExtractor: Drill
+    lateinit var ironworks: GenericCrafter
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
 
@@ -44,6 +45,14 @@ class Ferrum : Mod() {
 
         oreIron = OreBlock(iron)
 
+        addDrills()
+
+        addTurrets()
+
+        modifyVanillaContent()
+    }
+
+    private fun addDrills() {
         ironExtractor = object : Drill("iron-extractor") {
             init {
                 researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 200, Items.silicon, 200)
@@ -125,10 +134,6 @@ class Ferrum : Mod() {
             consumePower(1.80f)
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
-
-        addTurrets()
-
-        modifyVanillaContent()
     }
 
     private fun addTurrets() {
