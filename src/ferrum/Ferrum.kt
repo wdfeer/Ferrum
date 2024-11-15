@@ -1,7 +1,10 @@
 package ferrum
 
 import arc.graphics.Color
-import mindustry.content.*
+import mindustry.content.Blocks
+import mindustry.content.Fx
+import mindustry.content.Items
+import mindustry.content.Liquids
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.gen.Sounds
@@ -17,6 +20,9 @@ import mindustry.world.blocks.power.SolarGenerator
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
 import mindustry.world.blocks.units.Reconstructor
+import mindustry.world.draw.DrawDefault
+import mindustry.world.draw.DrawFlame
+import mindustry.world.draw.DrawMulti
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatValues
 
@@ -46,6 +52,26 @@ class Ferrum : Mod() {
         oreIron = OreBlock(iron)
 
         addDrills()
+
+        ironworks = object : GenericCrafter("ironworks") {
+            init {
+                researchCost = ItemStack.with(Items.lead, 2000, Items.graphite, 500, pyrite, 100)
+            }
+        }.apply {
+            requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
+            craftEffect = Fx.smeltsmoke
+            outputItem = ItemStack(iron, 2)
+            craftTime = 90f
+            size = 2
+            hasPower = true
+            hasLiquids = false
+            drawer = DrawMulti(DrawDefault(), DrawFlame(Color.valueOf("fff189")))
+            ambientSound = Sounds.smelter
+            ambientSoundVolume = 0.08f
+
+            consumeItems(*ItemStack.with(Items.graphite, 1, pyrite, 2))
+            consumePower(0.60f)
+        }
 
         addTurrets()
 
