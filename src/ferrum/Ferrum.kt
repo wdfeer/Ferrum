@@ -1,10 +1,8 @@
 package ferrum
 
 import arc.graphics.Color
-import mindustry.content.Blocks
-import mindustry.content.Fx
-import mindustry.content.Items
-import mindustry.content.Liquids
+import mindustry.content.*
+import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.gen.Sounds
 import mindustry.mod.Mod
@@ -34,11 +32,13 @@ class Ferrum : Mod() {
 
     override fun loadContent() {
         iron = Item("iron", Color.valueOf("7f786e")).apply {
+            techNode = TechNode(Items.titanium.techNode, this, emptyArray<ItemStack>())
             hardness = 3
             cost = 1f
         }
 
         pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
+            techNode = TechNode(Items.coal.techNode, this, emptyArray<ItemStack>())
             cost = 1f
         }
 
@@ -46,8 +46,9 @@ class Ferrum : Mod() {
 
         ironExtractor = object : Drill("iron-extractor") {
             init {
-                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 100)
+                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 200, Items.silicon, 200)
                 alwaysUnlocked = false
+                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
             }
 
             override fun canMine(tile: Tile?): Boolean {
@@ -88,6 +89,7 @@ class Ferrum : Mod() {
             init {
                 researchCost = ItemStack.with(Items.copper, 1200, Items.lead, 1000, Items.graphite, 400)
                 alwaysUnlocked = false
+                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
             }
 
             override fun canMine(tile: Tile?): Boolean {
@@ -131,9 +133,12 @@ class Ferrum : Mod() {
 
     private fun addTurrets() {
         canna = object : ItemTurret("canna") {
-            researchCost = ItemStack.with(iron, 100)
-            alwaysUnlocked = false
-          }.apply {
+            init {
+                researchCost = ItemStack.with(iron, 150)
+                alwaysUnlocked = false
+                techNode = TechNode(Blocks.hail.techNode, this, researchCost)
+            }
+        }.apply {
             requirements(Category.turret, ItemStack.with(iron, 35))
             ammo(
                 Items.lead,
@@ -169,9 +174,12 @@ class Ferrum : Mod() {
         }
 
         clyster = object : ItemTurret("clyster") {
-            researchCost = ItemStack.with(Items.metaglass, 400, iron, 80)
-            alwaysUnlocked = false
-          }.apply {
+            init {
+                researchCost = ItemStack.with(Items.metaglass, 500, iron, 80)
+                alwaysUnlocked = false
+                techNode = TechNode(Blocks.hail.techNode, this, researchCost)
+            }
+        }.apply {
             requirements(Category.turret, ItemStack.with(iron, 25, Items.graphite, 25))
             ammo(
                 Items.metaglass,
