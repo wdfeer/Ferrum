@@ -27,7 +27,7 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
 
-    lateinit var titaniumExtractor: Drill
+    lateinit var ironExtractor: Drill
     lateinit var pyriteExtractor: Drill
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
@@ -44,7 +44,7 @@ class Ferrum : Mod() {
 
         oreIron = OreBlock(iron)
 
-        titaniumExtractor = object : Drill("titanium-extractor") {
+        ironExtractor = object : Drill("iron-extractor") {
             override fun canMine(tile: Tile?): Boolean {
                 return tile?.drop() == Items.titanium
             }
