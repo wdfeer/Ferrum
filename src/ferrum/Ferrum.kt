@@ -31,8 +31,8 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
 
-    lateinit var ironExtractor: Drill
     lateinit var pyriteExtractor: Drill
+    lateinit var ironExtractor: Drill
     lateinit var ironworks: GenericCrafter
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
@@ -56,6 +56,8 @@ class Ferrum : Mod() {
         ironworks = object : GenericCrafter("ironworks") {
             init {
                 researchCost = ItemStack.with(Items.lead, 2000, Items.graphite, 500, pyrite, 100)
+                alwaysUnlocked = false
+                techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost)
             }
         }.apply {
             requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
@@ -79,47 +81,6 @@ class Ferrum : Mod() {
     }
 
     private fun addDrills() {
-        ironExtractor = object : Drill("iron-extractor") {
-            init {
-                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 200, Items.silicon, 200)
-                alwaysUnlocked = false
-                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
-            }
-
-            override fun canMine(tile: Tile?): Boolean {
-                return tile?.drop() == Items.titanium
-            }
-
-            override fun countOre(tile: Tile?) {
-                super.countOre(tile)
-                returnItem = iron
-            }
-
-            override fun setStats() {
-                super.setStats()
-
-                stats.remove(Stat.drillTier)
-                stats.add(Stat.drillTier, StatValues.drillables(
-                    drillTime, hardnessDrillMultiplier,
-                    (size * size).toFloat(), drillMultipliers
-                ) { it.itemDrop == Items.titanium })
-            }
-        }.apply {
-            requirements(
-                Category.production,
-                ItemStack.with(Items.copper, 80, Items.lead, 80, Items.graphite, 30, Items.silicon, 20)
-            )
-            drillTime = 280f
-            size = 3
-            hasPower = true
-            tier = 4
-            updateEffect = Fx.pulverizeMedium
-            drillEffect = Fx.mineBig
-
-            consumePower(1.60f)
-            consumeLiquid(Liquids.cryofluid, 0.1f).boost()
-        }
-
         pyriteExtractor = object : Drill("pyrite-extractor") {
             init {
                 researchCost = ItemStack.with(Items.copper, 1200, Items.lead, 1000, Items.graphite, 400)
@@ -148,7 +109,7 @@ class Ferrum : Mod() {
         }.apply {
             requirements(
                 Category.production,
-                ItemStack.with(Items.lead, 120, Items.graphite, 35)
+                ItemStack.with(Items.lead, 100, Items.graphite, 30)
             )
             drillTime = 280f
             size = 3
@@ -158,6 +119,47 @@ class Ferrum : Mod() {
             drillEffect = Fx.mineBig
 
             consumePower(1.80f)
+            consumeLiquid(Liquids.cryofluid, 0.1f).boost()
+        }
+
+        ironExtractor = object : Drill("iron-extractor") {
+            init {
+                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 200, Items.silicon, 200)
+                alwaysUnlocked = false
+                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
+            }
+
+            override fun canMine(tile: Tile?): Boolean {
+                return tile?.drop() == Items.titanium
+            }
+
+            override fun countOre(tile: Tile?) {
+                super.countOre(tile)
+                returnItem = iron
+            }
+
+            override fun setStats() {
+                super.setStats()
+
+                stats.remove(Stat.drillTier)
+                stats.add(Stat.drillTier, StatValues.drillables(
+                    drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers
+                ) { it.itemDrop == Items.titanium })
+            }
+        }.apply {
+            requirements(
+                Category.production,
+                ItemStack.with(Items.copper, 80, Items.silicon, 30, iron, 20)
+            )
+            drillTime = 280f
+            size = 3
+            hasPower = true
+            tier = 4
+            updateEffect = Fx.pulverizeMedium
+            drillEffect = Fx.mineBig
+
+            consumePower(1.60f)
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
     }
@@ -256,30 +258,6 @@ class Ferrum : Mod() {
     }
 
     private fun modifyVanillaContent() {
-        // Iron
-        run {
-            (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
-
-            fun addIronRequirement(block: Block, amount: Int) {
-                block.requirements = block.requirements.plus(ItemStack(iron, amount))
-            }
-
-            addIronRequirement(Blocks.steamGenerator, 15)
-            addIronRequirement(Blocks.thoriumReactor, 100)
-            addIronRequirement(Blocks.impactReactor, 100)
-
-            addIronRequirement(Blocks.blastDrill, 25)
-
-            addIronRequirement(Blocks.multiPress, 35)
-            addIronRequirement(Blocks.plastaniumCompressor, 40)
-
-            addIronRequirement(Blocks.meltdown, 70)
-            addIronRequirement(Blocks.spectre, 90)
-
-            addIronRequirement(Blocks.exponentialReconstructor, 300)
-            addIronRequirement(Blocks.tetrativeReconstructor, 800)
-        }
-
         // Pyrite
         run {
             (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
@@ -294,8 +272,32 @@ class Ferrum : Mod() {
             addPyriteRequirement(Blocks.solarPanel, 1)
             addPyriteRequirement(Blocks.batteryLarge, 10)
             addPyriteRequirement(Blocks.largeSolarPanel, 15)
-            addPyriteRequirement(Blocks.impactReactor, 50)
-            addPyriteRequirement(Blocks.foreshadow, 100)
+            addPyriteRequirement(Blocks.foreshadow, 200)
+        }
+
+        // Iron
+        run {
+            (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
+
+            fun addIronRequirement(block: Block, amount: Int) {
+                block.requirements = block.requirements.plus(ItemStack(iron, amount))
+            }
+
+            addIronRequirement(Blocks.steamGenerator, 15)
+            addIronRequirement(Blocks.thoriumReactor, 100)
+            addIronRequirement(Blocks.impactReactor, 100)
+
+            addIronRequirement(Blocks.laserDrill, 15)
+            addIronRequirement(Blocks.blastDrill, 25)
+
+            addIronRequirement(Blocks.multiPress, 35)
+            addIronRequirement(Blocks.plastaniumCompressor, 40)
+
+            addIronRequirement(Blocks.meltdown, 70)
+            addIronRequirement(Blocks.spectre, 90)
+
+            addIronRequirement(Blocks.exponentialReconstructor, 300)
+            addIronRequirement(Blocks.tetrativeReconstructor, 800)
         }
     }
 }
