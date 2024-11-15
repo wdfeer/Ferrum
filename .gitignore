@@ -149,3 +149,6 @@ android/libs/
 
 # Mindustry Client
 /run/
+
+# Kotlin Language Server
+kls_database.db
