@@ -2,13 +2,10 @@ package ferrum
 
 import arc.graphics.Color
 import arc.struct.Seq
-import mindustry.content.Blocks
-import mindustry.content.Fx
-import mindustry.content.Items
-import mindustry.content.Liquids
-import mindustry.content.SectorPresets
+import mindustry.content.*
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
+import mindustry.entities.bullet.FlakBulletType
 import mindustry.game.Objectives.Produce
 import mindustry.game.Objectives.SectorComplete
 import mindustry.gen.Sounds
@@ -40,6 +37,7 @@ class Ferrum : Mod() {
     lateinit var ironworks: GenericCrafter
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
+    lateinit var flak: ItemTurret
 
     override fun loadContent() {
         pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
@@ -266,6 +264,65 @@ class Ferrum : Mod() {
             shootCone = 12f
             health = 320
             shootSound = Sounds.cannon
+        }
+
+        flak = object : ItemTurret("flak") {
+            init {
+                researchCost = ItemStack.with(Items.lead, 8000,Items.silicon, 3000, iron, 1500, Items.titanium, 500)
+                alwaysUnlocked = false
+                techNode = TechNode(Blocks.scatter.techNode, this, researchCost).also {
+                    it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
+                }
+            }
+        }.apply {
+            requirements(Category.turret, ItemStack.with(iron, 125, Items.titanium, 65, Items.silicon, 50))
+            Blocks.scatter
+            ammo(
+                pyrite, FlakBulletType(7f, 6f).apply {
+                    lifetime = 40f
+                    shootEffect = Fx.shootSmall
+                    width = 6f
+                    height = 8f
+                    hitEffect = Fx.flakExplosion
+                    splashDamage = 50f
+                    splashDamageRadius = 8f
+                    reloadMultiplier = 1.4f
+                },
+                iron, FlakBulletType(5f, 12f).apply {
+                    lifetime = 40f
+                    shootEffect = Fx.shootSmall
+                    width = 6f
+                    height = 8f
+                    hitEffect = Fx.flakExplosion
+                    splashDamage = 60f
+                    splashDamageRadius = 8f
+                    fragBullets = 4
+                    fragBullet = BasicBulletType(3f, 8f).apply {
+                        lifetime = 12f
+                        collidesGround = false
+                    }
+                },
+                Items.blastCompound, FlakBulletType(6f, 5f).apply {
+                    lifetime = 40f
+                    ammoMultiplier = 4f
+                    shootEffect = Fx.shootSmall
+                    width = 6f
+                    height = 8f
+                    hitEffect = Fx.blastExplosion
+                    splashDamage = 80f
+                    splashDamageRadius = 32f
+                }
+            )
+            reload = 11f
+            recoil = 2f
+            range = 200f
+            inaccuracy = 7f
+            shootCone = 10f
+            scaledHealth = 320f
+            shootSound = Sounds.shootAlt
+            size = 2
+            targetGround = false
+            coolant = consumeCoolant(0.2f)
         }
     }
 
