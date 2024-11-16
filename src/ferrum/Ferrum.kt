@@ -1,12 +1,16 @@
 package ferrum
 
 import arc.graphics.Color
+import arc.struct.Seq
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.Liquids
+import mindustry.content.SectorPresets
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
+import mindustry.game.Objectives.Produce
+import mindustry.game.Objectives.SectorComplete
 import mindustry.gen.Sounds
 import mindustry.mod.Mod
 import mindustry.type.Category
@@ -38,14 +42,18 @@ class Ferrum : Mod() {
     lateinit var clyster: ItemTurret
 
     override fun loadContent() {
-        iron = Item("iron", Color.valueOf("7f786e")).apply {
-            techNode = TechNode(Items.titanium.techNode, this, emptyArray<ItemStack>())
-            hardness = 3
+        pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
+            techNode = TechNode(Items.coal.techNode, this, emptyArray<ItemStack>()).also {
+                it.objectives = Seq.with(Produce(this))
+            }
             cost = 1f
         }
 
-        pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
-            techNode = TechNode(Items.coal.techNode, this, emptyArray<ItemStack>())
+        iron = Item("iron", Color.valueOf("7f786e")).apply {
+            techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
+                it.objectives = Seq.with(Produce(this))
+            }
+            hardness = 3
             cost = 1f
         }
 
@@ -55,9 +63,11 @@ class Ferrum : Mod() {
 
         ironworks = object : GenericCrafter("ironworks") {
             init {
-                researchCost = ItemStack.with(Items.lead, 2000, Items.graphite, 500, pyrite, 100)
+                researchCost = ItemStack.with(Items.lead, 1000, Items.graphite, 500, pyrite, 100)
                 alwaysUnlocked = false
-                techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost)
+                techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
+                    it.objectives = Seq.with(Produce(pyrite))
+                }
             }
         }.apply {
             requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
@@ -83,9 +93,11 @@ class Ferrum : Mod() {
     private fun addDrills() {
         pyriteExtractor = object : Drill("pyrite-extractor") {
             init {
-                researchCost = ItemStack.with(Items.copper, 1200, Items.lead, 1000, Items.graphite, 400)
+                researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)
                 alwaysUnlocked = false
-                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
+                techNode = TechNode(Blocks.mechanicalDrill.techNode, this, researchCost).also {
+                    it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest))
+                }
             }
 
             override fun canMine(tile: Tile?): Boolean {
@@ -124,9 +136,9 @@ class Ferrum : Mod() {
 
         ironExtractor = object : Drill("iron-extractor") {
             init {
-                researchCost = ItemStack.with(Items.copper, 2000, Items.graphite, 500, Items.titanium, 200, Items.silicon, 200)
+                researchCost = ItemStack.with(Items.copper, 2000, iron, 500, Items.silicon, 500)
                 alwaysUnlocked = false
-                techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost)
+                techNode = TechNode(pyriteExtractor.techNode, this, researchCost)
             }
 
             override fun canMine(tile: Tile?): Boolean {
@@ -210,7 +222,7 @@ class Ferrum : Mod() {
             init {
                 researchCost = ItemStack.with(Items.metaglass, 500, iron, 80)
                 alwaysUnlocked = false
-                techNode = TechNode(Blocks.hail.techNode, this, researchCost)
+                techNode = TechNode(canna.techNode, this, researchCost)
             }
         }.apply {
             requirements(Category.turret, ItemStack.with(iron, 25, Items.graphite, 25))
@@ -298,6 +310,33 @@ class Ferrum : Mod() {
 
             addIronRequirement(Blocks.exponentialReconstructor, 300)
             addIronRequirement(Blocks.tetrativeReconstructor, 800)
+        }
+
+        // Tech Tree
+        run {
+            fun TechNode.addReq(amount: Int, item: Item = iron) {
+                requirements = requirements.plus(ItemStack(item, amount))
+                if (finishedRequirements.size < requirements.size)
+                    finishedRequirements = finishedRequirements.plus(ItemStack(item, 0))
+            }
+
+            Blocks.solarPanel.techNode.addReq(50, pyrite)
+            Blocks.pyratiteMixer.techNode.addReq(200, pyrite)
+            Blocks.batteryLarge.techNode.addReq(200, pyrite)
+            Blocks.largeSolarPanel.techNode.addReq(800, pyrite)
+            Blocks.tetrativeReconstructor.techNode.addReq(5000, pyrite)
+            Blocks.foreshadow.techNode.addReq(5000, pyrite)
+
+
+            Blocks.laserDrill.techNode.apply {
+                parent = pyriteExtractor.techNode
+                addReq(50)
+            }
+            Blocks.blastDrill.techNode.addReq(500)
+            Blocks.thoriumReactor.techNode.addReq(500)
+            Blocks.spectre.techNode.addReq(3000)
+            Blocks.meltdown.techNode.addReq(3000)
+            Blocks.exponentialReconstructor.techNode.addReq(5000)
         }
     }
 }
