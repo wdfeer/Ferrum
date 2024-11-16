@@ -6,6 +6,8 @@ import mindustry.content.*
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.entities.bullet.FlakBulletType
+import mindustry.entities.part.RegionPart
+import mindustry.entities.pattern.ShootAlternate
 import mindustry.game.Objectives.Produce
 import mindustry.game.Objectives.SectorComplete
 import mindustry.gen.Sounds
@@ -24,6 +26,7 @@ import mindustry.world.blocks.units.Reconstructor
 import mindustry.world.draw.DrawDefault
 import mindustry.world.draw.DrawGlowRegion
 import mindustry.world.draw.DrawMulti
+import mindustry.world.draw.DrawTurret
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatValues
 
@@ -268,7 +271,7 @@ class Ferrum : Mod() {
 
         flak = object : ItemTurret("flak") {
             init {
-                researchCost = ItemStack.with(Items.lead, 8000,Items.silicon, 3000, iron, 1500, Items.titanium, 500)
+                researchCost = ItemStack.with(Items.lead, 8000, Items.silicon, 3000, iron, 1500, Items.titanium, 500)
                 alwaysUnlocked = false
                 techNode = TechNode(Blocks.scatter.techNode, this, researchCost).also {
                     it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
@@ -278,7 +281,7 @@ class Ferrum : Mod() {
             requirements(Category.turret, ItemStack.with(iron, 125, Items.titanium, 65, Items.silicon, 50))
             Blocks.scatter
             ammo(
-                pyrite, FlakBulletType(7f, 6f).apply {
+                pyrite, FlakBulletType(9f, 6f).apply {
                     lifetime = 40f
                     shootEffect = Fx.shootSmall
                     width = 6f
@@ -288,7 +291,7 @@ class Ferrum : Mod() {
                     splashDamageRadius = 8f
                     reloadMultiplier = 1.4f
                 },
-                iron, FlakBulletType(5f, 12f).apply {
+                iron, FlakBulletType(6f, 12f).apply {
                     lifetime = 40f
                     shootEffect = Fx.shootSmall
                     width = 6f
@@ -323,6 +326,21 @@ class Ferrum : Mod() {
             size = 2
             targetGround = false
             coolant = consumeCoolant(0.2f)
+            recoils = 2
+            shoot = ShootAlternate(7f)
+            drawer = DrawTurret().apply {
+                for (i in 0..1) {
+                    parts.add(object : RegionPart("-barrel-" + (if (i == 0) "l" else "r")) {
+                        init {
+                            progress = PartProgress.recoil
+                            recoilIndex = i
+                            under = true
+                            moveY = -1.5f
+                        }
+                    })
+                }
+            }
+            limitRange(4f)
         }
     }
 
