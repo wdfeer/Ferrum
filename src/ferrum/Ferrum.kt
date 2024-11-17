@@ -83,7 +83,7 @@ class Ferrum : Mod() {
             ambientSoundVolume = 0.08f
 
             consumeItems(*ItemStack.with(Items.graphite, 1, pyrite, 2))
-            consumePower(0.60f)
+            consumePower(0.50f)
         }
 
         addTurrets()
@@ -131,7 +131,7 @@ class Ferrum : Mod() {
             updateEffect = Fx.pulverizeMedium
             drillEffect = Fx.mineBig
 
-            consumePower(1.80f)
+            consumePower(0.5f)
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
 
@@ -172,7 +172,7 @@ class Ferrum : Mod() {
             updateEffect = Fx.pulverizeMedium
             drillEffect = Fx.mineBig
 
-            consumePower(1.60f)
+            consumePower(2f)
             consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         }
     }
