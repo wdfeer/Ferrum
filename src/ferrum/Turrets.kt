@@ -14,6 +14,7 @@ import mindustry.entities.part.DrawPart
 import mindustry.entities.part.RegionPart
 import mindustry.entities.pattern.ShootAlternate
 import mindustry.game.Objectives.Produce
+import mindustry.gen.Bullet
 import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
@@ -214,12 +215,19 @@ fun Ferrum.addTurrets() {
         requirements(
             Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, iron, 8000, Items.titanium, 8000)
         )
-        ammo(iron, BasicBulletType(15f, 3000f).apply {
+        ammo(iron, object : BasicBulletType(15f, 3000f) {
+            override fun hit(b: Bullet?, x: Float, y: Float) {
+                // Rotation is the intensity for Fx.dynamicExplosion
+                Fx.dynamicExplosion.at(x, y, 6.5f, hitColor)
+                super.hit(b, x, y)
+            }
+        }.apply {
             lifetime = 400f
-            shootEffect = Fx.shootBig2
+            shootEffect = Fx.blastsmoke
+            trailEffect = Fx.missileTrail
+            hitShake = 24f
             width = 24f
             height = 48f
-            hitEffect = Fx.dynamicExplosion
             splashDamage = 4000f
             splashDamageRadius = 120f
             splashDamagePierce = true
@@ -227,7 +235,8 @@ fun Ferrum.addTurrets() {
             fragBullet = BasicBulletType(9f, 200f).apply {
                 width = 12f
                 height = 21f
-                shootEffect = Fx.smokeCloud
+                shootEffect = Fx.blastsmoke
+                trailEffect = Fx.artilleryTrailSmoke
 
                 lifetime = 48f
                 pierce = true
@@ -244,7 +253,7 @@ fun Ferrum.addTurrets() {
         ammoUseEffect = Fx.casing4
         recoil = 7f
         cooldownTime = reload
-        shake = 18f
+        shake = 14f
         size = 5
         shootSound = Sounds.largeCannon
         health = 8000
