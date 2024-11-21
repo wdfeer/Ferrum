@@ -212,24 +212,24 @@ fun Ferrum.addTurrets() {
         }
     }.apply {
         requirements(
-            Category.turret, ItemStack.with(Items.copper, 13000, Items.lead, 10000, iron, 8000, Items.titanium, 8000)
+            Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, iron, 8000, Items.titanium, 8000)
         )
-        ammo(iron, BasicBulletType(15f, 5000f).apply {
+        ammo(iron, BasicBulletType(15f, 3000f).apply {
             lifetime = 400f
             shootEffect = Fx.shootBig2
             width = 24f
             height = 48f
             hitEffect = Fx.dynamicExplosion
-            splashDamage = 1000f
-            splashDamageRadius = 160f
-            scaledSplashDamage = true
+            splashDamage = 4000f
+            splashDamageRadius = 120f
+            splashDamagePierce = true
             fragBullets = 32
-            fragBullet = BasicBulletType(9f, 100f).apply {
+            fragBullet = BasicBulletType(9f, 200f).apply {
                 width = 12f
                 height = 21f
                 shootEffect = Fx.smokeCloud
 
-                lifetime = 36f
+                lifetime = 48f
                 pierce = true
                 pierceBuilding = true
                 pierceCap = 6
@@ -239,15 +239,15 @@ fun Ferrum.addTurrets() {
         range = (Blocks.foreshadow as Turret).range * 1.5f
         maxAmmo = 200
         ammoPerShot = 50
-        rotateSpeed = 0.5f
+        rotateSpeed = 0.33f
         reload = Time.toSeconds * 100f
         ammoUseEffect = Fx.casing4
         recoil = 7f
         cooldownTime = reload
-        shake = 16f
+        shake = 18f
         size = 5
         shootSound = Sounds.largeCannon
-        health = 10000
+        health = 8000
         limitRange(2f)
         consumePower(5f)
         targetInterval = Float.POSITIVE_INFINITY
