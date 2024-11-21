@@ -1,6 +1,7 @@
 package ferrum
 
 import arc.struct.Seq
+import arc.util.Time
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
@@ -14,6 +15,7 @@ import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
+import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
 
 fun Ferrum.addTurrets() {
@@ -180,5 +182,53 @@ fun Ferrum.addTurrets() {
             }
         }
         limitRange(4f)
+    }
+
+    gustav = object : ItemTurret("gustav") {
+        init {
+            researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, iron, 20000, Items.titanium, 20000)
+            alwaysUnlocked = false
+            techNode = TechNode(canna.techNode, this, researchCost).also {
+                it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
+            }
+        }
+    }.apply {
+        requirements(Category.turret, ItemStack.with(Items.copper, 13000, Items.lead, 10000, iron, 8000, Items.titanium, 8000))
+        ammo(iron, BasicBulletType(15f, 5000f).apply {
+            lifetime = 400f
+            shootEffect = Fx.shootBig2
+            width = 24f
+            height = 30f
+            hitEffect = Fx.dynamicExplosion
+            splashDamage = 2000f
+            splashDamageRadius = 160f
+            scaledSplashDamage = true
+            fragBullets = 22
+            fragBullet = BasicBulletType(7f, 100f).apply {
+                width = 12f
+                height = 18f
+
+                lifetime = 24f
+                pierce = true
+                pierceBuilding = true
+                pierceCap = 6
+            }
+        })
+
+        range = (Blocks.foreshadow as Turret).range * 2f
+        maxAmmo = 200
+        ammoPerShot = 50
+        rotateSpeed = 0.5f
+        reload = Time.toMinutes * 2
+        ammoUseEffect = Fx.casing4
+        recoil = 7f
+        cooldownTime = reload
+        shake = 16f
+        size = 5
+        shootSound = Sounds.railgun
+        health = 10000
+
+        limitRange(2f)
+        consumePower(10f)
     }
 }
