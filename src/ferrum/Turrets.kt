@@ -194,6 +194,10 @@ fun Ferrum.addTurrets() {
                 it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
             }
         }
+
+        override fun isPlaceable(): Boolean {
+            return super.isPlaceable() && Vars.world.tiles.none { it.blockID() == id }
+        }
     }.apply {
         requirements(
             Category.turret,
