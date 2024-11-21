@@ -200,7 +200,8 @@ fun Ferrum.addTurrets() {
             width = 24f
             height = 30f
             hitEffect = Fx.dynamicExplosion
-            splashDamage = 2000f
+            chargeEffect = Fx.smokePuff
+            splashDamage = 1000f
             splashDamageRadius = 160f
             scaledSplashDamage = true
             fragBullets = 22
@@ -215,11 +216,11 @@ fun Ferrum.addTurrets() {
             }
         })
 
-        range = (Blocks.foreshadow as Turret).range * 2f
+        range = (Blocks.foreshadow as Turret).range * 1.5f
         maxAmmo = 200
         ammoPerShot = 50
         rotateSpeed = 0.5f
-        reload = Time.toMinutes * 2
+        reload = Time.toSeconds * 100f
         ammoUseEffect = Fx.casing4
         recoil = 7f
         cooldownTime = reload
@@ -230,5 +231,7 @@ fun Ferrum.addTurrets() {
 
         limitRange(2f)
         consumePower(10f)
+
+        targetInterval = Float.POSITIVE_INFINITY
     }
 }
