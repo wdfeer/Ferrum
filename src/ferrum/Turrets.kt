@@ -2,12 +2,14 @@ package ferrum
 
 import arc.struct.Seq
 import arc.util.Time
+import mindustry.Vars
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.entities.bullet.FlakBulletType
+import mindustry.entities.part.DrawPart
 import mindustry.entities.part.RegionPart
 import mindustry.entities.pattern.ShootAlternate
 import mindustry.game.Objectives.Produce
@@ -193,7 +195,10 @@ fun Ferrum.addTurrets() {
             }
         }
     }.apply {
-        requirements(Category.turret, ItemStack.with(Items.copper, 13000, Items.lead, 10000, iron, 8000, Items.titanium, 8000))
+        requirements(
+            Category.turret,
+            ItemStack.with(Items.copper, 13000, Items.lead, 10000, iron, 8000, Items.titanium, 8000)
+        )
         ammo(iron, BasicBulletType(15f, 5000f).apply {
             lifetime = 400f
             shootEffect = Fx.shootBig2
@@ -226,12 +231,17 @@ fun Ferrum.addTurrets() {
         cooldownTime = reload
         shake = 16f
         size = 5
-        shootSound = Sounds.railgun
+        shootSound = Sounds.largeCannon
         health = 10000
-
         limitRange(2f)
-        consumePower(10f)
-
+        consumePower(5f)
         targetInterval = Float.POSITIVE_INFINITY
+        drawer = DrawTurret().apply {
+            parts.add(RegionPart("-mid").apply {
+                progress = DrawPart.PartProgress.recoil
+                under = false
+                moveY = -2.5f
+            })
+        }
     }
 }
