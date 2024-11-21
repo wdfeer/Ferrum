@@ -26,6 +26,7 @@ repositories{
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 }
 
 compileKotlin{
