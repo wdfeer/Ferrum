@@ -27,10 +27,12 @@ class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
     lateinit var iron: Item
     lateinit var pyrite: Item
+    lateinit var steel: Item
 
     lateinit var pyriteExtractor: Drill
     lateinit var ironExtractor: Drill
     lateinit var ironworks: GenericCrafter
+    lateinit var steelForge: GenericCrafter
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
@@ -41,7 +43,7 @@ class Ferrum : Mod() {
             techNode = TechNode(Items.coal.techNode, this, emptyArray<ItemStack>()).also {
                 it.objectives = Seq.with(Produce(this))
             }
-            cost = 1f
+            cost = 0.8f
         }
 
         iron = Item("iron", Color.valueOf("7f786e")).apply {
@@ -50,6 +52,13 @@ class Ferrum : Mod() {
             }
             hardness = 3
             cost = 1f
+        }
+
+        steel = Item("steel", Color.valueOf("#7f7f7f")).apply {
+            techNode = TechNode(iron.techNode, this, emptyArray<ItemStack>()).also {
+                it.objectives = Seq.with(Produce(this))
+            }
+            cost = 1.2f
         }
 
         oreIron = OreBlock(iron)
