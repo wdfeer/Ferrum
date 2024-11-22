@@ -89,6 +89,28 @@ class Ferrum : Mod() {
             consumePower(0.50f)
         }
 
+        steelForge = object : GenericCrafter("steel-forge") {
+            init {
+                researchCost = ItemStack.with(Items.copper, 3000, Items.graphite, 1000, iron, 500)
+                alwaysUnlocked = false
+                techNode = TechNode(ironworks.techNode, this, researchCost).also {
+                    it.objectives = Seq.with(Produce(iron))
+                }
+            }
+        }.apply {
+            requirements(Category.crafting, ItemStack.with(Items.copper, 150, iron, 20))
+            craftEffect = Fx.smeltsmoke
+            outputItem = ItemStack(steel, 1)
+            craftTime = 120f
+            size = 2
+            hasLiquids = false
+            drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
+            ambientSound = Sounds.smelter
+            ambientSoundVolume = 0.08f
+
+            consumeItems(*ItemStack.with(Items.coal, 4, iron))
+        }
+
         addTurrets()
 
         modifyVanillaContent()
