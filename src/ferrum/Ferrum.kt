@@ -120,7 +120,7 @@ class Ferrum : Mod() {
         // Pyrite
         run {
             (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
-            (Blocks.tetrativeReconstructor as Reconstructor).consumeItems(ItemStack(pyrite, 200))
+            (Blocks.multiplicativeReconstructor as Reconstructor).consumeItems(ItemStack(pyrite, 60))
             (Blocks.solarPanel as SolarGenerator).powerProduction *= 1.25f
             (Blocks.largeSolarPanel as SolarGenerator).powerProduction *= 1.25f
 
@@ -144,24 +144,30 @@ class Ferrum : Mod() {
 
             addIronRequirement(Blocks.steamGenerator, 15)
             addIronRequirement(Blocks.thoriumReactor, 100)
-            addIronRequirement(Blocks.impactReactor, 100)
-
             addIronRequirement(Blocks.laserDrill, 15)
-            addIronRequirement(Blocks.blastDrill, 25)
-
             addIronRequirement(Blocks.multiPress, 35)
-            addIronRequirement(Blocks.plastaniumCompressor, 40)
-
-            addIronRequirement(Blocks.meltdown, 70)
-            addIronRequirement(Blocks.spectre, 90)
-
             addIronRequirement(Blocks.exponentialReconstructor, 300)
-            addIronRequirement(Blocks.tetrativeReconstructor, 800)
+        }
+
+        // Steel
+        run {
+            (Blocks.tetrativeReconstructor as Reconstructor).consumeItems(ItemStack(steel, 600))
+
+            fun addSteelRequirement(block: Block, amount: Int) {
+                block.requirements = block.requirements.plus(ItemStack(steel, amount))
+            }
+
+            addSteelRequirement(Blocks.impactReactor, 100)
+            addSteelRequirement(Blocks.blastDrill, 25)
+            addSteelRequirement(Blocks.plastaniumCompressor, 40)
+            addSteelRequirement(Blocks.meltdown, 70)
+            addSteelRequirement(Blocks.spectre, 90)
+            addSteelRequirement(Blocks.tetrativeReconstructor, 800)
         }
 
         // Tech Tree
         run {
-            fun TechNode.addReq(amount: Int, item: Item = iron) {
+            fun TechNode.addReq(amount: Int, item: Item) {
                 requirements = requirements.plus(ItemStack(item, amount))
                 if (finishedRequirements.size < requirements.size)
                     finishedRequirements = finishedRequirements.plus(ItemStack(item, 0))
@@ -171,19 +177,22 @@ class Ferrum : Mod() {
             Blocks.pyratiteMixer.techNode.addReq(200, pyrite)
             Blocks.batteryLarge.techNode.addReq(200, pyrite)
             Blocks.largeSolarPanel.techNode.addReq(800, pyrite)
-            Blocks.tetrativeReconstructor.techNode.addReq(5000, pyrite)
+            Blocks.multiplicativeReconstructor.techNode.addReq(1000, pyrite)
             Blocks.foreshadow.techNode.addReq(5000, pyrite)
 
 
             Blocks.laserDrill.techNode.apply {
                 parent = pyriteExtractor.techNode
-                addReq(50)
+                addReq(50, iron)
             }
-            Blocks.blastDrill.techNode.addReq(500)
-            Blocks.thoriumReactor.techNode.addReq(500)
-            Blocks.spectre.techNode.addReq(3000)
-            Blocks.meltdown.techNode.addReq(3000)
-            Blocks.exponentialReconstructor.techNode.addReq(5000)
+            Blocks.thoriumReactor.techNode.addReq(500, iron)
+            Blocks.exponentialReconstructor.techNode.addReq(5000, iron)
+
+
+            Blocks.blastDrill.techNode.addReq(500, steel)
+            Blocks.spectre.techNode.addReq(3000, steel)
+            Blocks.meltdown.techNode.addReq(3000, steel)
+            Blocks.tetrativeReconstructor.techNode.addReq(10000, steel)
         }
     }
 }
