@@ -33,6 +33,8 @@ class Ferrum : Mod() {
     lateinit var ironExtractor: Drill
     lateinit var ironworks: GenericCrafter
     lateinit var steelForge: GenericCrafter
+    lateinit var steelConverter: GenericCrafter
+
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
@@ -108,7 +110,31 @@ class Ferrum : Mod() {
             ambientSound = Sounds.smelter
             ambientSoundVolume = 0.08f
 
-            consumeItems(*ItemStack.with(Items.coal, 4, iron))
+            consumeItems(*ItemStack.with(Items.coal, 4, iron, 1))
+        }
+
+        steelConverter = object : GenericCrafter("steel-converter") {
+            init {
+                researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
+                alwaysUnlocked = false
+                techNode = TechNode(steelForge.techNode, this, researchCost).also {
+                    it.objectives = Seq.with(Produce(steel), Produce(Items.pyratite), Produce(Items.plastanium))
+                }
+            }
+        }.apply {
+            requirements(Category.crafting, ItemStack.with(Items.titanium, 160, Items.silicon, 90, steel, 80, Items.plastanium, 80))
+            craftEffect = Fx.smeltsmoke
+            outputItem = ItemStack(steel, 5)
+            craftTime = 150f
+            size = 3
+            hasPower = true
+            hasLiquids = false
+            drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
+            ambientSound = Sounds.smelter
+            ambientSoundVolume = 0.1f
+
+            consumeItems(*ItemStack.with(Items.pyratite, 2, iron, 5))
+            consumePower(2.5f)
         }
 
         addTurrets()
