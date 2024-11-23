@@ -183,10 +183,10 @@ fun Ferrum.addTurrets() {
 
     gustav = object : ItemTurret("gustav") {
         init {
-            researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, iron, 20000, Items.titanium, 20000)
+            researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
             alwaysUnlocked = false
             techNode = TechNode(canna.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
+                it.objectives = Seq.with(Produce(steel))
             }
         }
 
@@ -213,7 +213,7 @@ fun Ferrum.addTurrets() {
         }
     }.apply {
         requirements(
-            Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, iron, 8000, Items.titanium, 8000)
+            Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
         )
         ammo(iron, object : BasicBulletType(15f, 3000f) {
             override fun hit(b: Bullet?, x: Float, y: Float) {
