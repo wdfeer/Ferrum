@@ -18,7 +18,6 @@ import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.power.PowerGenerator
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
-import mindustry.world.blocks.units.Reconstructor
 import mindustry.world.draw.DrawDefault
 import mindustry.world.draw.DrawFlame
 import mindustry.world.draw.DrawGlowRegion
@@ -147,7 +146,6 @@ class Ferrum : Mod() {
     private fun modifyVanillaContent() {
         // Pyrite
         run {
-            (Blocks.multiplicativeReconstructor as Reconstructor).consumeItems(ItemStack(pyrite, 60))
             (Blocks.solarPanel as PowerGenerator).powerProduction *= 1.2f
             (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
@@ -160,6 +158,7 @@ class Ferrum : Mod() {
             addPyriteRequirement(Blocks.largeSolarPanel, 15)
             addPyriteRequirement(Blocks.phaseWeaver, 80)
             addPyriteRequirement(Blocks.foreshadow, 400)
+            addPyriteRequirement(Blocks.multiplicativeReconstructor, 300)
         }
 
         // Pyratite
@@ -194,8 +193,6 @@ class Ferrum : Mod() {
 
         // Iron
         run {
-            (Blocks.exponentialReconstructor as Reconstructor).consumeItems(ItemStack(iron, 200))
-
             fun addIronRequirement(block: Block, amount: Int) {
                 block.requirements = block.requirements.plus(ItemStack(iron, amount))
             }
@@ -203,12 +200,11 @@ class Ferrum : Mod() {
             addIronRequirement(Blocks.steamGenerator, 15)
             addIronRequirement(Blocks.laserDrill, 15)
             addIronRequirement(Blocks.multiPress, 35)
-            addIronRequirement(Blocks.exponentialReconstructor, 300)
+            addIronRequirement(Blocks.exponentialReconstructor, 600)
         }
 
         // Steel
         run {
-            (Blocks.tetrativeReconstructor as Reconstructor).consumeItems(ItemStack(steel, 600))
             (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
             fun addSteelRequirement(block: Block, amount: Int) {
@@ -222,7 +218,7 @@ class Ferrum : Mod() {
             addSteelRequirement(Blocks.plastaniumCompressor, 30)
             addSteelRequirement(Blocks.meltdown, 150)
             addSteelRequirement(Blocks.spectre, 100)
-            addSteelRequirement(Blocks.tetrativeReconstructor, 800)
+            addSteelRequirement(Blocks.tetrativeReconstructor, 1600)
             addSteelRequirement(Blocks.coreNucleus, 2000)
         }
 
