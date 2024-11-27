@@ -268,4 +268,54 @@ fun Ferrum.addTurrets() {
             })
         }
     }
+    krupp = object : ItemTurret("krupp") {
+      init {
+            researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000)
+            alwaysUnlocked = false
+            techNode = TechNode(canna.techNode, this, researchCost).also {
+                it.objectives = Seq.with(Produce(steel))
+            }
+      }
+    }.apply {
+      requirements(
+            Category.turret, ItemStack.with(steel, 1250)
+        )
+        ammo(iron, object : BasicBulletType(15f, 150f) {
+            override fun hit(b: Bullet?, x: Float, y: Float) {
+                // Rotation is the intensity for Fx.dynamicExplosion
+                Fx.dynamicExplosion.at(x, y, 1.2f, hitColor)
+                super.hit(b, x, y)
+            }
+        }.apply {
+            shootEffect = Fx.blastsmoke
+            trailEffect = Fx.missileTrail
+            hitShake = 3.6f
+            width = 12f
+            height = 24f
+            splashDamage = 100f
+            splashDamageRadius = 40f
+        })
+
+        range = (Blocks.ripple as Turret).range * 0.9f
+        maxAmmo = 20
+        ammoPerShot = 4
+        rotateSpeed = 1.5f
+        reload = Time.toSeconds * 3.5f
+        ammoUseEffect = Fx.casing4
+        recoil = 4f
+        cooldownTime = reload
+        shake = 2.4f
+        size = 3
+        shootSound = Sounds.largeCannon
+        health = 1200
+        limitRange(2f)
+        drawer = DrawTurret().apply {
+            parts.add(RegionPart("-mid").apply {
+                progress = DrawPart.PartProgress.recoil
+                under = false
+                moveY = -2.5f
+            })
+        }
+      
+    }
 }

@@ -40,6 +40,7 @@ class Ferrum : Mod() {
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
     lateinit var gustav: ItemTurret
+    lateinit var krupp: ItemTurret
 
     override fun loadContent() {
         pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
