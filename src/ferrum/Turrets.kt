@@ -181,11 +181,86 @@ fun Ferrum.addTurrets() {
         limitRange(4f)
     }
 
-    gustav = object : ItemTurret("gustav") {
+    krupp = object : ItemTurret("krupp") {
         init {
-            researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
+            researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000)
             alwaysUnlocked = false
             techNode = TechNode(canna.techNode, this, researchCost).also {
+                it.objectives = Seq.with(Produce(steel))
+            }
+        }
+    }.apply {
+        requirements(
+            Category.turret, ItemStack.with(steel, 750)
+        )
+        ammo(
+            iron, object : BasicBulletType(10f, 150f) {
+                override fun hit(b: Bullet?, x: Float, y: Float) {
+                    // Rotation is the intensity for Fx.dynamicExplosion
+                    Fx.dynamicExplosion.at(x, y, 1.2f, hitColor)
+                    super.hit(b, x, y)
+                }
+            }.apply {
+                shootEffect = Fx.blastsmoke
+                trailEffect = Fx.missileTrail
+                hitShake = 3.6f
+                width = 12f
+                height = 24f
+                splashDamage = 100f
+                splashDamageRadius = 15f
+                ammoMultiplier = 1f
+                pierce = true
+                pierceCap = 2
+            }, Items.surgeAlloy, object : BasicBulletType(10f, 120f) {
+                override fun hit(b: Bullet?, x: Float, y: Float) {
+                    Fx.dynamicExplosion.at(x, y, 1f, hitColor)
+                    super.hit(b, x, y)
+                }
+            }.apply {
+                shootEffect = Fx.blastsmoke
+                trailEffect = Fx.missileTrail
+                width = 12f
+                height = 24f
+                splashDamage = 60f
+                splashDamageRadius = 15f
+                pierce = true
+                pierceCap = 2
+                lightning = 5
+                lightningDamage = 25f
+                reloadMultiplier = 1.25f
+                ammoMultiplier = 8f
+            })
+
+        range = (Blocks.ripple as Turret).range * 0.9f
+        maxAmmo = 32
+        ammoPerShot = 8
+        rotateSpeed = 1.5f
+        reload = Time.toSeconds * 3.5f
+        ammoUseEffect = Fx.casing2
+        recoil = 3f
+        cooldownTime = reload
+        shake = 2.4f
+        inaccuracy = 2f
+        shootCone = 3f
+        size = 3
+        shootSound = Sounds.mediumCannon
+        health = 1200
+        limitRange(2f)
+        drawer = DrawTurret().apply {
+            parts.add(RegionPart("-mid").apply {
+                progress = DrawPart.PartProgress.recoil
+                under = false
+                moveY = -2.5f
+            })
+        }
+    }
+
+    gustav = object : ItemTurret("gustav") {
+        init {
+            researchCost =
+                ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
+            alwaysUnlocked = false
+            techNode = TechNode(krupp.techNode, this, researchCost).also {
                 it.objectives = Seq.with(Produce(steel))
             }
         }
@@ -196,8 +271,8 @@ fun Ferrum.addTurrets() {
             measureTime {
                 placeable = Vars.world.tiles.none { it.blockID() == id }
             }.takeIf { it.inWholeMilliseconds > 30 }?.let {
-                    Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
-                }
+                Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
+            }
 
             lastPlaceableComputeTime = TimeSource.Monotonic.markNow()
         }
@@ -213,11 +288,11 @@ fun Ferrum.addTurrets() {
         }
     }.apply {
         requirements(
-            Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
+            Category.turret,
+            ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
         )
         ammo(iron, object : BasicBulletType(15f, 3000f) {
             override fun hit(b: Bullet?, x: Float, y: Float) {
-                // Rotation is the intensity for Fx.dynamicExplosion
                 Fx.dynamicExplosion.at(x, y, 6.5f, hitColor)
                 super.hit(b, x, y)
             }
@@ -267,55 +342,5 @@ fun Ferrum.addTurrets() {
                 moveY = -2.5f
             })
         }
-    }
-    krupp = object : ItemTurret("krupp") {
-      init {
-            researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000)
-            alwaysUnlocked = false
-            techNode = TechNode(canna.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(steel))
-            }
-      }
-    }.apply {
-      requirements(
-            Category.turret, ItemStack.with(steel, 1250)
-        )
-        ammo(iron, object : BasicBulletType(15f, 150f) {
-            override fun hit(b: Bullet?, x: Float, y: Float) {
-                // Rotation is the intensity for Fx.dynamicExplosion
-                Fx.dynamicExplosion.at(x, y, 1.2f, hitColor)
-                super.hit(b, x, y)
-            }
-        }.apply {
-            shootEffect = Fx.blastsmoke
-            trailEffect = Fx.missileTrail
-            hitShake = 3.6f
-            width = 12f
-            height = 24f
-            splashDamage = 100f
-            splashDamageRadius = 40f
-        })
-
-        range = (Blocks.ripple as Turret).range * 0.9f
-        maxAmmo = 20
-        ammoPerShot = 4
-        rotateSpeed = 1.5f
-        reload = Time.toSeconds * 3.5f
-        ammoUseEffect = Fx.casing4
-        recoil = 4f
-        cooldownTime = reload
-        shake = 2.4f
-        size = 3
-        shootSound = Sounds.largeCannon
-        health = 1200
-        limitRange(2f)
-        drawer = DrawTurret().apply {
-            parts.add(RegionPart("-mid").apply {
-                progress = DrawPart.PartProgress.recoil
-                under = false
-                moveY = -2.5f
-            })
-        }
-      
     }
 }
