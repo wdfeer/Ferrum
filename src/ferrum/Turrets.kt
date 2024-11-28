@@ -151,8 +151,8 @@ fun Ferrum.addTurrets() {
             width = 6f
             height = 8f
             hitEffect = Fx.blastExplosion
-            splashDamage = 80f
-            splashDamageRadius = 32f
+            splashDamage = 100f
+            splashDamageRadius = 40f
         })
         reload = 11f
         recoil = 2f
