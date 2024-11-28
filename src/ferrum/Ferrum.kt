@@ -124,7 +124,10 @@ class Ferrum : Mod() {
                 }
             }
         }.apply {
-            requirements(Category.crafting, ItemStack.with(Items.titanium, 160, Items.silicon, 90, steel, 80, Items.plastanium, 80))
+            requirements(
+                Category.crafting,
+                ItemStack.with(Items.titanium, 160, Items.silicon, 90, steel, 80, Items.plastanium, 80)
+            )
             craftEffect = Fx.smeltsmoke
             outputItem = ItemStack(steel, 5)
             craftTime = 150f

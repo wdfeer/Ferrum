@@ -190,26 +190,34 @@ fun Ferrum.addTurrets() {
     }.apply {
         requirements(Category.turret, ItemStack.with(steel, 350))
         ammo(
-           iron,
-            BasicBulletType(3.8f, 90f).apply {
-                knockback = 1.6f
+            iron,
+            BasicBulletType(4.2f, 80f).apply {
+                knockback = 3f
                 lifetime = 50f
                 height = 22f
-                width = height
+                width = 18f
                 pierce = true
+                pierceBuilding = true
                 pierceCap = 3
-                splashDamage = 30f
+                splashDamage = 40f
                 splashDamageRadius = 12f
+
+                hitShake = 1.2f
+                hitSound = Sounds.explosion
+                hitEffect = Fx.explosion
+                shootEffect = Fx.shootSmall
             },
         )
+        size = 2
         reload = 100f
         recoil = 3f
-        range = 160f
+        range = (Blocks.lancer as Turret).range
         inaccuracy = 2.25f
         shootCone = 3.5f
         scaledHealth = 350f
         shootSound = Sounds.mediumCannon
         limitRange(1f)
+        coolant = consumeCoolant(0.2f)
     }
 
     gustav = object : ItemTurret("gustav") {
@@ -227,8 +235,8 @@ fun Ferrum.addTurrets() {
             measureTime {
                 placeable = Vars.world.tiles.none { it.blockID() == id }
             }.takeIf { it.inWholeMilliseconds > 30 }?.let {
-                    Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
-                }
+                Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
+            }
 
             lastPlaceableComputeTime = TimeSource.Monotonic.markNow()
         }
