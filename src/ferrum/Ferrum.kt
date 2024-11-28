@@ -39,6 +39,7 @@ class Ferrum : Mod() {
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
+    lateinit var houf: ItemTurret
     lateinit var gustav: ItemTurret
 
     override fun loadContent() {

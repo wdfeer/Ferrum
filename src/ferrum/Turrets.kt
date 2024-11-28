@@ -181,6 +181,37 @@ fun Ferrum.addTurrets() {
         limitRange(4f)
     }
 
+    houf = object : ItemTurret("houf") {
+        init {
+            researchCost = ItemStack.with(Items.titanium, 5000, steel, 5000)
+            alwaysUnlocked = false
+            techNode = TechNode(canna.techNode, this, researchCost)
+        }
+    }.apply {
+        requirements(Category.turret, ItemStack.with(steel, 350))
+        ammo(
+           iron,
+            BasicBulletType(3.8f, 90f).apply {
+                knockback = 1.6f
+                lifetime = 50f
+                height = 22f
+                width = height
+                pierce = true
+                pierceCap = 3
+                splashDamage = 30f
+                splashDamageRadius = 12f
+            },
+        )
+        reload = 100f
+        recoil = 3f
+        range = 160f
+        inaccuracy = 2.25f
+        shootCone = 3.5f
+        scaledHealth = 350f
+        shootSound = Sounds.mediumCannon
+        limitRange(1f)
+    }
+
     gustav = object : ItemTurret("gustav") {
         init {
             researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
