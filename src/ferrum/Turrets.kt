@@ -210,12 +210,20 @@ fun Ferrum.addTurrets() {
         )
         size = 2
         reload = 100f
-        recoil = 3f
+        recoil = 1.5f
+        shake = 0.8f
         range = (Blocks.lancer as Turret).range
         inaccuracy = 2.25f
         shootCone = 3.5f
         scaledHealth = 350f
         shootSound = Sounds.mediumCannon
+        drawer = DrawTurret().apply {
+            parts.add(RegionPart("-mid").apply {
+                progress = DrawPart.PartProgress.recoil
+                under = false
+                moveY = -1f
+            })
+        }
         limitRange(1f)
         coolant = consumeCoolant(0.2f)
     }
