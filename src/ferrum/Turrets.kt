@@ -208,17 +208,17 @@ fun Ferrum.addTurrets() {
                 ammoMultiplier = 1f
             },
             Items.blastCompound,
-            DynamicExplosionBulletType(4.2f, 20f, 2f).apply {
+            DynamicExplosionBulletType(4.2f, 25f, 2f).apply {
                 lifetime = 50f
                 height = 22f
                 width = 18f
-                splashDamage = 200f
+                splashDamage = 260f
                 splashDamageRadius = 56f
-                hitShake = 2.4f
-                hitSound = Sounds.largeExplosion
+                hitShake = 2f
+                hitSound = Sounds.dullExplosion
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 2f
-                reloadMultiplier = 0.75f
+                reloadMultiplier = 0.6f
             },
             Items.surgeAlloy,
             BasicBulletType(4.2f, 100f).apply {
