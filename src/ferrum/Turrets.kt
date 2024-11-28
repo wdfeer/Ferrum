@@ -201,11 +201,42 @@ fun Ferrum.addTurrets() {
                 pierceCap = 3
                 splashDamage = 40f
                 splashDamageRadius = 12f
-
                 hitShake = 1.2f
                 hitSound = Sounds.explosion
                 hitEffect = Fx.explosion
                 shootEffect = Fx.shootSmall
+                ammoMultiplier = 1f
+            },
+            Items.blastCompound,
+            BasicBulletType(4.2f, 20f).apply {
+                lifetime = 50f
+                height = 22f
+                width = 18f
+                splashDamage = 160f
+                splashDamageRadius = 40f
+                hitShake = 2.4f
+                hitSound = Sounds.largeExplosion
+                hitEffect = Fx.blastExplosion
+                shootEffect = Fx.shootSmall
+                ammoMultiplier = 3f
+            },
+            Items.surgeAlloy,
+            BasicBulletType(4.2f, 100f).apply {
+                lifetime = 50f
+                height = 22f
+                width = 18f
+                pierce = true
+                pierceBuilding = true
+                pierceCap = 3
+                splashDamage = 15f
+                splashDamageRadius = 20f
+                lightning = 4
+                lightningDamage = 15f
+                hitShake = 1.2f
+                hitSound = Sounds.explosion
+                hitEffect = Fx.explosion
+                shootEffect = Fx.shootSmall
+                ammoMultiplier = 5f
             },
         )
         size = 2
