@@ -208,17 +208,17 @@ fun Ferrum.addTurrets() {
                 ammoMultiplier = 1f
             },
             Items.blastCompound,
-            BasicBulletType(4.2f, 20f).apply {
+            DynamicExplosionBulletType(4.2f, 20f, 2f).apply {
                 lifetime = 50f
                 height = 22f
                 width = 18f
-                splashDamage = 160f
-                splashDamageRadius = 40f
+                splashDamage = 200f
+                splashDamageRadius = 56f
                 hitShake = 2.4f
                 hitSound = Sounds.largeExplosion
-                hitEffect = Fx.blastExplosion
                 shootEffect = Fx.shootSmall
-                ammoMultiplier = 3f
+                ammoMultiplier = 2f
+                reloadMultiplier = 0.75f
             },
             Items.surgeAlloy,
             BasicBulletType(4.2f, 100f).apply {
@@ -293,13 +293,7 @@ fun Ferrum.addTurrets() {
         requirements(
             Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
         )
-        ammo(iron, object : BasicBulletType(15f, 3000f) {
-            override fun hit(b: Bullet?, x: Float, y: Float) {
-                // Rotation is the intensity for Fx.dynamicExplosion
-                Fx.dynamicExplosion.at(x, y, 6.5f, hitColor)
-                super.hit(b, x, y)
-            }
-        }.apply {
+        ammo(iron, DynamicExplosionBulletType(15f, 3000f, 6.5f).apply {
             lifetime = 400f
             shootEffect = Fx.blastsmoke
             trailEffect = Fx.missileTrail
@@ -345,5 +339,13 @@ fun Ferrum.addTurrets() {
                 moveY = -2.5f
             })
         }
+    }
+}
+
+private class DynamicExplosionBulletType(speed: Float, damage: Float, val explosionPower: Float) : BasicBulletType(speed, damage) {
+    override fun hit(b: Bullet?, x: Float, y: Float) {
+        // Rotation is the intensity for Fx.dynamicExplosion
+        Fx.dynamicExplosion.at(x, y, explosionPower, hitColor)
+        super.hit(b, x, y)
     }
 }
