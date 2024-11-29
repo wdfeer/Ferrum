@@ -7,6 +7,7 @@ import mindustry.Vars
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
+import mindustry.content.StatusEffects
 import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.entities.bullet.FlakBulletType
@@ -153,6 +154,7 @@ fun Ferrum.addTurrets() {
             hitEffect = Fx.blastExplosion
             splashDamage = 100f
             splashDamageRadius = 40f
+            status = StatusEffects.blasted
         })
         reload = 11f
         recoil = 2f
@@ -219,6 +221,7 @@ fun Ferrum.addTurrets() {
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 2f
                 reloadMultiplier = 0.6f
+                status = StatusEffects.blasted
             },
             Items.surgeAlloy,
             BasicBulletType(4.2f, 100f).apply {
@@ -337,6 +340,7 @@ fun Ferrum.addTurrets() {
             splashDamageRadius = 200f
             splashDamagePierce = true
             ammoMultiplier = 1f
+            status = StatusEffects.blasted
         }, Items.surgeAlloy, DynamicExplosionBulletType(30f, 6000f, 7f).apply {
             lifetime = 400f
             shootEffect = Fx.blastsmoke
