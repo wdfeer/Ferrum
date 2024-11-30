@@ -242,6 +242,7 @@ class Ferrum : Mod() {
             Blocks.foreshadow.techNode.addReq(5000, pyrite)
 
 
+            Blocks.steamGenerator.techNode.addReq(150, iron)
             Blocks.laserDrill.techNode.apply {
                 parent = pyriteExtractor.techNode
                 addReq(50, iron)

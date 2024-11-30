@@ -1,10 +1,12 @@
 package ferrum
 
+import arc.func.Prov
 import arc.struct.Seq
 import mindustry.content.*
 import mindustry.content.TechTree.TechNode
 import mindustry.game.Objectives.SectorComplete
 import mindustry.type.Category
+import mindustry.type.Item
 import mindustry.type.ItemStack
 import mindustry.world.Tile
 import mindustry.world.blocks.production.Drill
@@ -41,11 +43,19 @@ fun Ferrum.addDrills() {
             ) { it.itemDrop == Items.coal })
         }
     }.apply {
+        buildType = Prov { object : Drill.DrillBuild() {
+            override fun offload(item: Item?) {
+                super.offload(Items.coal)
+                super.offload(Items.coal)
+                super.offload(item)
+            }
+        } }
+    }.apply {
         requirements(
             Category.production,
             ItemStack.with(Items.lead, 100, Items.graphite, 30)
         )
-        drillTime = 280f
+        drillTime = (Blocks.laserDrill as Drill).drillTime * 3f
         size = 3
         hasPower = true
         tier = 4
@@ -53,7 +63,7 @@ fun Ferrum.addDrills() {
         drillEffect = Fx.mineBig
 
         consumePower(0.5f)
-        consumeLiquid(Liquids.cryofluid, 0.1f).boost()
+        consumeLiquid(Liquids.water, 0.1f).boost()
     }
 
     ironExtractor = object : Drill("iron-extractor") {

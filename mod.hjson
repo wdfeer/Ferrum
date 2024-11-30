@@ -14,7 +14,7 @@ main: "ferrum.Ferrum"
 description: "Semi-realistic iron-based mod. Modifies serpulo progression and vanilla balance."
 
 #the mod version
-version: 0.9.1
+version: 0.9.2
 
 #the minimum game build required to run this mod
 minGameVersion: 146
