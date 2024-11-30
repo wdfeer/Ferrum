@@ -48,6 +48,7 @@ class Ferrum : Mod() {
                 it.objectives = Seq.with(Produce(this))
             }
             cost = 0.8f
+            hardness = Items.coal.hardness
         }
 
         iron = Item("iron", Color.valueOf("7f786e")).apply {
