@@ -39,6 +39,7 @@ class Ferrum : Mod() {
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
+    lateinit var houf: ItemTurret
     lateinit var gustav: ItemTurret
     lateinit var krupp: ItemTurret
 
@@ -48,6 +49,7 @@ class Ferrum : Mod() {
                 it.objectives = Seq.with(Produce(this))
             }
             cost = 0.8f
+            hardness = Items.coal.hardness
         }
 
         iron = Item("iron", Color.valueOf("7f786e")).apply {
@@ -242,6 +244,7 @@ class Ferrum : Mod() {
             Blocks.foreshadow.techNode.addReq(5000, pyrite)
 
 
+            Blocks.steamGenerator.techNode.addReq(150, iron)
             Blocks.laserDrill.techNode.apply {
                 parent = pyriteExtractor.techNode
                 addReq(50, iron)
