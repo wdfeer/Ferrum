@@ -274,59 +274,78 @@ fun Ferrum.addTurrets() {
         requirements(
             Category.turret, ItemStack.with(steel, 750)
         )
-        ammo(
-            iron, object : BasicBulletType(10f, 150f) {
-                override fun hit(b: Bullet?, x: Float, y: Float) {
-                    // Rotation is the intensity for Fx.dynamicExplosion
-                    Fx.dynamicExplosion.at(x, y, 1.2f, hitColor)
-                    super.hit(b, x, y)
-                }
-            }.apply {
-                shootEffect = Fx.blastsmoke
-                trailEffect = Fx.missileTrail
-                hitShake = 3.6f
-                width = 12f
-                height = 24f
-                splashDamage = 100f
-                splashDamageRadius = 15f
-                ammoMultiplier = 1f
-                pierce = true
-                pierceCap = 2
-            }, Items.surgeAlloy, object : BasicBulletType(10f, 120f) {
-                override fun hit(b: Bullet?, x: Float, y: Float) {
-                    Fx.dynamicExplosion.at(x, y, 1f, hitColor)
-                    super.hit(b, x, y)
-                }
-            }.apply {
-                shootEffect = Fx.blastsmoke
-                trailEffect = Fx.missileTrail
-                width = 12f
-                height = 24f
-                splashDamage = 60f
-                splashDamageRadius = 15f
-                pierce = true
-                pierceCap = 2
-                lightning = 5
-                lightningDamage = 25f
-                reloadMultiplier = 1.25f
-                ammoMultiplier = 8f
-            })
+        ammo(iron, DynamicExplosionBulletType(10f, 500f, 4f).apply {
+            shootEffect = Fx.blastsmoke
+            hitShake = 4.8f
+            width = 18f
+            height = 36f
+            splashDamage = 1000f
+            splashDamageRadius = 50f
+            splashDamagePierce = true
+            ammoMultiplier = 1f
+        }, Items.thorium, DynamicExplosionBulletType(15f, 1000f, 3f).apply {
+            shootEffect = Fx.shootBigSmoke
+            hitShake = 2.4f
+            width = 18f
+            height = 36f
+            pierceArmor = true
+            pierce = true
+            pierceBuilding = true
+            pierceCap = 8
+            ammoMultiplier = 1f
+        }, Items.pyratite, DynamicExplosionBulletType(10f, 500f, 4.5f).apply {
+            shootEffect = Fx.fireSmoke
+            hitShake = 5f
+            width = 18f
+            height = 36f
+            splashDamage = 10f
+            splashDamageRadius = 500f
+            splashDamagePierce = true
+            ammoMultiplier = 1f
+            status = StatusEffects.burning
+        }, Items.blastCompound, DynamicExplosionBulletType(10f, 100f, 5f).apply {
+            shootEffect = Fx.blastsmoke
+            hitShake = 6f
+            width = 18f
+            height = 36f
+            splashDamage = 2000f
+            splashDamageRadius = 100f
+            splashDamagePierce = true
+            ammoMultiplier = 1f
+            reloadMultiplier = 0.8f
+            status = StatusEffects.blasted
+        }, Items.surgeAlloy, DynamicExplosionBulletType(20f, 1000f, 4f).apply {
+            shootEffect = Fx.blastsmoke
+            hitShake = 4.8f
+            width = 18f
+            height = 36f
+            splashDamage = 800f
+            splashDamageRadius = 50f
+            splashDamagePierce = true
+            lightning = 4
+            lightningDamage = 250f
+            lightningLength = 8
+            reloadMultiplier = 1.25f
+            ammoMultiplier = 1f
+        })
 
-        range = (Blocks.ripple as Turret).range * 0.9f
-        maxAmmo = 32
-        ammoPerShot = 8
+        range = (Blocks.foreshadow as Turret).range * 0.95f
+        maxAmmo = 60
+        ammoPerShot = 30
         rotateSpeed = 1.5f
-        reload = Time.toSeconds * 3.5f
+        reload = Time.toSeconds * 25f
         ammoUseEffect = Fx.casing2
         recoil = 3f
         cooldownTime = reload
         shake = 2.4f
-        inaccuracy = 2f
-        shootCone = 3f
-        size = 3
-        shootSound = Sounds.mediumCannon
-        health = 1200
+        inaccuracy = 0.2f
+        shootCone = 1f
+        size = 4
+        shootSound = Sounds.largeCannon
+        health = 3000
         limitRange(2f)
+        coolantMultiplier = 0.1f
+        coolant = consumeCoolant(1.2f)
         drawer = DrawTurret().apply {
             parts.add(RegionPart("-mid").apply {
                 progress = DrawPart.PartProgress.recoil
@@ -361,8 +380,7 @@ fun Ferrum.addTurrets() {
 
         override fun isPlaceable(): Boolean {
             val timeSinceCompute = TimeSource.Monotonic.markNow() - lastPlaceableComputeTime
-            if (timeSinceCompute.inWholeMilliseconds > computeIntervalMillis)
-                computePlaceable()
+            if (timeSinceCompute.inWholeMilliseconds > computeIntervalMillis) computePlaceable()
 
             return super.isPlaceable() && placeable
         }
@@ -370,13 +388,7 @@ fun Ferrum.addTurrets() {
         requirements(
             Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
         )
-        ammo(iron, object : BasicBulletType(15f, 3000f) {
-            override fun hit(b: Bullet?, x: Float, y: Float) {
-                // Rotation is the intensity for Fx.dynamicExplosion
-                Fx.dynamicExplosion.at(x, y, 6.5f, hitColor)
-                super.hit(b, x, y)
-            }
-        }.apply {
+        ammo(iron, DynamicExplosionBulletType(15f, 3000f, 6.5f).apply {
             lifetime = 400f
             shootEffect = Fx.blastsmoke
             hitShake = 24f
@@ -450,6 +462,7 @@ fun Ferrum.addTurrets() {
         cooldownTime = reload
         shake = 14f
         size = 5
+        shootCone = 0.5f
         shootSound = Sounds.largeCannon
         health = 8000
         limitRange(2f)
