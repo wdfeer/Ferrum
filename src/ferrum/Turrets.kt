@@ -264,15 +264,15 @@ fun Ferrum.addTurrets() {
 
     krupp = object : ItemTurret("krupp") {
         init {
-            researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000)
+            researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000, Items.surgeAlloy, 1000)
             alwaysUnlocked = false
             techNode = TechNode(canna.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(steel))
+                it.objectives = Seq.with(Produce(steel), Produce(Items.surgeAlloy))
             }
         }
     }.apply {
         requirements(
-            Category.turret, ItemStack.with(steel, 750)
+            Category.turret, ItemStack.with(Items.titanium, 1000, Items.surgeAlloy, 500, steel, 1000)
         )
         ammo(iron, DynamicExplosionBulletType(10f, 500f, 4f).apply {
             shootEffect = Fx.blastsmoke
