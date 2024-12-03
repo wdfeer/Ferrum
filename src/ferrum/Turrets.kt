@@ -344,7 +344,7 @@ fun Ferrum.addTurrets() {
         shootSound = Sounds.largeCannon
         health = 3000
         limitRange(2f)
-        coolantMultiplier = 0.1f
+        coolantMultiplier = 0.25f
         coolant = consumeCoolant(1.2f)
         drawer = DrawTurret().apply {
             parts.add(RegionPart("-mid").apply {
