@@ -298,10 +298,12 @@ fun Ferrum.addTurrets() {
             hitShake = 5f
             width = 18f
             height = 36f
-            splashDamage = 10f
-            splashDamageRadius = 500f
+            splashDamage = 100f
+            splashDamageRadius = 100f
             splashDamagePierce = true
             ammoMultiplier = 1f
+            incendAmount = 100
+            incendSpread *= 10f
             status = StatusEffects.burning
         }, Items.blastCompound, DynamicExplosionBulletType(10f, 100f, 5f).apply {
             shootEffect = Fx.blastsmoke
@@ -332,10 +334,10 @@ fun Ferrum.addTurrets() {
         range = (Blocks.foreshadow as Turret).range * 0.95f
         maxAmmo = 60
         ammoPerShot = 30
-        rotateSpeed = 1.5f
+        rotateSpeed = 0.67f
         reload = Time.toSeconds * 25f
         ammoUseEffect = Fx.casing2
-        recoil = 3f
+        recoil = 1.8f
         cooldownTime = reload
         shake = 2.4f
         inaccuracy = 0.2f
@@ -346,13 +348,6 @@ fun Ferrum.addTurrets() {
         limitRange(2f)
         coolantMultiplier = 0.25f
         coolant = consumeCoolant(1.2f)
-        drawer = DrawTurret().apply {
-            parts.add(RegionPart("-mid").apply {
-                progress = DrawPart.PartProgress.recoil
-                under = false
-                moveY = -2.5f
-            })
-        }
     }
 
     gustav = object : ItemTurret("gustav") {
