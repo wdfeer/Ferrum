@@ -67,6 +67,10 @@ class Ferrum : Mod() {
             techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
                 it.objectives = Seq.with(Produce(this))
             }
+            boilPoint = 0.9f
+            heatCapacity = 0.1f
+            viscosity = 0.7f
+            gasColor = Color.valueOf("#efeabd")
         }
 
         oreIron = OreBlock(iron)
