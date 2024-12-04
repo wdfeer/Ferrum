@@ -281,7 +281,6 @@ fun Ferrum.addTurrets() {
             height = 36f
             splashDamage = 1000f
             splashDamageRadius = 50f
-            splashDamagePierce = true
             ammoMultiplier = 1f
         }, Items.thorium, DynamicExplosionBulletType(15f, 1000f, 3f).apply {
             shootEffect = Fx.shootBigSmoke
@@ -291,15 +290,15 @@ fun Ferrum.addTurrets() {
             pierceArmor = true
             pierce = true
             pierceBuilding = true
-            pierceCap = 8
+            pierceCap = 7
             ammoMultiplier = 1f
-        }, Items.pyratite, DynamicExplosionBulletType(10f, 500f, 4.5f).apply {
+        }, Items.pyratite, DynamicExplosionBulletType(10f, 800f, 4.5f).apply {
             shootEffect = Fx.fireSmoke
             hitShake = 5f
             width = 18f
             height = 36f
             splashDamage = 100f
-            splashDamageRadius = 100f
+            splashDamageRadius = 128f
             splashDamagePierce = true
             ammoMultiplier = 1f
             incendAmount = 100
@@ -313,6 +312,7 @@ fun Ferrum.addTurrets() {
             splashDamage = 2000f
             splashDamageRadius = 100f
             splashDamagePierce = true
+            buildingDamageMultiplier = 0.2f
             ammoMultiplier = 1f
             reloadMultiplier = 0.8f
             status = StatusEffects.blasted
@@ -323,12 +323,10 @@ fun Ferrum.addTurrets() {
             height = 36f
             splashDamage = 800f
             splashDamageRadius = 50f
-            splashDamagePierce = true
             lightning = 4
             lightningDamage = 250f
-            lightningLength = 8
-            reloadMultiplier = 1.25f
-            ammoMultiplier = 1f
+            lightningLength = 12
+            ammoMultiplier = 2f
         })
 
         range = (Blocks.foreshadow as Turret).range * 0.95f
@@ -345,7 +343,7 @@ fun Ferrum.addTurrets() {
         size = 4
         shootSound = Sounds.largeCannon
         health = 3000
-        limitRange(2f)
+        limitRange(3f)
         coolantMultiplier = 0.25f
         coolant = consumeCoolant(1.2f)
     }
@@ -391,7 +389,6 @@ fun Ferrum.addTurrets() {
             height = 48f
             splashDamage = 4000f
             splashDamageRadius = 120f
-            splashDamagePierce = true
             fragBullets = 32
             fragBullet = BasicBulletType(9f, 200f).apply {
                 width = 12f
@@ -414,6 +411,7 @@ fun Ferrum.addTurrets() {
             splashDamage = 10000f
             splashDamageRadius = 200f
             splashDamagePierce = true
+            buildingDamageMultiplier = 0.2f
             ammoMultiplier = 1f
             status = StatusEffects.blasted
         }, Items.surgeAlloy, DynamicExplosionBulletType(30f, 6000f, 7f).apply {
@@ -425,7 +423,6 @@ fun Ferrum.addTurrets() {
             height = 40f
             splashDamage = 2000f
             splashDamageRadius = 120f
-            splashDamagePierce = true
             lightning = 20
             lightningDamage = 200f
             lightningLength = 50
@@ -438,7 +435,7 @@ fun Ferrum.addTurrets() {
                 lifetime = 96f
                 pierce = true
                 pierceBuilding = true
-                pierceCap = 2
+                pierceCap = 3
 
                 lightning = 2
                 lightningDamage = 50f
@@ -460,7 +457,7 @@ fun Ferrum.addTurrets() {
         shootCone = 0.5f
         shootSound = Sounds.largeCannon
         health = 8000
-        limitRange(2f)
+        limitRange(6f)
         consumePower(5f)
         targetInterval = Float.POSITIVE_INFINITY
         drawer = DrawTurret().apply {
