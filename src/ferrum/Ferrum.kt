@@ -9,9 +9,7 @@ import mindustry.content.TechTree.TechNode
 import mindustry.game.Objectives.Produce
 import mindustry.gen.Sounds
 import mindustry.mod.Mod
-import mindustry.type.Category
-import mindustry.type.Item
-import mindustry.type.ItemStack
+import mindustry.type.*
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.production.Drill
@@ -26,6 +24,7 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
     lateinit var steel: Item
+    lateinit var h2so4: Liquid
 
     lateinit var pyriteExtractor: Drill
     lateinit var ironExtractor: Drill
@@ -64,6 +63,12 @@ class Ferrum : Mod() {
             cost = 1.2f
         }
 
+        h2so4 = Liquid("h2so4", Color.valueOf("#fffacd")).apply {
+            techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
+                it.objectives = Seq.with(Produce(this))
+            }
+        }
+
         oreIron = OreBlock(iron)
 
         addDrills()
@@ -80,6 +85,7 @@ class Ferrum : Mod() {
             requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
             craftEffect = Fx.smeltsmoke
             outputItem = ItemStack(iron, 2)
+            outputLiquid = LiquidStack(h2so4, 0.05f)
             craftTime = 90f
             size = 2
             hasPower = true
