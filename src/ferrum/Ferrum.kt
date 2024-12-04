@@ -93,7 +93,8 @@ class Ferrum : Mod() {
             craftTime = 90f
             size = 2
             hasPower = true
-            hasLiquids = false
+            hasLiquids = true
+            ignoreLiquidFullness = true
             drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
             ambientSound = Sounds.smelter
             ambientSoundVolume = 0.08f
