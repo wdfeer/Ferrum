@@ -3,10 +3,12 @@ package ferrum
 import mindustry.content.Blocks
 import mindustry.content.Items
 import mindustry.content.TechTree.TechNode
+import mindustry.entities.bullet.LiquidBulletType
 import mindustry.type.Item
 import mindustry.type.ItemStack
 import mindustry.world.Block
 import mindustry.world.blocks.defense.turrets.ItemTurret
+import mindustry.world.blocks.defense.turrets.LiquidTurret
 import mindustry.world.blocks.power.PowerGenerator
 import mindustry.world.blocks.production.GenericCrafter
 import kotlin.math.round
@@ -69,6 +71,27 @@ fun Ferrum.modifyVanillaContent() {
         addIronRequirement(Blocks.laserDrill, 15)
         addIronRequirement(Blocks.multiPress, 35)
         addIronRequirement(Blocks.exponentialReconstructor, 600)
+    }
+
+    // Sulfuric Acid
+    run {
+        (Blocks.wave as LiquidTurret).ammoTypes.put(h2so4, LiquidBulletType(h2so4).apply {
+            damage = 8f
+            drag = 0.01f
+        })
+
+        (Blocks.tsunami as LiquidTurret).ammoTypes.put(h2so4, LiquidBulletType(h2so4).apply {
+            damage = 8f
+            // Same as other ammo types:
+            drag = 0.001f
+            lifetime = 49f
+            speed = 4f
+            knockback = 1.3f
+            puddleSize = 8f
+            orbSize = 4f
+            ammoMultiplier = 0.4f
+            statusDuration = 60f * 4f
+        })
     }
 
     // Steel
