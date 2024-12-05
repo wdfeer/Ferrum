@@ -1,5 +1,6 @@
 package ferrum
 
+import arc.func.Prov
 import arc.graphics.Color
 import arc.struct.Seq
 import mindustry.content.Blocks
@@ -85,6 +86,17 @@ class Ferrum : Mod() {
                 alwaysUnlocked = false
                 techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
                     it.objectives = Seq.with(Produce(pyrite))
+                }
+                buildType = Prov {
+                    object : GenericCrafterBuild() {
+                        override fun updateTile() {
+                            super.updateTile()
+                            // Passive damage if h2so4 full
+                            if (liquids[h2so4] >= liquidCapacity) {
+                                damage(maxHealth / 60f / 120f)
+                            }
+                        }
+                    }
                 }
             }
         }.apply {
