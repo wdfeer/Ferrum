@@ -3,10 +3,7 @@ package ferrum
 import arc.func.Prov
 import arc.graphics.Color
 import arc.struct.Seq
-import mindustry.content.Blocks
-import mindustry.content.Fx
-import mindustry.content.Items
-import mindustry.content.StatusEffects
+import mindustry.content.*
 import mindustry.content.TechTree.TechNode
 import mindustry.game.Objectives.Produce
 import mindustry.gen.Sounds
@@ -26,6 +23,7 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
     lateinit var steel: Item
+    lateinit var so2: Liquid
     lateinit var h2so4: Liquid
 
     lateinit var pyriteExtractor: Drill
@@ -65,8 +63,17 @@ class Ferrum : Mod() {
             cost = 1.2f
         }
 
-        h2so4 = Liquid("h2so4", Color.valueOf("#fffacd")).apply {
+        so2 = Liquid("so2", Color.valueOf("#e6e6fa")).apply {
             techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
+                it.objectives = Seq.with(Produce(this))
+            }
+            gas = true
+            heatCapacity = (Liquids.cryofluid.heatCapacity * 2f + Liquids.water.heatCapacity) / 3f
+            viscosity = 0f
+        }
+
+        h2so4 = Liquid("h2so4", Color.valueOf("#fffacd")).apply {
+            techNode = TechNode(so2.techNode, this, emptyArray<ItemStack>()).also {
                 it.objectives = Seq.with(Produce(this))
             }
             effect = StatusEffects.corroded
@@ -91,9 +98,9 @@ class Ferrum : Mod() {
                     object : GenericCrafterBuild() {
                         override fun updateTile() {
                             super.updateTile()
-                            // Passive damage if h2so4 full
-                            if (liquids[h2so4] >= liquidCapacity) {
-                                damage(maxHealth / 60f / 120f)
+                            // Passive damage if so2 full
+                            if (liquids[so2] >= liquidCapacity) {
+                                damage(maxHealth / 60f / 240f)
                             }
                         }
                     }
@@ -104,7 +111,7 @@ class Ferrum : Mod() {
             craftEffect = Fx.smeltsmoke
             outputItem = ItemStack(iron, 2)
             craftTime = 90f
-            outputLiquid = LiquidStack(h2so4, outputItem.amount / craftTime * 2) // 1 iron = 2 h2so4
+            outputLiquid = LiquidStack(so2, outputItem.amount / craftTime * 6) // 1 iron = 6 so2
             size = 2
             hasPower = true
             hasLiquids = true
