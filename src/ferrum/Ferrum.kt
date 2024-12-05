@@ -67,9 +67,17 @@ class Ferrum : Mod() {
             techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
                 it.objectives = Seq.with(Produce(this))
             }
-            gas = true
+            coolant = true
             heatCapacity = (Liquids.cryofluid.heatCapacity * 2f + Liquids.water.heatCapacity) / 3f
             viscosity = 0f
+
+//            gas = true //making it a gas disallows it from being a coolant
+            // vanilla gas properties
+            boilPoint = -1f
+            color = color.cpy()
+            color.a = 0.6f
+            gasColor = color
+            barColor = color.cpy().a(1f)
         }
 
         h2so4 = Liquid("h2so4", Color.valueOf("#fffacd")).apply {
