@@ -5,6 +5,7 @@ import arc.struct.Seq
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
+import mindustry.content.StatusEffects
 import mindustry.content.TechTree.TechNode
 import mindustry.game.Objectives.Produce
 import mindustry.gen.Sounds
@@ -67,8 +68,9 @@ class Ferrum : Mod() {
             techNode = TechNode(pyrite.techNode, this, emptyArray<ItemStack>()).also {
                 it.objectives = Seq.with(Produce(this))
             }
+            effect = StatusEffects.corroded
             boilPoint = 0.9f
-            heatCapacity = 0.1f
+            coolant = false
             viscosity = 0.7f
             gasColor = Color.valueOf("#efeabd")
         }
