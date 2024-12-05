@@ -91,8 +91,8 @@ class Ferrum : Mod() {
             requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
             craftEffect = Fx.smeltsmoke
             outputItem = ItemStack(iron, 2)
-            outputLiquid = LiquidStack(h2so4, outputItem.amount / craftTime * 4) // 1 iron = 4 h2so4
             craftTime = 90f
+            outputLiquid = LiquidStack(h2so4, outputItem.amount / craftTime * 2) // 1 iron = 2 h2so4
             size = 2
             hasPower = true
             hasLiquids = true

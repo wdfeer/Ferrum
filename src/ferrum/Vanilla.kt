@@ -75,14 +75,13 @@ fun Ferrum.modifyVanillaContent() {
 
     // Sulfuric Acid
     run {
+        val bulletDamage = 16f
         (Blocks.wave as LiquidTurret).ammoTypes.put(h2so4, LiquidBulletType(h2so4).apply {
-            damage = 8f
+            damage = bulletDamage
             drag = 0.01f
         })
-
         (Blocks.tsunami as LiquidTurret).ammoTypes.put(h2so4, LiquidBulletType(h2so4).apply {
-            damage = 8f
-            // Same as other ammo types:
+            damage = bulletDamage
             drag = 0.001f
             lifetime = 49f
             speed = 4f
@@ -107,8 +106,9 @@ fun Ferrum.modifyVanillaContent() {
         addSteelRequirement(Blocks.impactReactor, 500)
         addSteelRequirement(Blocks.blastDrill, 25)
         addSteelRequirement(Blocks.plastaniumCompressor, 30)
-        addSteelRequirement(Blocks.meltdown, 150)
-        addSteelRequirement(Blocks.spectre, 100)
+        addSteelRequirement(Blocks.tsunami, 100)
+        addSteelRequirement(Blocks.meltdown, 200)
+        addSteelRequirement(Blocks.spectre, 150)
         addSteelRequirement(Blocks.tetrativeReconstructor, 1600)
         addSteelRequirement(Blocks.coreNucleus, 2000)
     }
