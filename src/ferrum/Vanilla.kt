@@ -1,5 +1,6 @@
 package ferrum
 
+import arc.func.Prov
 import mindustry.content.Blocks
 import mindustry.content.Items
 import mindustry.entities.bullet.LiquidBulletType
@@ -9,10 +10,35 @@ import mindustry.world.Block
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.LiquidTurret
 import mindustry.world.blocks.power.PowerGenerator
+import mindustry.world.blocks.production.Drill
+import mindustry.world.blocks.production.Drill.DrillBuild
 import mindustry.world.blocks.production.GenericCrafter
 import kotlin.math.round
+import kotlin.random.Random
 
 fun Ferrum.modifyVanillaContent() {
+    // Nickel
+    run {
+        fun Drill.setNickelChance() {
+            val nickelChance = 0.012f
+            buildType = Prov {
+                object : DrillBuild() {
+                    override fun offload(item: Item?) {
+                        if (item == Items.copper && Random.nextFloat() < nickelChance) super.offload(nickel)
+                        else super.offload(item)
+                    }
+                }
+            }
+        }
+
+        listOf(
+            Blocks.mechanicalDrill, Blocks.pneumaticDrill, Blocks.laserDrill, Blocks.blastDrill
+        ).filterIsInstance<Drill>().forEach {
+            if (it.buildType.get() !is DrillBuild) return
+            it.setNickelChance()
+        }
+    }
+
     // Pyrite
     run {
         (Blocks.solarPanel as PowerGenerator).powerProduction *= 1.2f
@@ -45,13 +71,7 @@ fun Ferrum.modifyVanillaContent() {
 
         // Buff pyratite and blast compound as ammo
         listOf(
-            Blocks.scorch,
-            Blocks.hail,
-            Blocks.salvo,
-            Blocks.ripple,
-            Blocks.swarmer,
-            Blocks.cyclone,
-            Blocks.spectre
+            Blocks.scorch, Blocks.hail, Blocks.salvo, Blocks.ripple, Blocks.swarmer, Blocks.cyclone, Blocks.spectre
         ).filterIsInstance<ItemTurret>().forEach { it.buffAmmo(Items.pyratite, Items.blastCompound) }
     }
 
