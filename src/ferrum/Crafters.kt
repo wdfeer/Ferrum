@@ -20,26 +20,25 @@ import mindustry.world.blocks.production.GenericCrafter
 import mindustry.world.draw.*
 
 fun Ferrum.loadCrafters() {
-    ironworks = object : GenericCrafter("ironworks") {
-        init {
-            researchCost = ItemStack.with(Items.lead, 1000, Items.graphite, 500, pyrite, 100)
-            alwaysUnlocked = false
-            techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(pyrite))
-            }
-            buildType = Prov {
-                object : GenericCrafterBuild() {
-                    override fun updateTile() {
-                        super.updateTile()
-                        // Passive damage if so2 full
-                        if (liquids[so2] >= liquidCapacity) {
-                            damage(maxHealth / 60f / 240f)
-                        }
+    ironworks = GenericCrafter("ironworks").apply {
+        researchCost = ItemStack.with(Items.lead, 1000, Items.graphite, 500, pyrite, 100)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Produce(pyrite))
+        }
+
+        buildType = Prov {
+            object : GenericCrafter.GenericCrafterBuild() {
+                override fun updateTile() {
+                    super.updateTile()
+                    // Passive damage if so2 full
+                    if (liquids[so2] >= liquidCapacity) {
+                        damage(maxHealth / 60f / 240f)
                     }
                 }
             }
         }
-    }.apply {
+
         requirements(Category.crafting, ItemStack.with(Items.copper, 50, Items.graphite, 25))
         craftEffect = Fx.smeltsmoke
         outputItem = ItemStack(iron, 2)
@@ -57,15 +56,13 @@ fun Ferrum.loadCrafters() {
         consumePower(0.50f)
     }
 
-    steelForge = object : GenericCrafter("steel-forge") {
-        init {
-            researchCost = ItemStack.with(Items.copper, 3000, Items.graphite, 1000, iron, 500)
-            alwaysUnlocked = false
-            techNode = TechNode(ironworks.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(iron))
-            }
+    steelForge = GenericCrafter("steel-forge").apply {
+        researchCost = ItemStack.with(Items.copper, 3000, Items.graphite, 1000, iron, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(ironworks.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Produce(iron))
         }
-    }.apply {
+
         requirements(Category.crafting, ItemStack.with(Items.copper, 150, iron, 20))
         craftEffect = Fx.smeltsmoke
         outputItem = ItemStack(steel, 2)
@@ -79,18 +76,15 @@ fun Ferrum.loadCrafters() {
         consumeItems(*ItemStack.with(Items.coal, 5, iron, 3))
     }
 
-    h2so4Plant = object : GenericCrafter("h2so4-plant") {
-        init {
-            researchCost = ItemStack.with(Items.copper, 10000, pyrite, 3000, steel, 1000)
-            alwaysUnlocked = false
-            techNode = TechNode(ironworks.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(so2), Produce(so2))
-            }
+    h2so4Plant = GenericCrafter("h2so4-plant").apply {
+        researchCost = ItemStack.with(Items.copper, 10000, pyrite, 3000, steel, 1000)
+        alwaysUnlocked = false
+        techNode = TechNode(steelForge.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Produce(steel), Produce(so2))
         }
-    }.apply {
+
         requirements(
-            Category.crafting,
-            ItemStack.with(Items.titanium, 200, Items.silicon, 100, Items.metaglass, 100, steel, 100)
+            Category.crafting, ItemStack.with(Items.titanium, 200, Items.silicon, 100, Items.metaglass, 100, steel, 100)
         )
         updateEffectChance *= 2.5f
         updateEffect = Effect(15f) {
@@ -119,28 +113,16 @@ fun Ferrum.loadCrafters() {
         consumePower(2f)
     }
 
-    steelConverter = object : GenericCrafter("steel-converter") {
-        init {
-            researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
-            alwaysUnlocked = false
-            techNode = TechNode(steelForge.techNode, this, researchCost).also {
-                it.objectives = Seq.with(Produce(steel), Produce(h2so4), Produce(Items.plastanium))
-            }
+    steelConverter = GenericCrafter("steel-converter").apply {
+        researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
+        alwaysUnlocked = false
+        techNode = TechNode(h2so4Plant.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Produce(steel), Produce(h2so4), Produce(Items.plastanium))
         }
-    }.apply {
+
         requirements(
-            Category.crafting,
-            ItemStack.with(
-                Items.titanium,
-                160,
-                Items.silicon,
-                100,
-                Items.metaglass,
-                100,
-                steel,
-                80,
-                Items.plastanium,
-                80
+            Category.crafting, ItemStack.with(
+                Items.titanium, 160, Items.silicon, 100, Items.metaglass, 100, steel, 80, Items.plastanium, 80
             )
         )
         craftEffect = Fx.smeltsmoke

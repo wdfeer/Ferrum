@@ -23,14 +23,6 @@ import kotlin.random.Random
 
 fun Ferrum.loadDrills() {
     pyriteExtractor = object : Drill("pyrite-extractor") {
-        init {
-            researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)
-            alwaysUnlocked = false
-            techNode = TechNode(Blocks.mechanicalDrill.techNode, this, researchCost).also {
-                it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest))
-            }
-        }
-
         override fun canMine(tile: Tile?): Boolean {
             return tile?.drop() == Items.coal
         }
@@ -99,6 +91,12 @@ fun Ferrum.loadDrills() {
             }
         }
     }.apply {
+        researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.mechanicalDrill.techNode, this, researchCost).also {
+            it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest))
+        }
+
         requirements(
             Category.production, ItemStack.with(Items.lead, 100, Items.graphite, 30)
         )
@@ -114,12 +112,6 @@ fun Ferrum.loadDrills() {
     }
 
     ironExtractor = object : Drill("iron-extractor") {
-        init {
-            researchCost = ItemStack.with(Items.copper, 2000, iron, 500, Items.silicon, 500)
-            alwaysUnlocked = false
-            techNode = TechNode(pyriteExtractor.techNode, this, researchCost)
-        }
-
         override fun canMine(tile: Tile?): Boolean {
             return tile?.drop() == Items.titanium
         }
@@ -187,6 +179,10 @@ fun Ferrum.loadDrills() {
             }
         }
     }.apply {
+        researchCost = ItemStack.with(Items.copper, 2000, iron, 500, Items.silicon, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(pyriteExtractor.techNode, this, researchCost)
+
         requirements(
             Category.production, ItemStack.with(Items.copper, 100, Items.silicon, 50, iron, 20)
         )

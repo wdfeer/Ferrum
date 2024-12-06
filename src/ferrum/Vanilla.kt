@@ -19,16 +19,12 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.solarPanel as PowerGenerator).powerProduction *= 1.2f
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
-        fun addPyriteRequirement(block: Block, amount: Int) {
-            block.requirements = block.requirements.plus(ItemStack(pyrite, amount))
-        }
-
-        addPyriteRequirement(Blocks.solarPanel, 1)
-        addPyriteRequirement(Blocks.batteryLarge, 30)
-        addPyriteRequirement(Blocks.largeSolarPanel, 15)
-        addPyriteRequirement(Blocks.phaseWeaver, 80)
-        addPyriteRequirement(Blocks.foreshadow, 400)
-        addPyriteRequirement(Blocks.multiplicativeReconstructor, 300)
+        Blocks.solarPanel.addRequirement(pyrite, 1)
+        Blocks.batteryLarge.addRequirement(pyrite, 30)
+        Blocks.largeSolarPanel.addRequirement(pyrite, 15)
+        Blocks.phaseWeaver.addRequirement(pyrite, 80)
+        Blocks.foreshadow.addRequirement(pyrite, 400)
+        Blocks.multiplicativeReconstructor.addRequirement(pyrite, 300)
     }
 
     // Pyratite
@@ -36,7 +32,6 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
         (Blocks.impactReactor as PowerGenerator).powerProduction *= 1.1f
         (Blocks.differentialGenerator as PowerGenerator).powerProduction *= 1.25f
-
 
         fun ItemTurret.buffAmmo(vararg items: Item) {
             ammoTypes.forEach { ammo ->
@@ -63,14 +58,10 @@ fun Ferrum.modifyVanillaContent() {
 
     // Iron
     run {
-        fun addIronRequirement(block: Block, amount: Int) {
-            block.requirements = block.requirements.plus(ItemStack(iron, amount))
-        }
-
-        addIronRequirement(Blocks.steamGenerator, 15)
-        addIronRequirement(Blocks.laserDrill, 15)
-        addIronRequirement(Blocks.multiPress, 35)
-        addIronRequirement(Blocks.exponentialReconstructor, 600)
+        Blocks.steamGenerator.addRequirement(iron, 15)
+        Blocks.laserDrill.addRequirement(iron, 15)
+        Blocks.multiPress.addRequirement(iron, 35)
+        Blocks.exponentialReconstructor.addRequirement(iron, 600)
     }
 
     // Sulfuric Acid
@@ -97,20 +88,16 @@ fun Ferrum.modifyVanillaContent() {
     run {
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
-        fun addSteelRequirement(block: Block, amount: Int) {
-            block.requirements = block.requirements.plus(ItemStack(steel, amount))
-        }
-
-        addSteelRequirement(Blocks.largeSolarPanel, 40)
-        addSteelRequirement(Blocks.thoriumReactor, 100)
-        addSteelRequirement(Blocks.impactReactor, 500)
-        addSteelRequirement(Blocks.blastDrill, 25)
-        addSteelRequirement(Blocks.plastaniumCompressor, 30)
-        addSteelRequirement(Blocks.tsunami, 100)
-        addSteelRequirement(Blocks.meltdown, 200)
-        addSteelRequirement(Blocks.spectre, 150)
-        addSteelRequirement(Blocks.tetrativeReconstructor, 1600)
-        addSteelRequirement(Blocks.coreNucleus, 2000)
+        Blocks.largeSolarPanel.addRequirement(steel, 40)
+        Blocks.thoriumReactor.addRequirement(steel, 100)
+        Blocks.impactReactor.addRequirement(steel, 500)
+        Blocks.blastDrill.addRequirement(steel, 25)
+        Blocks.plastaniumCompressor.addRequirement(steel, 30)
+        Blocks.tsunami.addRequirement(steel, 100)
+        Blocks.meltdown.addRequirement(steel, 200)
+        Blocks.spectre.addRequirement(steel, 150)
+        Blocks.tetrativeReconstructor.addRequirement(steel, 1600)
+        Blocks.coreNucleus.addRequirement(steel, 2000)
     }
 
     // Tech Tree
@@ -143,4 +130,8 @@ fun Ferrum.modifyVanillaContent() {
         Blocks.meltdown.techNode.addReq(3000, steel)
         Blocks.tetrativeReconstructor.techNode.addReq(10000, steel)
     }
+}
+
+private fun Block.addRequirement(item: Item, amount: Int) {
+    requirements = requirements.plus(ItemStack(item, amount))
 }
