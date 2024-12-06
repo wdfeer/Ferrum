@@ -62,7 +62,7 @@ fun Ferrum.addDrills() {
                             b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
                             b.table { info: Table ->
                                 info.left()
-                                info.add(block.localizedName).left().row()
+                                info.add(itemDrop.localizedName).left().row()
                                 info.run {
                                     if (itemDrop.hasEmoji())
                                         return@run add(itemDrop.emoji())
@@ -150,7 +150,7 @@ fun Ferrum.addDrills() {
                             b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
                             b.table { info: Table ->
                                 info.left()
-                                info.add(block.localizedName).left().row()
+                                info.add(itemDrop.localizedName).left().row()
                                 info.run {
                                     if (itemDrop.hasEmoji())
                                         return@run add(itemDrop.emoji())
