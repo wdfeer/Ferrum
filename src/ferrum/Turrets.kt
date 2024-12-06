@@ -190,7 +190,7 @@ fun Ferrum.addTurrets() {
             techNode = TechNode(canna.techNode, this, researchCost)
         }
     }.apply {
-        requirements(Category.turret, ItemStack.with(steel, 350))
+        requirements(Category.turret, ItemStack.with(steel, 275))
         ammo(
             iron,
             BasicBulletType(4.2f, 80f).apply {
@@ -246,7 +246,7 @@ fun Ferrum.addTurrets() {
         reload = 100f
         recoil = 1.5f
         shake = 0.8f
-        range = (Blocks.lancer as Turret).range
+        range = (Blocks.lancer as Turret).range * 1.1f
         inaccuracy = 2.25f
         shootCone = 3.5f
         scaledHealth = 350f
