@@ -11,8 +11,8 @@ fun Ferrum.loadLiquids() {
         heatCapacity = (Liquids.cryofluid.heatCapacity * 2f + Liquids.water.heatCapacity) / 3f
         viscosity = 0f
 
-//        gas = true //making it a gas disallows it from being a coolant
-        // vanilla gas properties
+        // setting gas=true sets coolant=false, couldn't find a workaround,
+        // so just setting the vanilla gas properties manually:
         boilPoint = -1f
         color = color.cpy()
         color.a = 0.6f
