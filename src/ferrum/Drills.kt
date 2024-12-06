@@ -21,7 +21,7 @@ import mindustry.world.meta.StatUnit
 import kotlin.math.max
 import kotlin.random.Random
 
-fun Ferrum.addDrills() {
+fun Ferrum.loadDrills() {
     pyriteExtractor = object : Drill("pyrite-extractor") {
         init {
             researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)

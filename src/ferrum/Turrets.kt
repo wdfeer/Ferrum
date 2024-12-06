@@ -25,7 +25,7 @@ import mindustry.world.draw.DrawTurret
 import kotlin.time.TimeSource
 import kotlin.time.measureTime
 
-fun Ferrum.addTurrets() {
+fun Ferrum.loadTurrets() {
     canna = object : ItemTurret("canna") {
         init {
             researchCost = ItemStack.with(iron, 150)
