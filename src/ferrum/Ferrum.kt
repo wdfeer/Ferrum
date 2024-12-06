@@ -145,15 +145,15 @@ class Ferrum : Mod() {
         }.apply {
             requirements(Category.crafting, ItemStack.with(Items.copper, 150, iron, 20))
             craftEffect = Fx.smeltsmoke
-            outputItem = ItemStack(steel, 1)
-            craftTime = 120f
+            outputItem = ItemStack(steel, 2)
+            craftTime = 240f
             size = 2
             hasLiquids = false
             drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
             ambientSound = Sounds.smelter
             ambientSoundVolume = 0.08f
 
-            consumeItems(*ItemStack.with(Items.coal, 4, iron, 1))
+            consumeItems(*ItemStack.with(Items.coal, 5, iron, 3))
         }
 
         h2so4Plant = object : GenericCrafter("h2so4-plant") {
@@ -201,25 +201,26 @@ class Ferrum : Mod() {
                 researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
                 alwaysUnlocked = false
                 techNode = TechNode(steelForge.techNode, this, researchCost).also {
-                    it.objectives = Seq.with(Produce(steel), Produce(Items.pyratite), Produce(Items.plastanium))
+                    it.objectives = Seq.with(Produce(steel), Produce(h2so4), Produce(Items.plastanium))
                 }
             }
         }.apply {
             requirements(
                 Category.crafting,
-                ItemStack.with(Items.titanium, 160, Items.silicon, 90, steel, 80, Items.plastanium, 80)
+                ItemStack.with(Items.titanium, 160, Items.silicon, 100, Items.metaglass, 100, steel, 80, Items.plastanium, 80)
             )
             craftEffect = Fx.smeltsmoke
-            outputItem = ItemStack(steel, 5)
-            craftTime = 150f
+            outputItem = ItemStack(steel, 3)
+            craftTime = 72f
             size = 3
             hasPower = true
-            hasLiquids = false
+            hasLiquids = true
             drawer = DrawMulti(DrawDefault(), DrawFlame())
             ambientSound = Sounds.smelter
             ambientSoundVolume = 0.1f
 
-            consumeItems(*ItemStack.with(Items.pyratite, 2, iron, 5))
+            consumeItems(*ItemStack.with(Items.coal, 1, iron, 3))
+            consumeLiquids(LiquidStack(h2so4, 0.05f), LiquidStack(Liquids.water, 0.15f))
             consumePower(2.5f)
         }
 
