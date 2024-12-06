@@ -6,8 +6,7 @@ import mindustry.content.Items
 import mindustry.content.SectorPresets
 import mindustry.content.TechTree.TechNode
 import mindustry.ctype.UnlockableContent
-import mindustry.game.Objectives.Produce
-import mindustry.game.Objectives.SectorComplete
+import mindustry.game.Objectives.*
 import mindustry.type.Item
 import mindustry.type.ItemStack
 
@@ -44,28 +43,28 @@ fun Ferrum.modifyFerrumTechTree() {
         researchCost = ItemStack.with(Items.lead, 1000, Items.graphite, 500, pyrite, 100)
         alwaysUnlocked = false
         techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(pyrite))
+            it.objectives = Seq.with(Research(pyrite))
         }
     }
     steelForge.apply {
         researchCost = ItemStack.with(Items.copper, 3000, Items.graphite, 1000, iron, 500)
         alwaysUnlocked = false
         techNode = TechNode(ironworks.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(iron))
+            it.objectives = Seq.with(Research(iron))
         }
     }
     h2so4Plant.apply {
         researchCost = ItemStack.with(Items.copper, 10000, pyrite, 3000, steel, 1000)
         alwaysUnlocked = false
         techNode = TechNode(steelForge.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(so2))
+            it.objectives = Seq.with(Research(steel), Research(so2))
         }
     }
     steelConverter.apply {
         researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
         alwaysUnlocked = false
         techNode = TechNode(h2so4Plant.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(h2so4), Produce(Items.plastanium))
+            it.objectives = Seq.with(Research(steel), Research(h2so4), Research(Items.plastanium))
         }
     }
 
@@ -84,7 +83,7 @@ fun Ferrum.modifyFerrumTechTree() {
         researchCost = ItemStack.with(Items.lead, 8000, Items.silicon, 3000, iron, 1500, Items.titanium, 500)
         alwaysUnlocked = false
         techNode = TechNode(Blocks.scatter.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
+            it.objectives = Seq.with(Research(iron), Research(Items.titanium))
         }
     }
     houf.apply {
@@ -96,14 +95,14 @@ fun Ferrum.modifyFerrumTechTree() {
         researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000, Items.surgeAlloy, 1000)
         alwaysUnlocked = false
         techNode = TechNode(canna.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(Items.surgeAlloy))
+            it.objectives = Seq.with(Research(steel), Research(Items.surgeAlloy))
         }
     }
     gustav.apply {
         researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
         alwaysUnlocked = false
         techNode = TechNode(canna.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel))
+            it.objectives = Seq.with(Research(steel))
         }
     }
 }
