@@ -3,12 +3,12 @@ package ferrum
 import arc.func.Prov
 import arc.graphics.Color
 import arc.scene.ui.layout.Table
-import arc.struct.Seq
 import arc.util.Scaling
 import arc.util.Strings
-import mindustry.content.*
-import mindustry.content.TechTree.TechNode
-import mindustry.game.Objectives.SectorComplete
+import mindustry.content.Blocks
+import mindustry.content.Fx
+import mindustry.content.Items
+import mindustry.content.Liquids
 import mindustry.type.Category
 import mindustry.type.Item
 import mindustry.type.ItemStack
@@ -91,12 +91,6 @@ fun Ferrum.loadDrills() {
             }
         }
     }.apply {
-        researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)
-        alwaysUnlocked = false
-        techNode = TechNode(Blocks.mechanicalDrill.techNode, this, researchCost).also {
-            it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest))
-        }
-
         requirements(
             Category.production, ItemStack.with(Items.lead, 100, Items.graphite, 30)
         )
@@ -179,10 +173,6 @@ fun Ferrum.loadDrills() {
             }
         }
     }.apply {
-        researchCost = ItemStack.with(Items.copper, 2000, iron, 500, Items.silicon, 500)
-        alwaysUnlocked = false
-        techNode = TechNode(pyriteExtractor.techNode, this, researchCost)
-
         requirements(
             Category.production, ItemStack.with(Items.copper, 100, Items.silicon, 50, iron, 20)
         )

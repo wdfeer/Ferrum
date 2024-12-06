@@ -1,6 +1,5 @@
 package ferrum
 
-import arc.struct.Seq
 import arc.util.Log
 import arc.util.Time
 import mindustry.Vars
@@ -8,13 +7,11 @@ import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.StatusEffects
-import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.entities.bullet.FlakBulletType
 import mindustry.entities.part.DrawPart
 import mindustry.entities.part.RegionPart
 import mindustry.entities.pattern.ShootAlternate
-import mindustry.game.Objectives.Produce
 import mindustry.gen.Bullet
 import mindustry.gen.Sounds
 import mindustry.type.Category
@@ -27,10 +24,6 @@ import kotlin.time.measureTime
 
 fun Ferrum.loadTurrets() {
     canna = ItemTurret("canna").apply {
-        researchCost = ItemStack.with(iron, 150)
-        alwaysUnlocked = false
-        techNode = TechNode(Blocks.hail.techNode, this, researchCost)
-
         requirements(Category.turret, ItemStack.with(iron, 35))
         ammo(
             Items.lead,
@@ -66,10 +59,6 @@ fun Ferrum.loadTurrets() {
     }
 
     clyster = ItemTurret("clyster").apply {
-        researchCost = ItemStack.with(Items.metaglass, 500, iron, 80)
-        alwaysUnlocked = false
-        techNode = TechNode(canna.techNode, this, researchCost)
-
         requirements(Category.turret, ItemStack.with(iron, 25, Items.graphite, 25))
         ammo(Items.metaglass, BasicBulletType(4f, 14f).apply {
             lifetime = 50f
@@ -109,12 +98,6 @@ fun Ferrum.loadTurrets() {
     }
 
     flak = ItemTurret("flak").apply {
-        researchCost = ItemStack.with(Items.lead, 8000, Items.silicon, 3000, iron, 1500, Items.titanium, 500)
-        alwaysUnlocked = false
-        techNode = TechNode(Blocks.scatter.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(iron), Produce(Items.titanium))
-        }
-
         requirements(Category.turret, ItemStack.with(iron, 125, Items.titanium, 65, Items.silicon, 50))
         Blocks.scatter
         ammo(pyrite, FlakBulletType(9f, 6f).apply {
@@ -178,10 +161,6 @@ fun Ferrum.loadTurrets() {
     }
 
     houf = ItemTurret("houf").apply {
-        researchCost = ItemStack.with(Items.titanium, 5000, steel, 5000)
-        alwaysUnlocked = false
-        techNode = TechNode(canna.techNode, this, researchCost)
-
         requirements(Category.turret, ItemStack.with(steel, 275))
         ammo(
             iron,
@@ -255,12 +234,6 @@ fun Ferrum.loadTurrets() {
     }
 
     krupp = ItemTurret("krupp").apply {
-        researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000, Items.surgeAlloy, 1000)
-        alwaysUnlocked = false
-        techNode = TechNode(canna.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(Items.surgeAlloy))
-        }
-
         requirements(
             Category.turret, ItemStack.with(Items.titanium, 1000, Items.surgeAlloy, 500, steel, 1000)
         )
@@ -358,12 +331,6 @@ fun Ferrum.loadTurrets() {
             return super.isPlaceable() && placeable
         }
     }.apply {
-        researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
-        alwaysUnlocked = false
-        techNode = TechNode(canna.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel))
-        }
-
         requirements(
             Category.turret, ItemStack.with(Items.copper, 12000, Items.lead, 11000, steel, 10000, Items.titanium, 4000)
         )

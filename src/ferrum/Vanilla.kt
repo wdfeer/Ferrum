@@ -2,7 +2,6 @@ package ferrum
 
 import mindustry.content.Blocks
 import mindustry.content.Items
-import mindustry.content.TechTree.TechNode
 import mindustry.entities.bullet.LiquidBulletType
 import mindustry.type.Item
 import mindustry.type.ItemStack
@@ -100,36 +99,7 @@ fun Ferrum.modifyVanillaContent() {
         Blocks.coreNucleus.addRequirement(steel, 2000)
     }
 
-    // Tech Tree
-    run {
-        fun TechNode.addReq(amount: Int, item: Item) {
-            requirements = requirements.plus(ItemStack(item, amount))
-            if (finishedRequirements.size < requirements.size)
-                finishedRequirements = finishedRequirements.plus(ItemStack(item, 0))
-        }
-
-        Blocks.solarPanel.techNode.addReq(50, pyrite)
-        Blocks.pyratiteMixer.techNode.addReq(200, pyrite)
-        Blocks.batteryLarge.techNode.addReq(200, pyrite)
-        Blocks.largeSolarPanel.techNode.addReq(800, pyrite)
-        Blocks.multiplicativeReconstructor.techNode.addReq(1000, pyrite)
-        Blocks.foreshadow.techNode.addReq(5000, pyrite)
-
-
-        Blocks.steamGenerator.techNode.addReq(150, iron)
-        Blocks.laserDrill.techNode.apply {
-            parent = pyriteExtractor.techNode
-            addReq(50, iron)
-        }
-        Blocks.thoriumReactor.techNode.addReq(500, iron)
-        Blocks.exponentialReconstructor.techNode.addReq(5000, iron)
-
-
-        Blocks.blastDrill.techNode.addReq(500, steel)
-        Blocks.spectre.techNode.addReq(3000, steel)
-        Blocks.meltdown.techNode.addReq(3000, steel)
-        Blocks.tetrativeReconstructor.techNode.addReq(10000, steel)
-    }
+    modifyVanillaTechTree()
 }
 
 private fun Block.addRequirement(item: Item, amount: Int) {

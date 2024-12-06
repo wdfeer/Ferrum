@@ -37,6 +37,7 @@ class Ferrum : Mod() {
         loadDrills()
         loadCrafters()
         loadTurrets()
+        modifyFerrumTechTree()
         modifyVanillaContent()
     }
 }

@@ -4,14 +4,10 @@ import arc.func.Prov
 import arc.graphics.g2d.Draw
 import arc.graphics.g2d.Fill
 import arc.math.Angles
-import arc.struct.Seq
-import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.Liquids
-import mindustry.content.TechTree.TechNode
 import mindustry.entities.Effect
-import mindustry.game.Objectives.Produce
 import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
@@ -21,12 +17,6 @@ import mindustry.world.draw.*
 
 fun Ferrum.loadCrafters() {
     ironworks = GenericCrafter("ironworks").apply {
-        researchCost = ItemStack.with(Items.lead, 1000, Items.graphite, 500, pyrite, 100)
-        alwaysUnlocked = false
-        techNode = TechNode(Blocks.graphitePress.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(pyrite))
-        }
-
         buildType = Prov {
             object : GenericCrafter.GenericCrafterBuild() {
                 override fun updateTile() {
@@ -57,12 +47,6 @@ fun Ferrum.loadCrafters() {
     }
 
     steelForge = GenericCrafter("steel-forge").apply {
-        researchCost = ItemStack.with(Items.copper, 3000, Items.graphite, 1000, iron, 500)
-        alwaysUnlocked = false
-        techNode = TechNode(ironworks.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(iron))
-        }
-
         requirements(Category.crafting, ItemStack.with(Items.copper, 150, iron, 20))
         craftEffect = Fx.smeltsmoke
         outputItem = ItemStack(steel, 2)
@@ -77,12 +61,6 @@ fun Ferrum.loadCrafters() {
     }
 
     h2so4Plant = GenericCrafter("h2so4-plant").apply {
-        researchCost = ItemStack.with(Items.copper, 10000, pyrite, 3000, steel, 1000)
-        alwaysUnlocked = false
-        techNode = TechNode(steelForge.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(so2))
-        }
-
         requirements(
             Category.crafting, ItemStack.with(Items.titanium, 200, Items.silicon, 100, Items.metaglass, 100, steel, 100)
         )
@@ -114,12 +92,6 @@ fun Ferrum.loadCrafters() {
     }
 
     steelConverter = GenericCrafter("steel-converter").apply {
-        researchCost = ItemStack.with(Items.copper, 15000, pyrite, 10000, Items.plastanium, 2000, steel, 2000)
-        alwaysUnlocked = false
-        techNode = TechNode(h2so4Plant.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Produce(steel), Produce(h2so4), Produce(Items.plastanium))
-        }
-
         requirements(
             Category.crafting, ItemStack.with(
                 Items.titanium, 160, Items.silicon, 100, Items.metaglass, 100, steel, 80, Items.plastanium, 80
