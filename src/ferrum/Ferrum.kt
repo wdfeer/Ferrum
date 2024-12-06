@@ -2,9 +2,13 @@ package ferrum
 
 import arc.func.Prov
 import arc.graphics.Color
+import arc.graphics.g2d.Draw
+import arc.graphics.g2d.Fill
+import arc.math.Angles
 import arc.struct.Seq
 import mindustry.content.*
 import mindustry.content.TechTree.TechNode
+import mindustry.entities.Effect
 import mindustry.game.Objectives.Produce
 import mindustry.gen.Sounds
 import mindustry.mod.Mod
@@ -13,10 +17,7 @@ import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
-import mindustry.world.draw.DrawDefault
-import mindustry.world.draw.DrawFlame
-import mindustry.world.draw.DrawGlowRegion
-import mindustry.world.draw.DrawMulti
+import mindustry.world.draw.*
 
 class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
@@ -168,15 +169,28 @@ class Ferrum : Mod() {
                 Category.crafting,
                 ItemStack.with(Items.titanium, 200, Items.silicon, 100, Items.metaglass, 100, steel, 100)
             )
+            updateEffectChance *= 2.5f
+            updateEffect = Effect(15f) {
+                val color = so2.color.cpy()
+                Angles.randLenVectors(
+                    it.id.toLong(), 2, 1.2f + it.fin() * 1.4f
+                ) { x: Float, y: Float ->
+                    Draw.color(color, it.color, it.fin())
+                    Fill.square(it.x + x, it.y + y, 0.5f + it.fout() * 2f, 45f)
+                }
+            }
             craftEffect = Fx.smeltsmoke
             outputLiquid = LiquidStack(h2so4, 0.2f)
             craftTime = 150f
             size = 3
             hasPower = true
             hasLiquids = true
-            drawer = DrawMulti(DrawDefault()) // TODO
-            ambientSound = Sounds.smelter // TODO
-            ambientSoundVolume = 0.1f
+            drawer = DrawMulti(
+                DrawRegion("-bottom"),
+                DrawLiquidRegion(so2).apply { suffix = "-so2" },
+                DrawLiquidRegion(h2so4).apply { suffix = "-h2so4" },
+                DrawDefault()
+            )
 
             consumeLiquids(LiquidStack(so2, 0.2f), LiquidStack(Liquids.water, 0.2f))
             consumePower(2f)
