@@ -18,7 +18,6 @@ import mindustry.world.Tile
 import mindustry.world.blocks.production.Drill
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatUnit
-import mindustry.world.meta.StatValues
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -92,7 +91,7 @@ fun Ferrum.addDrills() {
         buildType = Prov {
             object : Drill.DrillBuild() {
                 override fun offload(item: Item?) {
-                    if (Random.nextFloat() < 2/3f)
+                    if (Random.nextFloat() < 2 / 3f)
                         super.offload(Items.coal)
                     else
                         super.offload(item)
@@ -134,16 +133,64 @@ fun Ferrum.addDrills() {
             super.setStats()
 
             stats.remove(Stat.drillTier)
-            stats.add(
-                Stat.drillTier, StatValues.drillables(
-                    drillTime, hardnessDrillMultiplier, (size * size).toFloat(), drillMultipliers
-                ) { it.itemDrop == Items.titanium })
+            stats.add(Stat.drillTier) { table: Table ->
+                val blockData = listOf(
+                    Blocks.oreTitanium to Items.titanium,
+                    Blocks.oreTitanium to iron
+                )
+                val drillMultiplier = hardnessDrillMultiplier
+                val multipliers = drillMultipliers
+                table.row()
+                table.table { c: Table ->
+                    var i = 0
+                    for (data in blockData) {
+                        val block = data.first
+                        val itemDrop = data.second
+                        c.table(Styles.grayPanel) { b: Table ->
+                            b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
+                            b.table { info: Table ->
+                                info.left()
+                                info.add(block.localizedName).left().row()
+                                info.run {
+                                    if (itemDrop.hasEmoji())
+                                        return@run add(itemDrop.emoji())
+                                    else
+                                        return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                }.left()
+                            }.grow()
+                            if (multipliers != null) {
+                                b.add(
+                                    Strings.autoFixed(
+                                        (60f / (max(
+                                            (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
+                                            drillTime.toDouble()
+                                        ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
+                                    ) + StatUnit.perSecond.localized()
+                                )
+                                    .right().pad(10f).padRight(15f).color(Color.lightGray)
+                            }
+                        }.growX().pad(5f)
+                        if (++i % 2 == 0) c.row()
+                    }
+                }.growX().colspan(table.columns)
+            }
+        }
+    }.apply {
+        buildType = Prov {
+            object : Drill.DrillBuild() {
+                override fun offload(item: Item?) {
+                    if (Random.nextFloat() < 0.5f)
+                        super.offload(Items.titanium)
+                    else
+                        super.offload(item)
+                }
+            }
         }
     }.apply {
         requirements(
-            Category.production, ItemStack.with(Items.copper, 80, Items.silicon, 30, iron, 20)
+            Category.production, ItemStack.with(Items.copper, 100, Items.silicon, 50, iron, 20)
         )
-        drillTime = 280f
+        drillTime = (Blocks.laserDrill as Drill).drillTime * 0.6f
         size = 3
         hasPower = true
         tier = 4
