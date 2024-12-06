@@ -9,6 +9,7 @@ import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
 
 class Ferrum : Mod() {
+    lateinit var nickel: Item
     lateinit var iron: Item
     lateinit var pyrite: Item
     lateinit var steel: Item
