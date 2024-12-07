@@ -45,12 +45,12 @@ fun Ferrum.loadDrills() {
     }.apply {
         requirements(Category.production, ItemStack.with(Items.copper, 18, Items.silicon, 10))
         consumePower(0.1f)
-        consumeCoolant(0.06f)
 
         // copied from pneumatic drill
         tier = 3
         drillTime = 400f
         size = 2
+        consumeLiquid(Liquids.water, 0.06f).boost()
     }
 
     pyriteExtractor = object : Drill("pyrite-extractor") {
