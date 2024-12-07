@@ -14,6 +14,7 @@ import mindustry.content.Liquids
 import mindustry.type.Category
 import mindustry.type.Item
 import mindustry.type.ItemStack
+import mindustry.type.Liquid
 import mindustry.ui.Fonts
 import mindustry.ui.Styles
 import mindustry.world.Block
@@ -31,9 +32,18 @@ fun Ferrum.loadDrills() {
         val byproducts = mapOf(Items.coal to pyrite, Items.titanium to iron)
         val byproductChance = 1 / 3f
 
+        private fun getLiquidBoostIntensity(liquid: Liquid): Float =
+            1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
+
         init {
             buildType = Prov {
                 object : DrillBuild() {
+                    override fun updateTile() {
+                        liquidBoostIntensity = getLiquidBoostIntensity(liquids.current())
+                        super.updateTile()
+                        liquidBoostIntensity = getLiquidBoostIntensity(Liquids.water)
+                    }
+
                     override fun offload(item: Item?) {
                         // item is the byproduct if byproductable
                         if (byproducts.containsValue(item) && byproductChance < Random.nextFloat()) super.offload(
@@ -50,12 +60,9 @@ fun Ferrum.loadDrills() {
             returnItem = byproducts[tile?.drop()] ?: return
         }
 
-        override fun setStats() {
-            super.setStats()
-
+        private fun setCustomDrillTierStat() {
             stats.remove(Stat.drillTier)
 
-            // Custom implementation of StatValues.drillables, to show the bypdroducts
             val statValue = StatValue { table: Table ->
                 val drillMultiplier = hardnessDrillMultiplier
                 val filter = Boolf { b: Block ->
@@ -104,18 +111,65 @@ fun Ferrum.loadDrills() {
                     }
                 }.growX().colspan(table.columns)
             }
-
             stats.add(Stat.drillTier, statValue)
+        }
+
+        private fun getRealLiquidBoostMultiplier(liquid: Liquid): Float =
+            getLiquidBoostIntensity(liquid).let { it * it }
+
+        private fun setCustomBoosterStat() {
+            stats.remove(Stat.booster)
+
+            val statValue = StatValue { table: Table ->
+                val unit = "{0}" + StatUnit.timesSpeed.localized()
+                val amount = 0.06f
+                val filter = { liq: Liquid? -> this.consumesLiquid(liq) }
+
+                table.row()
+                table.table { c: Table ->
+                    for (liquid in Vars.content.liquids()) {
+                        if (!filter(liquid)) continue
+
+                        c.table(Styles.grayPanel) { b: Table ->
+                            b.image(liquid.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
+                            b.table { info: Table ->
+                                info.add(liquid.localizedName).left().row()
+                                info.add(Strings.autoFixed(amount * 60f, 2) + StatUnit.perSecond.localized()).left()
+                                    .color(Color.lightGray)
+                            }
+                            b.table { bt: Table ->
+                                bt.right().defaults().padRight(3f).left()
+                                bt.add(
+                                    unit.replace(
+                                        "{0}", "[stat]" + Strings.autoFixed(
+                                            getRealLiquidBoostMultiplier(liquid), 2
+                                        ) + "[lightgray]"
+                                    )
+                                ).pad(5f)
+                            }.right().grow().pad(10f).padRight(15f)
+                        }.growX().pad(5f).row()
+                    }
+                }.growX().colspan(table.columns)
+                table.row()
+            }
+
+            stats.add(Stat.booster, statValue)
+        }
+
+        override fun setStats() {
+            super.setStats()
+            setCustomDrillTierStat()
+            setCustomBoosterStat()
         }
     }.apply {
         requirements(Category.production, ItemStack.with(Items.copper, 18, Items.silicon, 10))
         consumePower(0.1f)
+        consumeCoolant(0.06f).boost()
 
         // copied from pneumatic drill
         tier = 3
         drillTime = 400f
         size = 2
-        consumeLiquid(Liquids.water, 0.06f).boost()
     }
 
     pyriteExtractor = object : Drill("pyrite-extractor") {
