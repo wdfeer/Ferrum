@@ -16,7 +16,12 @@ class Ferrum : Mod() {
     lateinit var h2so4: Liquid
     lateinit var oreIron: OreBlock
 
+    lateinit var smartDrill: Drill
+
+    @Deprecated("Replace with the smart-drill in 1.0")
     lateinit var pyriteExtractor: Drill
+
+    @Deprecated("Replace with the smart-drill in 1.0")
     lateinit var ironExtractor: Drill
 
     lateinit var ironworks: GenericCrafter

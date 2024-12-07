@@ -22,6 +22,37 @@ import kotlin.math.max
 import kotlin.random.Random
 
 fun Ferrum.loadDrills() {
+    smartDrill = object : Drill("smart-drill") {
+        val byproducts = mapOf(Items.coal to pyrite, Items.titanium to iron)
+        val byproductChance = 0.5f
+
+        init {
+            buildType = Prov {
+                object : DrillBuild() {
+                    override fun offload(item: Item?) {
+                        super.offload(byproducts[item].takeIf { Random.nextFloat() < byproductChance } ?: item)
+                    }
+                }
+            }
+        }
+
+        override fun countOre(tile: Tile?) {
+            super.countOre(tile)
+            returnItem = byproducts[tile?.drop()] ?: return
+        }
+
+        // TODO: set custom 'stats' UI
+    }.apply {
+        requirements(Category.production, ItemStack.with(Items.copper, 18, Items.silicon, 10))
+        consumePower(0.1f)
+        consumeCoolant(0.06f)
+
+        // copied from pneumatic drill
+        tier = 3
+        drillTime = 400f
+        size = 2
+    }
+
     pyriteExtractor = object : Drill("pyrite-extractor") {
         override fun canMine(tile: Tile?): Boolean {
             return tile?.drop() == Items.coal
@@ -38,8 +69,7 @@ fun Ferrum.loadDrills() {
             stats.remove(Stat.drillTier)
             stats.add(Stat.drillTier) { table: Table ->
                 val blockData = listOf(
-                    Triple(Blocks.oreCoal, Items.coal, 2f),
-                    Triple(Blocks.oreCoal, pyrite, 1f)
+                    Triple(Blocks.oreCoal, Items.coal, 2f), Triple(Blocks.oreCoal, pyrite, 1f)
                 )
                 val drillMultiplier = hardnessDrillMultiplier
                 val multipliers = drillMultipliers
@@ -56,10 +86,8 @@ fun Ferrum.loadDrills() {
                                 info.left()
                                 info.add(itemDrop.localizedName).left().row()
                                 info.run {
-                                    if (itemDrop.hasEmoji())
-                                        return@run add(itemDrop.emoji())
-                                    else
-                                        return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                    if (itemDrop.hasEmoji()) return@run add(itemDrop.emoji())
+                                    else return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
                                 }.left()
                             }.grow()
                             if (multipliers != null) {
@@ -70,8 +98,7 @@ fun Ferrum.loadDrills() {
                                             drillTime.toDouble()
                                         ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
                                     ) + StatUnit.perSecond.localized()
-                                )
-                                    .right().pad(10f).padRight(15f).color(Color.lightGray)
+                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
                             }
                         }.growX().pad(5f)
                         if (++i % 2 == 0) c.row()
@@ -83,10 +110,8 @@ fun Ferrum.loadDrills() {
         buildType = Prov {
             object : Drill.DrillBuild() {
                 override fun offload(item: Item?) {
-                    if (Random.nextFloat() < 2 / 3f)
-                        super.offload(Items.coal)
-                    else
-                        super.offload(item)
+                    if (Random.nextFloat() < 2 / 3f) super.offload(Items.coal)
+                    else super.offload(item)
                 }
             }
         }
@@ -121,8 +146,7 @@ fun Ferrum.loadDrills() {
             stats.remove(Stat.drillTier)
             stats.add(Stat.drillTier) { table: Table ->
                 val blockData = listOf(
-                    Blocks.oreTitanium to Items.titanium,
-                    Blocks.oreTitanium to iron
+                    Blocks.oreTitanium to Items.titanium, Blocks.oreTitanium to iron
                 )
                 val drillMultiplier = hardnessDrillMultiplier
                 val multipliers = drillMultipliers
@@ -138,10 +162,8 @@ fun Ferrum.loadDrills() {
                                 info.left()
                                 info.add(itemDrop.localizedName).left().row()
                                 info.run {
-                                    if (itemDrop.hasEmoji())
-                                        return@run add(itemDrop.emoji())
-                                    else
-                                        return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                    if (itemDrop.hasEmoji()) return@run add(itemDrop.emoji())
+                                    else return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
                                 }.left()
                             }.grow()
                             if (multipliers != null) {
@@ -152,8 +174,7 @@ fun Ferrum.loadDrills() {
                                             drillTime.toDouble()
                                         ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
                                     ) + StatUnit.perSecond.localized()
-                                )
-                                    .right().pad(10f).padRight(15f).color(Color.lightGray)
+                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
                             }
                         }.growX().pad(5f)
                         if (++i % 2 == 0) c.row()
@@ -165,10 +186,8 @@ fun Ferrum.loadDrills() {
         buildType = Prov {
             object : Drill.DrillBuild() {
                 override fun offload(item: Item?) {
-                    if (Random.nextFloat() < 0.5f)
-                        super.offload(Items.titanium)
-                    else
-                        super.offload(item)
+                    if (Random.nextFloat() < 0.5f) super.offload(Items.titanium)
+                    else super.offload(item)
                 }
             }
         }
