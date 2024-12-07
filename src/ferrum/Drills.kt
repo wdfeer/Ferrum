@@ -29,13 +29,17 @@ import kotlin.random.Random
 fun Ferrum.loadDrills() {
     smartDrill = object : Drill("smart-drill") {
         val byproducts = mapOf(Items.coal to pyrite, Items.titanium to iron)
-        val byproductChance = 0.5f
+        val byproductChance = 1 / 3f
 
         init {
             buildType = Prov {
                 object : DrillBuild() {
                     override fun offload(item: Item?) {
-                        super.offload(byproducts[item].takeIf { Random.nextFloat() < byproductChance } ?: item)
+                        // item is the byproduct if byproductable
+                        if (byproducts.containsValue(item) && byproductChance < Random.nextFloat())
+                            super.offload(byproducts.entries.first { it.value == item }.key)
+                        else
+                            super.offload(item)
                     }
                 }
             }
