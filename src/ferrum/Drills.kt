@@ -36,10 +36,10 @@ fun Ferrum.loadDrills() {
                 object : DrillBuild() {
                     override fun offload(item: Item?) {
                         // item is the byproduct if byproductable
-                        if (byproducts.containsValue(item) && byproductChance < Random.nextFloat())
-                            super.offload(byproducts.entries.first { it.value == item }.key)
-                        else
-                            super.offload(item)
+                        if (byproducts.containsValue(item) && byproductChance < Random.nextFloat()) super.offload(
+                            byproducts.entries.first { it.value == item }.key
+                        )
+                        else super.offload(item)
                     }
                 }
             }
@@ -79,12 +79,15 @@ fun Ferrum.loadDrills() {
                                     append(block.localizedName)
                                     append(byproducts[block.itemDrop]?.let { "+" } ?: return@buildString)
                                 }).left().row()
-                                info.add(block.itemDrop.emoji()).left()
-                                byproducts[block.itemDrop]?.let {
-                                    if (it.hasEmoji()) info.add(it.emoji())
-                                    else info.image(it.uiIcon)
-                                        .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
-                                }?.left()
+                                info.table { itemTable ->
+                                    itemTable.add(block.itemDrop.emoji())
+                                    byproducts[block.itemDrop]?.let {
+                                        if (it.hasEmoji()) itemTable.add(it.emoji())
+                                        else itemTable.image(it.uiIcon)
+                                            .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                    }?.left()
+                                }.left()
+
                             }.grow()
                             if (multipliers != null) {
                                 b.add(
