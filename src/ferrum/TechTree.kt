@@ -3,10 +3,10 @@ package ferrum
 import arc.struct.Seq
 import mindustry.content.Blocks
 import mindustry.content.Items
-import mindustry.content.SectorPresets
 import mindustry.content.TechTree.TechNode
 import mindustry.ctype.UnlockableContent
-import mindustry.game.Objectives.*
+import mindustry.game.Objectives.Produce
+import mindustry.game.Objectives.Research
 import mindustry.type.Item
 import mindustry.type.ItemStack
 
@@ -23,20 +23,6 @@ fun Ferrum.modifyFerrumTechTree() {
     steel.setSelfProduceTechNode(iron)
     so2.setSelfProduceTechNode(pyrite)
     h2so4.setSelfProduceTechNode(so2)
-
-    // Drills
-    pyriteExtractor.apply {
-        researchCost = ItemStack.with(Items.copper, 1000, Items.lead, 500, Items.graphite, 200)
-        alwaysUnlocked = false
-        techNode = TechNode(Blocks.mechanicalDrill.techNode, this, researchCost).also {
-            it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest))
-        }
-    }
-    ironExtractor.apply {
-        researchCost = ItemStack.with(Items.copper, 2000, iron, 500, Items.silicon, 500)
-        alwaysUnlocked = false
-        techNode = TechNode(pyriteExtractor.techNode, this, researchCost)
-    }
 
     // Crafters
     ironworks.apply {
@@ -125,7 +111,7 @@ fun Ferrum.modifyVanillaTechTree() {
 
     Blocks.steamGenerator.addReq(150, iron)
     Blocks.laserDrill.apply {
-        techNode.parent = pyriteExtractor.techNode
+        techNode.parent = smartDrill.techNode
         addReq(50, iron)
     }
     Blocks.thoriumReactor.addReq(500, iron)
