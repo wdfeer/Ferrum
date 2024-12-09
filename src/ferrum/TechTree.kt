@@ -3,10 +3,10 @@ package ferrum
 import arc.struct.Seq
 import mindustry.content.Blocks
 import mindustry.content.Items
+import mindustry.content.SectorPresets
 import mindustry.content.TechTree.TechNode
 import mindustry.ctype.UnlockableContent
-import mindustry.game.Objectives.Produce
-import mindustry.game.Objectives.Research
+import mindustry.game.Objectives.*
 import mindustry.type.Item
 import mindustry.type.ItemStack
 
@@ -23,6 +23,15 @@ fun Ferrum.modifyFerrumTechTree() {
     steel.setSelfProduceTechNode(iron)
     so2.setSelfProduceTechNode(pyrite)
     h2so4.setSelfProduceTechNode(so2)
+
+    // Drills
+    smartDrill.apply {
+        researchCost = Blocks.pneumaticDrill.researchCost.plus(ItemStack(Items.silicon, 50))
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost).also {
+            it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest), Research(Items.silicon))
+        }
+    }
 
     // Crafters
     ironworks.apply {
@@ -97,8 +106,8 @@ fun Ferrum.modifyVanillaTechTree() {
     fun UnlockableContent.addReq(amount: Int, item: Item) {
         techNode.apply {
             requirements = requirements.plus(ItemStack(item, amount))
-            if (finishedRequirements.size < requirements.size)
-                finishedRequirements = finishedRequirements.plus(ItemStack(item, 0))
+            if (finishedRequirements.size < requirements.size) finishedRequirements =
+                finishedRequirements.plus(ItemStack(item, 0))
         }
     }
 
