@@ -100,6 +100,7 @@ fun Ferrum.modifyVanillaContent() {
     }
 
     modifyVanillaTechTree()
+    byproductifyVanillaDrills()
 }
 
 private fun Block.addRequirement(item: Item, amount: Int) {

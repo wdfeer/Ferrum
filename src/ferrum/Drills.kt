@@ -24,10 +24,19 @@ import mindustry.world.meta.StatValue
 import kotlin.math.max
 import kotlin.random.Random
 
+private data class Byproduct(val item: Item, val chance: Float) {
+    fun roll(): Item? {
+        return takeIf { Random.nextFloat() < chance }?.item
+    }
+}
+
+private val Ferrum.byproducts
+    get() = mapOf(
+        Items.coal to Byproduct(pyrite, 1 / 3f), Items.titanium to Byproduct(iron, 1 / 2f)
+    )
+
 fun Ferrum.loadDrills() {
     smartDrill = object : Drill("smart-drill") {
-        val byproducts = mapOf(Items.coal to (pyrite to 1 / 3f), Items.titanium to (iron to 1 / 2f))
-
         private fun getLiquidBoostIntensity(liquid: Liquid): Float =
             1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
 
@@ -41,9 +50,7 @@ fun Ferrum.loadDrills() {
                     }
 
                     override fun offload(item: Item?) {
-                        val byproduct: Item? = byproducts[item]?.let { (result, chance) ->
-                            if (Random.nextFloat() < chance) result else null
-                        }
+                        val byproduct: Item? = byproducts[item]?.roll()
                         super.offload(byproduct ?: item)
                     }
                 }
@@ -78,7 +85,7 @@ fun Ferrum.loadDrills() {
                                 }).left().row()
                                 info.table { itemTable ->
                                     itemTable.add(block.itemDrop.emoji())
-                                    byproducts[block.itemDrop]?.first?.let {
+                                    byproducts[block.itemDrop]?.item?.let {
                                         if (it.hasEmoji()) itemTable.add(it.emoji())
                                         else itemTable.image(it.uiIcon)
                                             .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
@@ -161,4 +168,18 @@ fun Ferrum.loadDrills() {
         drillTime = 400f
         size = 2
     }
+}
+
+fun Ferrum.byproductifyVanillaDrills() {
+    fun Drill.addByproducts() {
+        buildType = Prov {
+            object : Drill.DrillBuild() {
+                override fun offload(item: Item?) {
+                    super.offload(byproducts[item]?.let { Byproduct(it.item, it.chance * it.chance) }?.roll() ?: item)
+                }
+            }
+        }
+    }
+
+    Vars.content.blocks().filterIsInstance<Drill>().filter { it.isVanilla }.forEach { it.apply(Drill::addByproducts) }
 }
