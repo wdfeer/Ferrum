@@ -26,7 +26,7 @@ fun Ferrum.modifyFerrumTechTree() {
 
     // Drills
     smartDrill.apply {
-        researchCost = Blocks.pneumaticDrill.researchCost.plus(ItemStack(Items.silicon, 50))
+        researchCost = ItemStack.with(Items.copper, 300, Items.silicon, 50)
         alwaysUnlocked = false
         techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost).also {
             it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest), Research(Items.silicon))
