@@ -7,8 +7,6 @@ import arc.scene.ui.layout.Table
 import arc.util.Scaling
 import arc.util.Strings
 import mindustry.Vars
-import mindustry.content.Blocks
-import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.Liquids
 import mindustry.type.Category
@@ -18,7 +16,6 @@ import mindustry.type.Liquid
 import mindustry.ui.Fonts
 import mindustry.ui.Styles
 import mindustry.world.Block
-import mindustry.world.Tile
 import mindustry.world.blocks.environment.Floor
 import mindustry.world.blocks.production.Drill
 import mindustry.world.meta.Stat
@@ -29,8 +26,7 @@ import kotlin.random.Random
 
 fun Ferrum.loadDrills() {
     smartDrill = object : Drill("smart-drill") {
-        val byproducts = mapOf(Items.coal to pyrite, Items.titanium to iron)
-        val byproductChance = 1 / 3f
+        val byproducts = mapOf(Items.coal to (pyrite to 1 / 3f), Items.titanium to (iron to 1 / 2f))
 
         private fun getLiquidBoostIntensity(liquid: Liquid): Float =
             1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
@@ -45,19 +41,13 @@ fun Ferrum.loadDrills() {
                     }
 
                     override fun offload(item: Item?) {
-                        // item is the byproduct if byproductable
-                        if (byproducts.containsValue(item) && byproductChance < Random.nextFloat()) super.offload(
-                            byproducts.entries.first { it.value == item }.key
-                        )
-                        else super.offload(item)
+                        val byproduct: Item? = byproducts[item]?.let { (result, chance) ->
+                            if (Random.nextFloat() < chance) result else null
+                        }
+                        super.offload(byproduct ?: item)
                     }
                 }
             }
-        }
-
-        override fun countOre(tile: Tile?) {
-            super.countOre(tile)
-            returnItem = byproducts[tile?.drop()] ?: return
         }
 
         private fun setCustomDrillTierStat() {
@@ -88,7 +78,7 @@ fun Ferrum.loadDrills() {
                                 }).left().row()
                                 info.table { itemTable ->
                                     itemTable.add(block.itemDrop.emoji())
-                                    byproducts[block.itemDrop]?.let {
+                                    byproducts[block.itemDrop]?.first?.let {
                                         if (it.hasEmoji()) itemTable.add(it.emoji())
                                         else itemTable.image(it.uiIcon)
                                             .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
