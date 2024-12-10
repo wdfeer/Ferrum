@@ -168,6 +168,96 @@ fun Ferrum.loadDrills() {
         drillTime = 400f
         size = 2
     }
+
+    traceDrill = object : Drill("trace-drill") {
+        private fun getLiquidBoostIntensity(liquid: Liquid): Float =
+            1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
+
+        init {
+            buildType = Prov {
+                object : DrillBuild() {
+                    override fun updateTile() {
+                        liquidBoostIntensity = getLiquidBoostIntensity(liquids.current())
+                        super.updateTile()
+                        liquidBoostIntensity = getLiquidBoostIntensity(Liquids.water)
+                    }
+
+                    override fun offload(item: Item?) {
+                        val byproduct: Item? = byproducts[item]?.roll()
+                        super.offload(byproduct ?: item)
+                    }
+                }
+            }
+        }
+
+        private fun setCustomDrillTierStat() {
+            stats.remove(Stat.drillTier)
+
+            val statValue = StatValue { table: Table ->
+                val drillMultiplier = hardnessDrillMultiplier
+                val filter = Boolf { b: Block ->
+                    b is Floor && !b.wallOre && b.itemDrop != null && b.itemDrop.hardness <= tier && b.itemDrop !== blockedItem && (Vars.indexer.isBlockPresent(
+                        b
+                    ) || Vars.state.isMenu)
+                }
+                val multipliers = drillMultipliers
+
+                table.row()
+                table.table { c: Table ->
+                    var i = 0
+                    for (block in Vars.content.blocks()) {
+                        if (!filter.get(block)) continue
+
+                        c.table(Styles.grayPanel) { b: Table ->
+                            b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
+                            b.table { info: Table ->
+                                info.left()
+                                info.add(buildString {
+                                    append(block.localizedName)
+                                    append(byproducts[block.itemDrop]?.let { "+" } ?: return@buildString)
+                                }).left().row()
+                                info.table { itemTable ->
+                                    itemTable.add(block.itemDrop.emoji())
+                                    byproducts[block.itemDrop]?.item?.let {
+                                        if (it.hasEmoji()) itemTable.add(it.emoji())
+                                        else itemTable.image(it.uiIcon)
+                                            .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                    }?.left()
+                                }.left()
+
+                            }.grow()
+                            if (multipliers != null) {
+                                b.add(
+                                    Strings.autoFixed(
+                                        (60f / (max(
+                                            (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
+                                            drillTime.toDouble()
+                                        ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
+                                    ) + StatUnit.perSecond.localized()
+                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
+                            }
+                        }.growX().pad(5f)
+                        if (++i % 2 == 0) c.row()
+                    }
+                }.growX().colspan(table.columns)
+            }
+            stats.add(Stat.drillTier, statValue)
+        }
+
+        private fun getRealLiquidBoostMultiplier(liquid: Liquid): Float =
+            getLiquidBoostIntensity(liquid).let { it * it }
+
+        override fun setStats() {
+            super.setStats()
+            setCustomDrillTierStat()
+        }
+    }.apply {
+        requirements(Category.production, ItemStack.with(Items.titanium, 120, Items.silicon, 90, Items.thorium, 40))
+        consumePower(3.5f)
+        consumeLiquid(Liquids.cryofluid, 0.06f).boost()
+	
+	// TODO: copy stuff from the blast drill
+    }
 }
 
 fun Ferrum.byproductifyVanillaDrills() {

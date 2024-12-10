@@ -17,6 +17,7 @@ class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
 
     lateinit var smartDrill: Drill
+    lateinit var traceDrill: Drill
 
     lateinit var ironworks: GenericCrafter
     lateinit var steelForge: GenericCrafter

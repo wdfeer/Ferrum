@@ -32,6 +32,13 @@ fun Ferrum.modifyFerrumTechTree() {
             it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest), Research(Items.silicon))
         }
     }
+    traceDrill.apply {
+        researchCost = ItemStack.with(Items.copper, 2500, Items.silicon, 1000, Items.thorium, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(smartDrill.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(Items.titanium), Research(Items.thorium))
+        }
+    }
 
     // Crafters
     ironworks.apply {
