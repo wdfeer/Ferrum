@@ -1,7 +1,9 @@
 package ferrum
 
 import arc.util.Log
+import arc.util.Log.LogLevel
 import arc.util.Time
+import kotlinx.coroutines.*
 import mindustry.Vars
 import mindustry.content.Blocks
 import mindustry.content.Fx
@@ -19,7 +21,6 @@ import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
-import kotlin.time.TimeSource
 import kotlin.time.measureTime
 
 fun Ferrum.loadTurrets() {
@@ -310,23 +311,31 @@ fun Ferrum.loadTurrets() {
     }
 
     gustav = object : ItemTurret("gustav") {
+        @Volatile
         var placeable: Boolean = true
-        var lastPlaceableComputeTime: TimeSource.Monotonic.ValueTimeMark = TimeSource.Monotonic.markNow()
+        var shouldRecomputePlaceable: Boolean = false
         fun computePlaceable() {
             measureTime {
+                // Can get expensive
                 placeable = Vars.world.tiles.none { it.blockID() == id }
-            }.takeIf { it.inWholeMilliseconds > 30 }?.let {
-                Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
+            }.takeIf { it.inWholeMilliseconds > 15 }?.let {
+                Log.log(LogLevel.debug, "Took too long to compute whether gustav is placeable! ($it)")
             }
-
-            lastPlaceableComputeTime = TimeSource.Monotonic.markNow()
         }
 
-        val computeIntervalMillis = 2500
-
+        val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+        var job: Job? = null
         override fun isPlaceable(): Boolean {
-            val timeSinceCompute = TimeSource.Monotonic.markNow() - lastPlaceableComputeTime
-            if (timeSinceCompute.inWholeMilliseconds > computeIntervalMillis) computePlaceable()
+            // Schedule recomputing every second frame
+            shouldRecomputePlaceable = !shouldRecomputePlaceable
+
+            // Compute in parallel to prevent lag
+            if (shouldRecomputePlaceable && job?.isActive != true) {
+                job?.cancel()
+                job = coroutineScope.launch {
+                    computePlaceable()
+                }
+            }
 
             return super.isPlaceable() && placeable
         }
