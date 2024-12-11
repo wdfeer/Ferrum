@@ -2,7 +2,7 @@
 Mindustry mod written in Kotlin revolving around iron and its applications.
 Based on reality, moderately simplified for simple-minded gamers.
 
-## Features:
+## Features: (v1.0.1)
 
 - Many changes to vanilla progression and block requirements, including tech tree changes
 
@@ -26,8 +26,9 @@ Based on reality, moderately simplified for simple-minded gamers.
 
 - _Gustav_  - massive base-demolishing gun, only 1 may be built per map, can only be operated manually or via logic
 
-Possible new features include:
+**Possible new features include:**
 - Magnetic items or blocks based on the ferromagnetic properties of Iron.
-- More _unique_ blocks, which can
+- New units, produced with iron or steel.
+- More cool guns.
 
 _Note: no erekir support_
