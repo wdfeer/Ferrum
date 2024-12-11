@@ -3,7 +3,9 @@ package ferrum
 import arc.util.Log
 import arc.util.Log.LogLevel
 import arc.util.Time
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mindustry.Vars
 import mindustry.content.Blocks
 import mindustry.content.Fx
@@ -323,17 +325,21 @@ fun Ferrum.loadTurrets() {
             }
         }
 
-        val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-        var job: Job? = null
+        @Volatile
+        var computing: Boolean = false
         override fun isPlaceable(): Boolean {
             // Schedule recomputing every second frame
             shouldRecomputePlaceable = !shouldRecomputePlaceable
 
-            // Compute in parallel to prevent lag
-            if (shouldRecomputePlaceable && job?.isActive != true) {
-                job?.cancel()
-                job = coroutineScope.launch {
-                    computePlaceable()
+            if (shouldRecomputePlaceable && !computing) {
+                // Compute in parallel to prevent lag
+                computing = true
+                CoroutineScope(Dispatchers.Default).launch {
+                    try {
+                        computePlaceable()
+                    } finally {
+                        computing = false
+                    }
                 }
             }
 
