@@ -7,6 +7,7 @@ import arc.scene.ui.layout.Table
 import arc.util.Scaling
 import arc.util.Strings
 import mindustry.Vars
+import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.Liquids
 import mindustry.type.Category
@@ -170,29 +171,10 @@ fun Ferrum.loadDrills() {
     }
 
     traceDrill = object : Drill("trace-drill") {
-        private fun getLiquidBoostIntensity(liquid: Liquid): Float =
-            1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
+        override fun setStats() {
+            super.setStats()
 
-        init {
-            buildType = Prov {
-                object : DrillBuild() {
-                    override fun updateTile() {
-                        liquidBoostIntensity = getLiquidBoostIntensity(liquids.current())
-                        super.updateTile()
-                        liquidBoostIntensity = getLiquidBoostIntensity(Liquids.water)
-                    }
-
-                    override fun offload(item: Item?) {
-                        val byproduct: Item? = byproducts[item]?.roll()
-                        super.offload(byproduct ?: item)
-                    }
-                }
-            }
-        }
-
-        private fun setCustomDrillTierStat() {
             stats.remove(Stat.drillTier)
-
             val statValue = StatValue { table: Table ->
                 val drillMultiplier = hardnessDrillMultiplier
                 val filter = Boolf { b: Block ->
@@ -243,20 +225,24 @@ fun Ferrum.loadDrills() {
             }
             stats.add(Stat.drillTier, statValue)
         }
-
-        private fun getRealLiquidBoostMultiplier(liquid: Liquid): Float =
-            getLiquidBoostIntensity(liquid).let { it * it }
-
-        override fun setStats() {
-            super.setStats()
-            setCustomDrillTierStat()
-        }
     }.apply {
-        requirements(Category.production, ItemStack.with(Items.titanium, 120, Items.silicon, 90, Items.thorium, 40))
-        consumePower(3.5f)
-        consumeLiquid(Liquids.cryofluid, 0.06f).boost()
-	
-	// TODO: copy stuff from the blast drill
+        requirements(Category.production, ItemStack.with(Items.silicon, 125, Items.titanium, 50, Items.thorium, steel, 50))
+        consumePower(4.5f)
+        consumeLiquid(Liquids.cryofluid, 0.1f).boost()
+        drillTime = 210f
+
+        // copied from vanilla blast drill
+        size = 4
+        drawRim = true
+        hasPower = true
+        tier = 5
+        updateEffect = Fx.pulverizeRed
+        updateEffectChance = 0.03f
+        drillEffect = Fx.mineHuge
+        rotateSpeed = 6f
+        warmupSpeed = 0.01f
+        itemCapacity = 20
+        liquidBoostIntensity = 1.8f
     }
 }
 
