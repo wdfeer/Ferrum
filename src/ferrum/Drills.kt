@@ -9,6 +9,7 @@ import arc.util.Strings
 import mindustry.Vars
 import mindustry.content.Items
 import mindustry.content.Liquids
+import mindustry.content.Planets
 import mindustry.type.Category
 import mindustry.type.Item
 import mindustry.type.ItemStack
@@ -181,5 +182,7 @@ fun Ferrum.byproductifyVanillaDrills() {
         }
     }
 
-    Vars.content.blocks().filterIsInstance<Drill>().filter { it.isVanilla }.forEach { it.apply(Drill::addByproducts) }
+    Vars.content.blocks().filterIsInstance<Drill>().filter {
+        it.isVanilla && it.isVisibleOn(Planets.serpulo)
+    }.forEach { it.apply(Drill::addByproducts) }
 }
