@@ -27,13 +27,15 @@ import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.random.Random
 
+private fun <T> T.takeIf(chance: Float): T? = takeIf { Random.nextFloat() < chance }
+
 private data class Byproduct(val item: Item, val chance: Float) {
     fun roll(): Item? {
-        return takeIf { Random.nextFloat() < chance }?.item
+        return takeIf(chance)?.item
     }
 
     fun roll(updateChance: (Float) -> Float): Item? {
-        return takeIf { Random.nextFloat() < updateChance(chance) }?.item
+        return takeIf(updateChance(chance))?.item
     }
 }
 
@@ -43,7 +45,7 @@ private val Ferrum.byproducts
     )
 
 fun Ferrum.loadDrills() {
-    fun Drill.getCustomDrillTierStat(): StatValue {
+    fun Drill.getCustomDrillTierStat(byproducts: Map<Item, Byproduct> = this@loadDrills.byproducts): StatValue {
         return StatValue { table: Table ->
             val drillMultiplier = hardnessDrillMultiplier
             val filter = Boolf { b: Block ->
@@ -180,14 +182,16 @@ fun Ferrum.loadDrills() {
     }
 
     traceDrill = object : Drill("trace-drill") {
+        val advancedByproducts: Map<Item, Byproduct> = this@loadDrills.byproducts.mapValues {
+            // increase chance
+            it.value.copy(chance = sqrt(it.value.chance))
+        } + mapOf(Items.sand to Byproduct(Items.titanium, 1 / 9f), Items.copper to Byproduct(iron, 1 / 5f))
+
         init {
             buildType = Prov {
                 object : DrillBuild() {
                     override fun offload(item: Item?) {
-                        val byproduct: Item? = byproducts[item]?.roll {
-                            // increased chance
-                            sqrt(it)
-                        }
+                        val byproduct: Item? = advancedByproducts[item]?.roll()
                         super.offload(byproduct ?: item)
                     }
                 }
@@ -198,7 +202,7 @@ fun Ferrum.loadDrills() {
             super.setStats()
 
             stats.remove(Stat.drillTier)
-            stats.add(Stat.drillTier, getCustomDrillTierStat())
+            stats.add(Stat.drillTier, getCustomDrillTierStat(advancedByproducts))
         }
     }.apply {
         requirements(
