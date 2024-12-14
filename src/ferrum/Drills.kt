@@ -17,6 +17,7 @@ import mindustry.type.Liquid
 import mindustry.ui.Fonts
 import mindustry.ui.Styles
 import mindustry.world.Block
+import mindustry.world.Tile
 import mindustry.world.blocks.environment.Floor
 import mindustry.world.blocks.production.Drill
 import mindustry.world.meta.Stat
@@ -171,6 +172,15 @@ fun Ferrum.loadDrills() {
     }
 
     traceDrill = object : Drill("trace-drill") {
+        override fun countOre(tile: Tile?) {
+            super.countOre(tile)
+            returnItem = byproducts[tile?.drop()]?.item ?: return
+        }
+
+        override fun canMine(tile: Tile?): Boolean {
+            return super.canMine(tile) && byproducts.contains(tile?.drop())
+        }
+
         override fun setStats() {
             super.setStats()
 
@@ -226,7 +236,9 @@ fun Ferrum.loadDrills() {
             stats.add(Stat.drillTier, statValue)
         }
     }.apply {
-        requirements(Category.production, ItemStack.with(Items.silicon, 125, Items.titanium, 50, Items.thorium, steel, 50))
+        requirements(
+            Category.production, ItemStack.with(Items.silicon, 125, Items.titanium, 50, Items.thorium, steel, 50)
+        )
         consumePower(4.5f)
         consumeLiquid(Liquids.cryofluid, 0.1f).boost()
         drillTime = 210f
