@@ -18,18 +18,22 @@ import mindustry.type.Liquid
 import mindustry.ui.Fonts
 import mindustry.ui.Styles
 import mindustry.world.Block
-import mindustry.world.Tile
 import mindustry.world.blocks.environment.Floor
 import mindustry.world.blocks.production.Drill
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatUnit
 import mindustry.world.meta.StatValue
 import kotlin.math.max
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 private data class Byproduct(val item: Item, val chance: Float) {
     fun roll(): Item? {
         return takeIf { Random.nextFloat() < chance }?.item
+    }
+
+    fun roll(updateChance: (Float) -> Float): Item? {
+        return takeIf { Random.nextFloat() < updateChance(chance) }?.item
     }
 }
 
@@ -39,6 +43,57 @@ private val Ferrum.byproducts
     )
 
 fun Ferrum.loadDrills() {
+    fun Drill.getCustomDrillTierStat(): StatValue {
+        return StatValue { table: Table ->
+            val drillMultiplier = hardnessDrillMultiplier
+            val filter = Boolf { b: Block ->
+                b is Floor && !b.wallOre && b.itemDrop != null && b.itemDrop.hardness <= tier && b.itemDrop !== blockedItem && (Vars.indexer.isBlockPresent(
+                    b
+                ) || Vars.state.isMenu)
+            }
+            val multipliers = drillMultipliers
+
+            table.row()
+            table.table { c: Table ->
+                var i = 0
+                for (block in Vars.content.blocks()) {
+                    if (!filter.get(block)) continue
+
+                    c.table(Styles.grayPanel) { b: Table ->
+                        b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
+                        b.table { info: Table ->
+                            info.left()
+                            info.add(buildString {
+                                append(block.localizedName)
+                                append(byproducts[block.itemDrop]?.let { "+" } ?: return@buildString)
+                            }).left().row()
+                            info.table { itemTable ->
+                                itemTable.add(block.itemDrop.emoji())
+                                byproducts[block.itemDrop]?.item?.let {
+                                    if (it.hasEmoji()) itemTable.add(it.emoji())
+                                    else itemTable.image(it.uiIcon)
+                                        .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
+                                }?.left()
+                            }.left()
+
+                        }.grow()
+                        if (multipliers != null) {
+                            b.add(
+                                Strings.autoFixed(
+                                    (60f / (max(
+                                        (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
+                                        drillTime.toDouble()
+                                    ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
+                                ) + StatUnit.perSecond.localized()
+                            ).right().pad(10f).padRight(15f).color(Color.lightGray)
+                        }
+                    }.growX().pad(5f)
+                    if (++i % 2 == 0) c.row()
+                }
+            }.growX().colspan(table.columns)
+        }
+    }
+
     smartDrill = object : Drill("smart-drill") {
         private fun getLiquidBoostIntensity(liquid: Liquid): Float =
             1 + 0.6f * liquid.heatCapacity / Liquids.water.heatCapacity
@@ -62,56 +117,7 @@ fun Ferrum.loadDrills() {
 
         private fun setCustomDrillTierStat() {
             stats.remove(Stat.drillTier)
-
-            val statValue = StatValue { table: Table ->
-                val drillMultiplier = hardnessDrillMultiplier
-                val filter = Boolf { b: Block ->
-                    b is Floor && !b.wallOre && b.itemDrop != null && b.itemDrop.hardness <= tier && b.itemDrop !== blockedItem && (Vars.indexer.isBlockPresent(
-                        b
-                    ) || Vars.state.isMenu)
-                }
-                val multipliers = drillMultipliers
-
-                table.row()
-                table.table { c: Table ->
-                    var i = 0
-                    for (block in Vars.content.blocks()) {
-                        if (!filter.get(block)) continue
-
-                        c.table(Styles.grayPanel) { b: Table ->
-                            b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
-                            b.table { info: Table ->
-                                info.left()
-                                info.add(buildString {
-                                    append(block.localizedName)
-                                    append(byproducts[block.itemDrop]?.let { "+" } ?: return@buildString)
-                                }).left().row()
-                                info.table { itemTable ->
-                                    itemTable.add(block.itemDrop.emoji())
-                                    byproducts[block.itemDrop]?.item?.let {
-                                        if (it.hasEmoji()) itemTable.add(it.emoji())
-                                        else itemTable.image(it.uiIcon)
-                                            .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
-                                    }?.left()
-                                }.left()
-
-                            }.grow()
-                            if (multipliers != null) {
-                                b.add(
-                                    Strings.autoFixed(
-                                        (60f / (max(
-                                            (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
-                                            drillTime.toDouble()
-                                        ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
-                                    ) + StatUnit.perSecond.localized()
-                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
-                            }
-                        }.growX().pad(5f)
-                        if (++i % 2 == 0) c.row()
-                    }
-                }.growX().colspan(table.columns)
-            }
-            stats.add(Stat.drillTier, statValue)
+            stats.add(Stat.drillTier, getCustomDrillTierStat())
         }
 
         private fun getRealLiquidBoostMultiplier(liquid: Liquid): Float =
@@ -173,56 +179,26 @@ fun Ferrum.loadDrills() {
     }
 
     traceDrill = object : Drill("trace-drill") {
-        override fun countOre(tile: Tile?) {
-            super.countOre(tile)
-            returnItem = byproducts[returnItem]?.item ?: return
-        }
-
-        override fun canMine(tile: Tile?): Boolean {
-            return byproducts.contains(tile?.drop())
+        init {
+            buildType = Prov {
+                object : DrillBuild() {
+                    override fun offload(item: Item?) {
+                        val byproduct: Item? = byproducts[item]?.roll {
+                            // increased chance
+                            sqrt(it)
+                        }
+                        super.offload(byproduct ?: item)
+                    }
+                }
+            }
         }
 
         override fun setStats() {
             super.setStats()
 
             stats.remove(Stat.drillTier)
-            stats.add(Stat.drillTier) { table: Table ->
-                val blockData = listOf(
-                    Blocks.oreCoal to pyrite, Blocks.oreTitanium to iron
-                )
-                val drillMultiplier = hardnessDrillMultiplier
-                val multipliers = drillMultipliers
-                table.row()
-                table.table { c: Table ->
-                    var i = 0
-                    for (data in blockData) {
-                        val block = data.first
-                        val itemDrop = data.second
-                        c.table(Styles.grayPanel) { b: Table ->
-                            b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
-                            b.table { info: Table ->
-                                info.left()
-                                info.add(block.localizedName).left().row()
-                                info.run {
-                                    if (itemDrop.hasEmoji()) return@run add(itemDrop.emoji())
-                                    else return@run image(itemDrop.uiIcon).size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
-                                }.left()
-                            }.grow()
-                            if (multipliers != null) {
-                                b.add(
-                                    Strings.autoFixed(
-                                        (60f / (max(
-                                            (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
-                                            drillTime.toDouble()
-                                        ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
-                                    ) + StatUnit.perSecond.localized()
-                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
-                            }
-                        }.growX().pad(5f)
-                        if (++i % 2 == 0) c.row()
-                    }
-                }.growX().colspan(table.columns)
-            }
+            val statValue = getCustomDrillTierStat()
+            stats.add(Stat.drillTier, statValue)
         }
     }.apply {
         requirements(
@@ -230,7 +206,7 @@ fun Ferrum.loadDrills() {
         )
         consumePower(4.5f)
         consumeLiquid(Liquids.cryofluid, 0.1f).boost()
-        drillTime = (Blocks.blastDrill as Drill).drillTime * 1.5f
+        drillTime = (Blocks.blastDrill as Drill).drillTime * 1.1f
         heatColor = Color.cyan.saturation(0.25f)
         warmupSpeed = 0.005f
 
@@ -253,7 +229,10 @@ fun Ferrum.byproductifyVanillaDrills() {
         buildType = Prov {
             object : Drill.DrillBuild() {
                 override fun offload(item: Item?) {
-                    super.offload(byproducts[item]?.let { Byproduct(it.item, it.chance * it.chance) }?.roll() ?: item)
+                    super.offload(byproducts[item]?.roll {
+                        // lowered chance
+                        it * it
+                    } ?: item)
                 }
             }
         }
