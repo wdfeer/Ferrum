@@ -13,11 +13,14 @@ fun Ferrum.loadItems() {
 
     iron = Item("iron", Color.valueOf("7f786e")).apply {
         hardness = 3
-        cost = 1f
     }
 
     steel = Item("steel", Color.valueOf("#7f7f7f")).apply {
         cost = 1.2f
+    }
+
+    mischmetal = Item("mischmetal", Color.valueOf("698c69")).apply {
+        cost = 2f
     }
 
     oreIron = OreBlock(iron)

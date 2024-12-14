@@ -185,7 +185,11 @@ fun Ferrum.loadDrills() {
         val advancedByproducts: Map<Item, Byproduct> = this@loadDrills.byproducts.mapValues {
             // increase chance
             it.value.copy(chance = sqrt(it.value.chance))
-        } + mapOf(Items.sand to Byproduct(Items.titanium, 1 / 9f), Items.copper to Byproduct(iron, 1 / 5f))
+        } + mapOf(
+            Items.sand to Byproduct(Items.titanium, 1 / 9f),
+            Items.copper to Byproduct(iron, 1 / 5f),
+            Items.thorium to Byproduct(mischmetal, 2 / 5f)
+        )
 
         init {
             buildType = Prov {

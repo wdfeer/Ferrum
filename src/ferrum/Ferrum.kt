@@ -12,6 +12,7 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
     lateinit var steel: Item
+    lateinit var mischmetal: Item
     lateinit var so2: Liquid
     lateinit var h2so4: Liquid
     lateinit var oreIron: OreBlock
