@@ -108,6 +108,15 @@ fun Ferrum.modifyFerrumTechTree() {
             it.objectives = Seq.with(Research(steel))
         }
     }
+
+    // Other
+    ceriumOverdriver.apply {
+        researchCost = ItemStack.with(Items.lead, 6000, Items.silicon, 2000, Items.phaseFabric, 1000, steel, 2000, mischmetal, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.overdriveDome.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(mischmetal))
+        }
+    }
 }
 
 fun Ferrum.modifyVanillaTechTree() {

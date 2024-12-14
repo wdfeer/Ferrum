@@ -23,6 +23,7 @@ fun Ferrum.loadBlocks() {
         size = 2
         range /= 2f
         speedBoost += 0.5f
+        useTime /= 3f
         consumeItem(mischmetal).boost()
     }
 }
