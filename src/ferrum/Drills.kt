@@ -78,12 +78,13 @@ fun Ferrum.loadDrills() {
 
                         }.grow()
                         if (multipliers != null) {
+                            val area = size * size
                             b.add(
                                 Strings.autoFixed(
                                     (60f / (max(
                                         (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
                                         drillTime.toDouble()
-                                    ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
+                                    ) / multipliers.get(block.itemDrop, 1f)) * area).toFloat(), 2
                                 ) + StatUnit.perSecond.localized()
                             ).right().pad(10f).padRight(15f).color(Color.lightGray)
                         }
@@ -197,8 +198,7 @@ fun Ferrum.loadDrills() {
             super.setStats()
 
             stats.remove(Stat.drillTier)
-            val statValue = getCustomDrillTierStat()
-            stats.add(Stat.drillTier, statValue)
+            stats.add(Stat.drillTier, getCustomDrillTierStat())
         }
     }.apply {
         requirements(
