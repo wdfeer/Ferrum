@@ -1,5 +1,6 @@
 package ferrum
 
+import arc.func.Prov
 import mindustry.content.Blocks
 import mindustry.content.Items
 import mindustry.entities.bullet.LiquidBulletType
@@ -8,6 +9,7 @@ import mindustry.type.ItemStack
 import mindustry.world.Block
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.LiquidTurret
+import mindustry.world.blocks.defense.turrets.TractorBeamTurret
 import mindustry.world.blocks.power.PowerGenerator
 import mindustry.world.blocks.production.GenericCrafter
 import kotlin.math.round
@@ -97,6 +99,23 @@ fun Ferrum.modifyVanillaContent() {
         Blocks.spectre.addRequirement(steel, 150)
         Blocks.tetrativeReconstructor.addRequirement(steel, 1600)
         Blocks.coreNucleus.addRequirement(steel, 2000)
+    }
+
+    // Mischmetal
+    run {
+        Blocks.parallax.addRequirement(mischmetal, 60)
+        (Blocks.parallax as TractorBeamTurret).apply {
+            consPower.usage *= 2f
+            damage *= 8f
+            buildType = Prov { object : TractorBeamTurret.TractorBeamBuild() {
+                val baseDamage = damage
+                override fun updateTile() {
+                    // effectively ignores armor
+                    damage = baseDamage + (target?.armor ?: 0f)
+                    super.updateTile()
+                }
+            } }
+        }
     }
 
     modifyVanillaTechTree()
