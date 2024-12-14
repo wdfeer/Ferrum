@@ -21,6 +21,7 @@ fun Ferrum.modifyFerrumTechTree() {
     pyrite.setSelfProduceTechNode(Items.coal)
     iron.setSelfProduceTechNode(pyrite)
     steel.setSelfProduceTechNode(iron)
+    mischmetal.setSelfProduceTechNode(steel)
     so2.setSelfProduceTechNode(pyrite)
     h2so4.setSelfProduceTechNode(so2)
 
@@ -30,6 +31,13 @@ fun Ferrum.modifyFerrumTechTree() {
         alwaysUnlocked = false
         techNode = TechNode(Blocks.pneumaticDrill.techNode, this, researchCost).also {
             it.objectives = Seq.with(SectorComplete(SectorPresets.frozenForest), Research(Items.silicon))
+        }
+    }
+    traceDrill.apply {
+        researchCost = ItemStack.with(Items.copper, 2500, Items.silicon, 1000, Items.thorium, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(smartDrill.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(Items.titanium), Research(Items.thorium))
         }
     }
 
@@ -100,6 +108,15 @@ fun Ferrum.modifyFerrumTechTree() {
             it.objectives = Seq.with(Research(steel))
         }
     }
+
+    // Other
+    ceriumOverdriver.apply {
+        researchCost = ItemStack.with(Items.lead, 6000, Items.silicon, 2000, Items.phaseFabric, 1000, steel, 2000, mischmetal, 500)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.overdriveDome.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(mischmetal))
+        }
+    }
 }
 
 fun Ferrum.modifyVanillaTechTree() {
@@ -130,4 +147,9 @@ fun Ferrum.modifyVanillaTechTree() {
     Blocks.spectre.addReq(3000, steel)
     Blocks.meltdown.addReq(3000, steel)
     Blocks.tetrativeReconstructor.addReq(10000, steel)
+
+    Blocks.lancer.addReq(100, mischmetal)
+    Blocks.parallax.addReq(200, mischmetal)
+    Blocks.meltdown.addReq(1000, mischmetal)
+    Blocks.foreshadow.addReq(1000, mischmetal)
 }
