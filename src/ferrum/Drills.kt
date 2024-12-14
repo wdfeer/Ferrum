@@ -206,7 +206,7 @@ fun Ferrum.loadDrills() {
         )
         consumePower(4.5f)
         consumeLiquid(Liquids.cryofluid, 0.1f).boost()
-        drillTime = (Blocks.blastDrill as Drill).drillTime * 1.1f
+        drillTime = (Blocks.blastDrill as Drill).drillTime * 1.2f
         heatColor = Color.cyan.saturation(0.25f)
         warmupSpeed = 0.005f
 
@@ -220,7 +220,7 @@ fun Ferrum.loadDrills() {
         drillEffect = Fx.mineHuge
         rotateSpeed = 6f
         itemCapacity = 20
-        liquidBoostIntensity = 1.8f
+        liquidBoostIntensity = 2.0f
     }
 }
 
