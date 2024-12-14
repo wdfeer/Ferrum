@@ -175,11 +175,11 @@ fun Ferrum.loadDrills() {
     traceDrill = object : Drill("trace-drill") {
         override fun countOre(tile: Tile?) {
             super.countOre(tile)
-            returnItem = byproducts[tile?.drop()]?.item ?: return
+            returnItem = byproducts[returnItem]?.item ?: return
         }
 
         override fun canMine(tile: Tile?): Boolean {
-            return super.canMine(tile) && byproducts.contains(tile?.drop())
+            return byproducts.contains(tile?.drop())
         }
 
         override fun setStats() {
