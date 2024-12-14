@@ -21,6 +21,7 @@ fun Ferrum.modifyFerrumTechTree() {
     pyrite.setSelfProduceTechNode(Items.coal)
     iron.setSelfProduceTechNode(pyrite)
     steel.setSelfProduceTechNode(iron)
+    mischmetal.setSelfProduceTechNode(steel)
     so2.setSelfProduceTechNode(pyrite)
     h2so4.setSelfProduceTechNode(so2)
 
