@@ -139,9 +139,8 @@ fun Ferrum.modifyVanillaTechTree() {
     Blocks.meltdown.addReq(3000, steel)
     Blocks.tetrativeReconstructor.addReq(10000, steel)
 
-    Blocks.parallax.apply {
-        addReq(200, mischmetal)
-        if (techNode.objectives.none { (it as? Research)?.content == mischmetal })
-            techNode.objectives.add(Research(mischmetal))
-    }
+    Blocks.lancer.addReq(100, mischmetal)
+    Blocks.parallax.addReq(200, mischmetal)
+    Blocks.meltdown.addReq(1000, mischmetal)
+    Blocks.foreshadow.addReq(1000, mischmetal)
 }

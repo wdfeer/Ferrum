@@ -9,6 +9,7 @@ import mindustry.type.ItemStack
 import mindustry.world.Block
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.LiquidTurret
+import mindustry.world.blocks.defense.turrets.PowerTurret
 import mindustry.world.blocks.defense.turrets.TractorBeamTurret
 import mindustry.world.blocks.power.PowerGenerator
 import mindustry.world.blocks.production.GenericCrafter
@@ -103,6 +104,11 @@ fun Ferrum.modifyVanillaContent() {
 
     // Mischmetal
     run {
+        Blocks.lancer.addRequirement(mischmetal, 20)
+        (Blocks.lancer as PowerTurret).apply {
+            shootType.damage += 10
+        }
+
         Blocks.parallax.addRequirement(mischmetal, 60)
         (Blocks.parallax as TractorBeamTurret).apply {
             consPower.usage *= 2f
@@ -116,6 +122,9 @@ fun Ferrum.modifyVanillaContent() {
                 }
             } }
         }
+
+        Blocks.meltdown.addRequirement(mischmetal, 80)
+        Blocks.foreshadow.addRequirement(mischmetal, 120)
     }
 
     modifyVanillaTechTree()
