@@ -7,6 +7,7 @@ import arc.scene.ui.layout.Table
 import arc.util.Scaling
 import arc.util.Strings
 import mindustry.Vars
+import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.Liquids
@@ -23,6 +24,7 @@ import mindustry.world.blocks.production.Drill
 import mindustry.world.meta.Stat
 import mindustry.world.meta.StatUnit
 import mindustry.world.meta.StatValue
+import mindustry.world.meta.StatValues
 import kotlin.math.max
 import kotlin.random.Random
 
@@ -185,63 +187,19 @@ fun Ferrum.loadDrills() {
             super.setStats()
 
             stats.remove(Stat.drillTier)
-            val statValue = StatValue { table: Table ->
-                val drillMultiplier = hardnessDrillMultiplier
-                val filter = Boolf { b: Block ->
-                    b is Floor && !b.wallOre && b.itemDrop != null && b.itemDrop.hardness <= tier && b.itemDrop !== blockedItem && (Vars.indexer.isBlockPresent(
-                        b
-                    ) || Vars.state.isMenu)
-                }
-                val multipliers = drillMultipliers
-
-                table.row()
-                table.table { c: Table ->
-                    var i = 0
-                    for (block in Vars.content.blocks()) {
-                        if (!filter.get(block)) continue
-
-                        c.table(Styles.grayPanel) { b: Table ->
-                            b.image(block.uiIcon).size(40f).pad(10f).left().scaling(Scaling.fit)
-                            b.table { info: Table ->
-                                info.left()
-                                info.add(buildString {
-                                    append(block.localizedName)
-                                    append(byproducts[block.itemDrop]?.let { "+" } ?: return@buildString)
-                                }).left().row()
-                                info.table { itemTable ->
-                                    itemTable.add(block.itemDrop.emoji())
-                                    byproducts[block.itemDrop]?.item?.let {
-                                        if (it.hasEmoji()) itemTable.add(it.emoji())
-                                        else itemTable.image(it.uiIcon)
-                                            .size((Fonts.def.data.lineHeight / Fonts.def.data.scaleY))
-                                    }?.left()
-                                }.left()
-
-                            }.grow()
-                            if (multipliers != null) {
-                                b.add(
-                                    Strings.autoFixed(
-                                        (60f / (max(
-                                            (drillTime + drillMultiplier * block.itemDrop.hardness).toDouble(),
-                                            drillTime.toDouble()
-                                        ) / multipliers.get(block.itemDrop, 1f)) * size).toFloat(), 2
-                                    ) + StatUnit.perSecond.localized()
-                                ).right().pad(10f).padRight(15f).color(Color.lightGray)
-                            }
-                        }.growX().pad(5f)
-                        if (++i % 2 == 0) c.row()
-                    }
-                }.growX().colspan(table.columns)
-            }
-            stats.add(Stat.drillTier, statValue)
+            stats.add(
+                Stat.drillTier, StatValues.drillables(
+                    drillTime, hardnessDrillMultiplier,
+                    (size * size).toFloat(), drillMultipliers
+                ) { byproducts.contains(it.itemDrop) })
         }
     }.apply {
         requirements(
-            Category.production, ItemStack.with(Items.silicon, 125, Items.titanium, 50, Items.thorium, steel, 50)
+            Category.production, ItemStack.with(Items.silicon, 80, Items.titanium, 50, Items.thorium, 50, steel, 50)
         )
         consumePower(4.5f)
         consumeLiquid(Liquids.cryofluid, 0.1f).boost()
-        drillTime = 210f
+        drillTime = (Blocks.blastDrill as Drill).drillTime * 1.5f
 
         // copied from vanilla blast drill
         size = 4
