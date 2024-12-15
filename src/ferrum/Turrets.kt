@@ -410,6 +410,32 @@ fun Ferrum.loadTurrets() {
                 lightningLength = 30
             }
             ammoMultiplier = 1f
+        }, mischmetal, DynamicExplosionBulletType(30f, 1600f, 7.5f).apply {
+            lifetime = 400f
+            shootEffect = Fx.blastsmoke
+            hitEffect = Fx.bigShockwave
+            hitShake = 30f
+            width = 20f
+            height = 40f
+            splashDamage = 1600f
+            splashDamageRadius = 160f
+            makeFire = true
+            incendAmount = 4
+            fragBullets = 48
+            fragBullet = BasicBulletType(18f, 50f).apply {
+                width = 12f
+                height = 21f
+
+                lifetime = 60f
+                pierce = true
+                pierceBuilding = true
+                pierceCap = 4
+
+                makeFire
+                incendAmount = 1
+            }
+            ammoMultiplier = 1f
+            reloadMultiplier = 1.25f
         })
 
         range = (Blocks.foreshadow as Turret).range * 1.5f
