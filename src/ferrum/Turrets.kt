@@ -212,6 +212,22 @@ fun Ferrum.loadTurrets() {
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 5f
             },
+            mischmetal,
+            DynamicExplosionBulletType(4.2f, 60f, 1.4f).apply {
+                lifetime = 50f
+                height = 22f
+                width = 18f
+                splashDamage = 40f
+                splashDamageRadius = 36f
+                hitShake = 2f
+                hitSound = Sounds.dullExplosion
+                shootEffect = Fx.shootSmall
+                ammoMultiplier = 2f
+                reloadMultiplier = 1.25f
+                status = StatusEffects.burning
+                makeFire = true
+                incendAmount = 2
+            },
         )
         size = 2
         reload = 100f
