@@ -250,7 +250,7 @@ fun Ferrum.loadTurrets() {
         coolant = consumeCoolant(0.2f)
     }
 
-    blaze = ItemTurret("blaze").apply {
+    spark = ItemTurret("spark").apply {
         requirements(Category.turret, ItemStack.with(Items.copper, 25, Items.graphite, 22))
         ammo(
             Items.pyratite,
