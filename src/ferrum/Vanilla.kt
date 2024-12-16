@@ -2,18 +2,14 @@ package ferrum
 
 import arc.func.Prov
 import mindustry.content.Blocks
-import mindustry.content.Items
 import mindustry.entities.bullet.LiquidBulletType
 import mindustry.type.Item
 import mindustry.type.ItemStack
 import mindustry.world.Block
-import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.LiquidTurret
 import mindustry.world.blocks.defense.turrets.PowerTurret
 import mindustry.world.blocks.defense.turrets.TractorBeamTurret
 import mindustry.world.blocks.power.PowerGenerator
-import mindustry.world.blocks.production.GenericCrafter
-import kotlin.math.round
 
 fun Ferrum.modifyVanillaContent() {
     // Pyrite
@@ -22,40 +18,13 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
         Blocks.solarPanel.addRequirement(pyrite, 1)
+        Blocks.powerNodeLarge.addRequirement(pyrite, 10)
         Blocks.batteryLarge.addRequirement(pyrite, 30)
         Blocks.largeSolarPanel.addRequirement(pyrite, 15)
-        Blocks.phaseWeaver.addRequirement(pyrite, 80)
+        Blocks.pyratiteMixer.addRequirement(pyrite, 80)
+        Blocks.phaseWeaver.addRequirement(pyrite, 100)
         Blocks.foreshadow.addRequirement(pyrite, 400)
         Blocks.multiplicativeReconstructor.addRequirement(pyrite, 300)
-    }
-
-    // Pyratite
-    run {
-        (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
-        (Blocks.impactReactor as PowerGenerator).powerProduction *= 1.1f
-        (Blocks.differentialGenerator as PowerGenerator).powerProduction *= 1.25f
-
-        fun ItemTurret.buffAmmo(vararg items: Item) {
-            ammoTypes.forEach { ammo ->
-                if (items.contains(ammo.key)) {
-                    ammo.value.apply {
-                        damage = round(damage * 1.1f)
-                        splashDamage = round(splashDamage * 1.1f)
-                    }
-                }
-            }
-        }
-
-        // Buff pyratite and blast compound as ammo
-        listOf(
-            Blocks.scorch,
-            Blocks.hail,
-            Blocks.salvo,
-            Blocks.ripple,
-            Blocks.swarmer,
-            Blocks.cyclone,
-            Blocks.spectre
-        ).filterIsInstance<ItemTurret>().forEach { it.buffAmmo(Items.pyratite, Items.blastCompound) }
     }
 
     // Iron

@@ -135,7 +135,8 @@ fun Ferrum.modifyVanillaTechTree() {
         }
     }
 
-    Blocks.solarPanel.addReq(50, pyrite)
+    Blocks.powerNodeLarge.addReq(100, pyrite)
+    Blocks.solarPanel.addReq(100, pyrite)
     Blocks.pyratiteMixer.addReq(200, pyrite)
     Blocks.batteryLarge.addReq(200, pyrite)
     Blocks.largeSolarPanel.addReq(800, pyrite)
