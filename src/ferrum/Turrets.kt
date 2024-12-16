@@ -8,6 +8,7 @@ import mindustry.content.Fx
 import mindustry.content.Items
 import mindustry.content.StatusEffects
 import mindustry.entities.bullet.BasicBulletType
+import mindustry.entities.bullet.BulletType
 import mindustry.entities.bullet.FlakBulletType
 import mindustry.entities.part.DrawPart
 import mindustry.entities.part.RegionPart
@@ -247,6 +248,78 @@ fun Ferrum.loadTurrets() {
         }
         limitRange(1f)
         coolant = consumeCoolant(0.2f)
+    }
+
+    blaze = ItemTurret("blaze").apply {
+        requirements(Category.turret, ItemStack.with(Items.copper, 25, Items.graphite, 22))
+        ammo(
+            Items.pyratite,
+            BulletType(6f, 60f).apply {
+                ammoMultiplier = 4f
+                hitSize = 7f
+                lifetime = 18f
+                pierce = true
+                statusDuration = 60f * 30
+                shootEffect = Fx.shootPyraFlame
+                hitEffect = Fx.hitFlameSmall
+                despawnEffect = Fx.none
+                status = StatusEffects.burning
+                hittable = false
+                reloadMultiplier = 2f
+            },
+            Items.surgeAlloy,
+            BulletType(12f, 80f).apply {
+                ammoMultiplier = 6f
+                hitSize = 7f
+                lifetime = 18f
+                statusDuration = 60f * 10
+                shootEffect = Fx.shootBigSmoke
+                trailInterval = 0.25f
+                trailEffect = Fx.hitFlameSmall
+                despawnEffect = Fx.hitFlamePlasma
+                status = StatusEffects.burning
+                hittable = false
+                lightning = 2
+                reloadMultiplier = 0.75f
+            },
+            mischmetal,
+            BulletType(6f, 45f).apply {
+                ammoMultiplier = 4f
+                hitSize = 7f
+                lifetime = 18f
+                statusDuration = 60f * 10
+                trailInterval = 1f
+                trailEffect = Fx.hitFlameSmall
+                hitSound = Sounds.explosion
+                despawnEffect = Fx.hitFlamePlasma
+                status = StatusEffects.burning
+                hittable = false
+                fragBullets = 4
+                fragBullet = BulletType(2f, 15f).apply {
+                    hitSize = 5f
+                    lifetime = 9f
+                    pierce = true
+                    statusDuration = 60f * 10
+                    despawnEffect = Fx.hitFlameSmall
+                    status = StatusEffects.burning
+                    hittable = false
+                    homingPower = 0.5f
+                }
+            },
+        )
+        size = 2
+        recoil = 0f
+        reload = 6f
+        coolantMultiplier = 1.5f
+        range = 88f
+        shootY = 3f
+        shootCone = 30f
+        ammoUseEffect = Fx.none
+        scaledHealth = 400f
+        shootSound = Sounds.flame
+        coolant = consumeCoolant(0.1f)
+        consumePower(2f)
+        limitRange(8f)
     }
 
     krupp = ItemTurret("krupp").apply {
