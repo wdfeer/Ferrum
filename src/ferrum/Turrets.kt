@@ -251,7 +251,7 @@ fun Ferrum.loadTurrets() {
     }
 
     spark = ItemTurret("spark").apply {
-        requirements(Category.turret, ItemStack.with(Items.copper, 25, Items.graphite, 22))
+        requirements(Category.turret, ItemStack.with(Items.surgeAlloy, 45, mischmetal, 45))
         ammo(
             Items.pyratite,
             BulletType(6f, 60f).apply {

@@ -94,6 +94,13 @@ fun Ferrum.modifyFerrumTechTree() {
         alwaysUnlocked = false
         techNode = TechNode(canna.techNode, this, researchCost)
     }
+    spark.apply {
+        researchCost = ItemStack.with(Items.surgeAlloy, 1000, mischmetal, 1000)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.scorch.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(mischmetal), Research(Items.surgeAlloy))
+        }
+    }
     krupp.apply {
         researchCost = ItemStack.with(Items.titanium, 20000, steel, 10000, Items.surgeAlloy, 1000)
         alwaysUnlocked = false
