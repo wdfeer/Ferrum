@@ -254,7 +254,7 @@ fun Ferrum.loadTurrets() {
         requirements(Category.turret, ItemStack.with(steel, 80, Items.surgeAlloy, 45, mischmetal, 45))
         ammo(
             Items.pyratite,
-            BulletType(6f, 60f).apply {
+            BulletType(6f, 80f).apply {
                 ammoMultiplier = 4f
                 hitSize = 7f
                 lifetime = 18f
@@ -268,22 +268,26 @@ fun Ferrum.loadTurrets() {
                 reloadMultiplier = 2f
             },
             Items.surgeAlloy,
-            BulletType(12f, 80f).apply {
+            BulletType(12f, 100f).apply {
                 ammoMultiplier = 6f
                 hitSize = 7f
                 lifetime = 18f
                 statusDuration = 60f * 10
                 shootEffect = Fx.shootBigSmoke
                 trailInterval = 0.25f
+                hitSound = Sounds.explosion
                 trailEffect = Fx.hitFlameSmall
+                hitEffect = Fx.hitFlamePlasma
                 despawnEffect = Fx.hitFlamePlasma
                 status = StatusEffects.burning
                 hittable = false
-                lightning = 2
-                reloadMultiplier = 0.75f
+                lightning = 4
+                lightningDamage = 50f
+                lightningLength *= 2
+                reloadMultiplier = 2 / 3f
             },
             mischmetal,
-            BulletType(6f, 45f).apply {
+            BulletType(6f, 50f).apply {
                 ammoMultiplier = 4f
                 hitSize = 7f
                 lifetime = 18f
@@ -291,27 +295,28 @@ fun Ferrum.loadTurrets() {
                 trailInterval = 1f
                 trailEffect = Fx.hitFlameSmall
                 hitSound = Sounds.explosion
+                hitEffect = Fx.flakExplosion
                 despawnEffect = Fx.hitFlamePlasma
                 status = StatusEffects.burning
                 hittable = false
                 fragBullets = 4
-                fragBullet = BulletType(2f, 15f).apply {
+                fragBullet = BulletType(2f, 18f).apply {
                     hitSize = 5f
-                    lifetime = 9f
+                    lifetime = 12f
                     pierce = true
                     statusDuration = 60f * 10
                     despawnEffect = Fx.hitFlameSmall
                     status = StatusEffects.burning
                     hittable = false
-                    homingPower = 0.5f
+                    homingPower = 0.1f
                 }
             },
         )
         size = 2
         recoil = 0f
-        reload = 6f
-        coolantMultiplier = 1.5f
-        range = 88f
+        reload = 8f
+        coolantMultiplier = 2f
+        range = 96f
         shootCone = 30f
         ammoUseEffect = Fx.none
         scaledHealth = 400f
