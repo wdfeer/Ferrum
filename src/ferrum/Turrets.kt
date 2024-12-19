@@ -2,7 +2,8 @@ package ferrum
 
 import arc.util.Log
 import arc.util.Time
-import mindustry.Vars
+import ferrum.util.noneBuilt1
+import ferrum.util.noneBuilt2
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
@@ -20,7 +21,8 @@ import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
-import kotlin.time.TimeSource
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.measureTime
 
 fun Ferrum.loadTurrets() {
@@ -403,25 +405,35 @@ fun Ferrum.loadTurrets() {
     }
 
     gustav = object : ItemTurret("gustav") {
-        var placeable: Boolean = true
-        var lastPlaceableComputeTime: TimeSource.Monotonic.ValueTimeMark = TimeSource.Monotonic.markNow()
-        fun computePlaceable() {
-            measureTime {
-                placeable = Vars.world.tiles.none { it.blockID() == id }
-            }.takeIf { it.inWholeMilliseconds > 30 }?.let {
-                Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
-            }
+        val iterations: Int = 1000
 
-            lastPlaceableComputeTime = TimeSource.Monotonic.markNow()
+        var times1: MutableList<Duration> = mutableListOf()
+        var times2: MutableList<Duration> = mutableListOf()
+
+        private fun List<Duration>.getAvg(): Duration {
+            val sum = this.sumOf { it.inWholeNanoseconds }
+            val avg = sum / this.size.toFloat()
+            return avg.toLong().nanoseconds
         }
 
-        val computeIntervalMillis = 2500
-
         override fun isPlaceable(): Boolean {
-            val timeSinceCompute = TimeSource.Monotonic.markNow() - lastPlaceableComputeTime
-            if (timeSinceCompute.inWholeMilliseconds > computeIntervalMillis) computePlaceable()
+            var result1: Boolean
+            var result2: Boolean
 
-            return super.isPlaceable() && placeable
+            times1.add(measureTime { result1 = noneBuilt1() })
+            times2.add(measureTime { result2 = noneBuilt2() })
+
+            require(result1 == result2)
+
+            if (times1.size >= iterations) {
+                val avg1 = times1.getAvg()
+                val avg2 = times2.getAvg()
+                Log.log(Log.LogLevel.info, "Avg 1: $avg1, Avg 2: $avg2 ($iterations iterations). 1/2: ${(avg1 / avg2 * 100f).toInt() / 100f}x")
+                times1 = mutableListOf()
+                times2 = mutableListOf()
+            }
+
+            return super.isPlaceable() && result1
         }
     }.apply {
         requirements(
