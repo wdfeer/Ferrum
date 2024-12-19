@@ -3,6 +3,7 @@ package ferrum
 import mindustry.mod.Mod
 import mindustry.type.Item
 import mindustry.type.Liquid
+import mindustry.world.Block
 import mindustry.world.blocks.defense.OverdriveProjector
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.environment.OreBlock
@@ -36,6 +37,7 @@ class Ferrum : Mod() {
     lateinit var oreIron: OreBlock
 
     lateinit var ceriumOverdriver: OverdriveProjector
+    lateinit var coatingTurret: Block
 
     override fun loadContent() {
         loadItems()

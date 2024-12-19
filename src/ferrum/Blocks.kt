@@ -26,4 +26,6 @@ fun Ferrum.loadBlocks() {
         useTime /= 3f
         consumeItem(mischmetal).boost()
     }
+
+    coatingTurret = getCoatingTurret()
 }
