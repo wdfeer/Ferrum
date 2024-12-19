@@ -1,8 +1,7 @@
 package ferrum
 
-import arc.util.Log
 import arc.util.Time
-import mindustry.Vars
+import ferrum.util.noneBuilt
 import mindustry.content.Blocks
 import mindustry.content.Fx
 import mindustry.content.Items
@@ -20,8 +19,6 @@ import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
-import kotlin.time.TimeSource
-import kotlin.time.measureTime
 
 fun Ferrum.loadTurrets() {
     canna = ItemTurret("canna").apply {
@@ -403,25 +400,8 @@ fun Ferrum.loadTurrets() {
     }
 
     gustav = object : ItemTurret("gustav") {
-        var placeable: Boolean = true
-        var lastPlaceableComputeTime: TimeSource.Monotonic.ValueTimeMark = TimeSource.Monotonic.markNow()
-        fun computePlaceable() {
-            measureTime {
-                placeable = Vars.world.tiles.none { it.blockID() == id }
-            }.takeIf { it.inWholeMilliseconds > 30 }?.let {
-                Log.log(Log.LogLevel.warn, "Took too long to compute whether gustav is placeable! ($it)")
-            }
-
-            lastPlaceableComputeTime = TimeSource.Monotonic.markNow()
-        }
-
-        val computeIntervalMillis = 2500
-
         override fun isPlaceable(): Boolean {
-            val timeSinceCompute = TimeSource.Monotonic.markNow() - lastPlaceableComputeTime
-            if (timeSinceCompute.inWholeMilliseconds > computeIntervalMillis) computePlaceable()
-
-            return super.isPlaceable() && placeable
+            return super.isPlaceable() && noneBuilt()
         }
     }.apply {
         requirements(
