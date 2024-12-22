@@ -242,7 +242,7 @@ fun Ferrum.loadTurrets() {
         requirements(Category.turret, ItemStack.with(Items.titanium, 120, steel, 120))
         ammo(
             iron,
-            BasicBulletType(4.2f, 80f).apply {
+            BasicBulletType(4.2f, 90f).apply {
                 knockback = 3f
                 lifetime = 50f
                 height = 22f
@@ -259,7 +259,7 @@ fun Ferrum.loadTurrets() {
                 ammoMultiplier = 1f
             },
             Items.blastCompound,
-            DynamicExplosionBulletType(4.2f, 25f, 2f).apply {
+            DynamicExplosionBulletType(4.2f, 35f, 2f).apply {
                 lifetime = 50f
                 height = 22f
                 width = 18f
@@ -291,7 +291,7 @@ fun Ferrum.loadTurrets() {
                 ammoMultiplier = 5f
             },
             mischmetal,
-            DynamicExplosionBulletType(4.2f, 60f, 1.4f).apply {
+            DynamicExplosionBulletType(4.2f, 80f, 1.4f).apply {
                 lifetime = 50f
                 height = 22f
                 width = 18f
