@@ -89,10 +89,15 @@ fun Ferrum.modifyFerrumTechTree() {
             it.objectives = Seq.with(Research(iron), Research(Items.titanium))
         }
     }
-    houf.apply {
-        researchCost = ItemStack.with(Items.titanium, 5000, steel, 5000)
+    mitraille.apply {
+        researchCost = ItemStack.with(Items.titanium, 4000, steel, 3000)
         alwaysUnlocked = false
         techNode = TechNode(canna.techNode, this, researchCost)
+    }
+    houf.apply {
+        researchCost = ItemStack.with(Items.titanium, 4000, steel, 3000)
+        alwaysUnlocked = false
+        techNode = TechNode(mitraille.techNode, this, researchCost)
     }
     spark.apply {
         researchCost = ItemStack.with(Items.surgeAlloy, 1000, mischmetal, 1000)
