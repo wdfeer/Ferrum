@@ -34,11 +34,11 @@ class Ferrum : Mod() {
     lateinit var spark: ItemTurret
     lateinit var gustav: ItemTurret
     lateinit var krupp: ItemTurret
-    lateinit var ironDome: PointDefenseTurret
 
     lateinit var oreIron: OreBlock
 
     lateinit var ceriumOverdriver: OverdriveProjector
+    lateinit var ironDome: PointDefenseTurret
 
     override fun loadContent() {
         loadItems()
