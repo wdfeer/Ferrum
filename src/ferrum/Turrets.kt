@@ -1,5 +1,6 @@
 package ferrum
 
+import arc.func.Prov
 import arc.util.Time
 import ferrum.util.noneBuilt
 import mindustry.content.Blocks
@@ -18,6 +19,7 @@ import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
+import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
 
@@ -237,6 +239,14 @@ fun Ferrum.loadTurrets() {
         }
         limitRange(1f)
         coolant = consumeCoolant(0.2f)
+        buildType = Prov {
+            object : ItemTurretBuild() {
+                override fun shoot(type: BulletType?) {
+                    super.shoot(type)
+                    damagePierce(30f / (type?.damage ?: 10f))
+                }
+            }
+        }
     }
 
     houf = ItemTurret("houf").apply {
