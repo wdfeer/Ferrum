@@ -632,7 +632,7 @@ fun Ferrum.loadTurrets() {
                 override fun updateTile() {
                     target = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
                         .select { it.team !== team && it.type().hittable }
-                        .maxBy { it.damage }
+                        .max { b: Bullet -> b.damage }
                     super.updateTile()
                 }
             }
