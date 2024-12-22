@@ -626,7 +626,11 @@ fun Ferrum.loadTurrets() {
         }
     }
 
-    ironDome = PointDefenseTurret("iron-dome").apply {
+    ironDome = object : PointDefenseTurret("iron-dome") {
+        override fun isPlaceable(): Boolean {
+            return super.isPlaceable() && noneBuilt()
+        }
+    }.apply {
         buildType = Prov {
             object : PointDefenseBuild() {
                 override fun updateTile() {
