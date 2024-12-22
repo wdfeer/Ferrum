@@ -28,6 +28,7 @@ class Ferrum : Mod() {
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
+    lateinit var mitraille: ItemTurret
     lateinit var houf: ItemTurret
     lateinit var spark: ItemTurret
     lateinit var gustav: ItemTurret

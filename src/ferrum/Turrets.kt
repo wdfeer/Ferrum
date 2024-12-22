@@ -12,6 +12,7 @@ import mindustry.entities.bullet.FlakBulletType
 import mindustry.entities.part.DrawPart
 import mindustry.entities.part.RegionPart
 import mindustry.entities.pattern.ShootAlternate
+import mindustry.entities.pattern.ShootPattern
 import mindustry.gen.Bullet
 import mindustry.gen.Sounds
 import mindustry.type.Category
@@ -119,6 +120,7 @@ fun Ferrum.loadTurrets() {
             fragBullet = BasicBulletType(3f, 8f).apply {
                 lifetime = 12f
                 collidesGround = false
+                pierceArmor = true
             }
         }, Items.blastCompound, FlakBulletType(6f, 5f).apply {
             lifetime = 40f
@@ -158,8 +160,86 @@ fun Ferrum.loadTurrets() {
         limitRange(4f)
     }
 
+    mitraille = ItemTurret("mitraille").apply {
+        requirements(Category.turret, ItemStack.with(Items.titanium, 120, steel, 120))
+        ammoTypes = (Blocks.salvo as ItemTurret).ammoTypes.copy()
+            .onEach { it.value = it.value.copy() }
+            .onEach { it.value.ammoMultiplier /= 2f }
+            .also {
+                it[Items.copper].reloadMultiplier = 1.8f
+                it[Items.graphite].reloadMultiplier = 1.2f
+                it[Items.silicon].reloadMultiplier += 0.1f
+                it[Items.thorium].apply {
+                    damage = 20f
+                    pierce = true
+                    pierceCap = 2
+                }
+            }
+            .apply {
+                put(iron, BasicBulletType(4f, 12f).apply {
+                    width = 10f
+                    height = 13f
+                    shootEffect = Fx.shootBig
+                    smokeEffect = Fx.shootBigSmoke
+                    ammoMultiplier = 1f
+                    lifetime = 60f
+                    pierceArmor = true
+                    fragBullets = 2
+                    fragBullet = BasicBulletType(16f, 8f).apply {
+                        width = 5f
+                        height = 7f
+                        lifetime = 3f
+                        pierceArmor = true
+                    }
+                })
+                put(Items.surgeAlloy, BasicBulletType(8f, 30f).apply {
+                    width = 10f
+                    height = 13f
+                    shootEffect = Fx.shootBig
+                    smokeEffect = Fx.shootBigSmoke
+                    ammoMultiplier = 3f
+                    lifetime = 60f
+                    lightning = 1
+                    lightningDamage = 24f
+                    lightningLength = 7
+                })
+                put(mischmetal, BasicBulletType(3.8f, 19f).apply {
+                    width = 10f
+                    height = 13f
+                    shootEffect = Fx.shootBig
+                    smokeEffect = Fx.shootBigSmoke
+                    ammoMultiplier = 3f
+                    lifetime = 60f
+                    homingPower = 0.1f
+                    status = StatusEffects.burning
+                    makeFire = true
+                    pierce = true
+                    pierceCap = 2
+                    reloadMultiplier = 1.25f
+                })
+            }
+        size = 2
+        reload = 5f
+        shoot = ShootPattern().apply { shots = 2 }
+        recoil = 0.5f
+        range = (((Blocks.lancer as Turret).range + (Blocks.hail as Turret).range) / 2).let { it - it % 8 }
+        inaccuracy = 16f
+        shootCone = 24f
+        scaledHealth = 350f
+        shootSound = Sounds.shootAlt
+        drawer = DrawTurret().apply {
+            parts.add(RegionPart("-mid").apply {
+                progress = DrawPart.PartProgress.recoil
+                under = false
+                moveY = -1f
+            })
+        }
+        limitRange(1f)
+        coolant = consumeCoolant(0.2f)
+    }
+
     houf = ItemTurret("houf").apply {
-        requirements(Category.turret, ItemStack.with(steel, 275))
+        requirements(Category.turret, ItemStack.with(Items.titanium, 120, steel, 120))
         ammo(
             iron,
             BasicBulletType(4.2f, 80f).apply {
@@ -231,10 +311,10 @@ fun Ferrum.loadTurrets() {
         reload = 100f
         recoil = 1.5f
         shake = 0.8f
-        range = (Blocks.lancer as Turret).range * 1.1f
+        range = mitraille.range
         inaccuracy = 2.25f
         shootCone = 3.5f
-        scaledHealth = 350f
+        scaledHealth = mitraille.scaledHealth
         shootSound = Sounds.mediumCannon
         drawer = DrawTurret().apply {
             parts.add(RegionPart("-mid").apply {
