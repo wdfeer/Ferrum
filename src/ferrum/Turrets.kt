@@ -1,7 +1,11 @@
 package ferrum
 
 import arc.func.Prov
+import arc.math.Mathf
+import arc.math.geom.Vec2
+import arc.struct.Seq
 import arc.util.Time
+import arc.util.Tmp
 import ferrum.util.noneBuilt
 import mindustry.content.*
 import mindustry.entities.bullet.BasicBulletType
@@ -17,9 +21,7 @@ import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
-import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild
 import mindustry.world.blocks.defense.turrets.PointDefenseTurret
-import mindustry.world.blocks.defense.turrets.PointDefenseTurret.PointDefenseBuild
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
 
@@ -237,7 +239,7 @@ fun Ferrum.loadTurrets() {
         limitRange(1f)
         coolant = consumeCoolant(0.2f)
         buildType = Prov {
-            object : ItemTurretBuild() {
+            object : ItemTurret.ItemTurretBuild() {
                 override fun shoot(type: BulletType?) {
                     super.shoot(type)
                     damagePierce(30f / (type?.damage ?: 10f))
@@ -632,12 +634,27 @@ fun Ferrum.loadTurrets() {
         }
     }.apply {
         buildType = Prov {
-            object : PointDefenseBuild() {
+            object : PointDefenseTurret.PointDefenseBuild() {
                 override fun updateTile() {
-                    target = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
-                        .select { it.team !== team && it.type().hittable }
-                        .max { b: Bullet -> b.damage }
-                    super.updateTile()
+                    reloadCounter += delta()
+
+                    val targets = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
+                        .select { it.team !== team && it.type().hittable && it.within(this, range) }
+
+                    if (!targets.isEmpty && reloadCounter >= reload) attack(targets)
+                }
+
+                fun attack(targets: Seq<Bullet>) {
+                    targets.forEach {
+                        it.remove()
+
+                        beamEffect.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color, Vec2().set(it))
+                        shootEffect.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color)
+                        if (it.damage > 25f)
+                            hitEffect.at(it.x, it.y, color)
+                        shootSound.at(x + Tmp.v1.x, y + Tmp.v1.y, Mathf.random(0.9f, 1.1f))
+                    }
+                    reloadCounter = 0f
                 }
             }
         }
@@ -647,16 +664,13 @@ fun Ferrum.loadTurrets() {
             )
         )
         health = 12000
-        range = gustav.range * 2f // blasphemous, might nerf later
+        range = (Blocks.foreshadow as Turret).range
         hasPower = true
         consumePower(100f)
         consumeLiquid(Liquids.cryofluid, 0.5f)
+        hitEffect = Fx.smokeCloud
         size = 5
-        shootLength = 15f
-        bulletDamage = 300f
-        retargetTime = Float.POSITIVE_INFINITY // using custom targeting
-        rotateSpeed *= 5f
-        reload = 2f
+        reload = 10f
     }
 }
 
