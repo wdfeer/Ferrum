@@ -241,6 +241,24 @@ fun Ferrum.loadTurrets() {
     houf = ItemTurret("houf").apply {
         requirements(Category.turret, ItemStack.with(Items.titanium, 120, steel, 120))
         ammo(
+            pyrite,
+            BasicBulletType(6.5f, 50f).apply {
+                knockback = 3f
+                lifetime = 50f
+                height = 22f
+                width = 18f
+                pierce = true
+                pierceBuilding = true
+                pierceCap = 2
+                splashDamage = 50f
+                splashDamageRadius = 16f
+                hitShake = 1.2f
+                hitSound = Sounds.explosion
+                hitEffect = Fx.explosion
+                shootEffect = Fx.shootSmall
+                ammoMultiplier = 1f
+                reloadMultiplier = 1.4f
+            },
             iron,
             BasicBulletType(4.2f, 90f).apply {
                 knockback = 3f
@@ -273,7 +291,7 @@ fun Ferrum.loadTurrets() {
                 status = StatusEffects.blasted
             },
             Items.surgeAlloy,
-            BasicBulletType(4.2f, 100f).apply {
+            BasicBulletType(6.5f, 100f).apply {
                 lifetime = 50f
                 height = 22f
                 width = 18f
