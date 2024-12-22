@@ -3,10 +3,7 @@ package ferrum
 import arc.func.Prov
 import arc.util.Time
 import ferrum.util.noneBuilt
-import mindustry.content.Blocks
-import mindustry.content.Fx
-import mindustry.content.Items
-import mindustry.content.StatusEffects
+import mindustry.content.*
 import mindustry.entities.bullet.BasicBulletType
 import mindustry.entities.bullet.BulletType
 import mindustry.entities.bullet.FlakBulletType
@@ -15,11 +12,14 @@ import mindustry.entities.part.RegionPart
 import mindustry.entities.pattern.ShootAlternate
 import mindustry.entities.pattern.ShootPattern
 import mindustry.gen.Bullet
+import mindustry.gen.Groups
 import mindustry.gen.Sounds
 import mindustry.type.Category
 import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.ItemTurret.ItemTurretBuild
+import mindustry.world.blocks.defense.turrets.PointDefenseTurret
+import mindustry.world.blocks.defense.turrets.PointDefenseTurret.PointDefenseBuild
 import mindustry.world.blocks.defense.turrets.Turret
 import mindustry.world.draw.DrawTurret
 
@@ -165,10 +165,8 @@ fun Ferrum.loadTurrets() {
 
     mitraille = ItemTurret("mitraille").apply {
         requirements(Category.turret, ItemStack.with(Items.titanium, 120, steel, 120))
-        ammoTypes = (Blocks.salvo as ItemTurret).ammoTypes.copy()
-            .onEach { it.value = it.value.copy() }
-            .onEach { it.value.ammoMultiplier /= 2f }
-            .also {
+        ammoTypes = (Blocks.salvo as ItemTurret).ammoTypes.copy().onEach { it.value = it.value.copy() }
+            .onEach { it.value.ammoMultiplier /= 2f }.also {
                 it[Items.copper].reloadMultiplier = 1.8f
                 it[Items.graphite].reloadMultiplier = 1.2f
                 it[Items.silicon].reloadMultiplier += 0.1f
@@ -177,8 +175,7 @@ fun Ferrum.loadTurrets() {
                     pierce = true
                     pierceCap = 2
                 }
-            }
-            .apply {
+            }.apply {
                 put(iron, BasicBulletType(4f, 12f).apply {
                     width = 10f
                     height = 13f
@@ -604,7 +601,7 @@ fun Ferrum.loadTurrets() {
             reloadMultiplier = 1.25f
         })
 
-        range = (Blocks.foreshadow as Turret).range * 1.5f
+        range = ((Blocks.foreshadow as Turret).range * 1.5f).let { it - it % 8 }
         maxAmmo = 200
         ammoPerShot = 100
         rotateSpeed = 0.33f
@@ -627,6 +624,35 @@ fun Ferrum.loadTurrets() {
                 moveY = -2.5f
             })
         }
+    }
+
+    ironDome = PointDefenseTurret("iron-dome").apply {
+        buildType = Prov {
+            object : PointDefenseBuild() {
+                override fun updateTile() {
+                    target = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
+                        .select { it.team !== team && it.type().hittable }
+                        .maxBy { it.damage }
+                    super.updateTile()
+                }
+            }
+        }
+        requirements(
+            Category.turret, ItemStack.with(
+                Items.titanium, 8000, steel, 8000, Items.silicon, 6000, Items.phaseFabric, 2500, mischmetal, 1600
+            )
+        )
+        health = 12000
+        range = gustav.range * 2f // blasphemous, might nerf later
+        hasPower = true
+        consumePower(100f)
+        consumeLiquid(Liquids.cryofluid, 0.5f)
+        size = 5
+        shootLength = 15f
+        bulletDamage = 300f
+        retargetTime = Float.POSITIVE_INFINITY // using custom targeting
+        rotateSpeed *= 5f
+        reload = 2f
     }
 }
 

@@ -5,6 +5,7 @@ import mindustry.type.Item
 import mindustry.type.Liquid
 import mindustry.world.blocks.defense.OverdriveProjector
 import mindustry.world.blocks.defense.turrets.ItemTurret
+import mindustry.world.blocks.defense.turrets.PointDefenseTurret
 import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
@@ -33,6 +34,7 @@ class Ferrum : Mod() {
     lateinit var spark: ItemTurret
     lateinit var gustav: ItemTurret
     lateinit var krupp: ItemTurret
+    lateinit var ironDome: PointDefenseTurret
 
     lateinit var oreIron: OreBlock
 
