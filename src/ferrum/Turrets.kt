@@ -116,6 +116,7 @@ fun Ferrum.loadTurrets() {
             hitEffect = Fx.flakExplosion
             splashDamage = 60f
             splashDamageRadius = 8f
+            pierceArmor = true
             fragBullets = 4
             fragBullet = BasicBulletType(3f, 8f).apply {
                 lifetime = 12f
