@@ -60,7 +60,8 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
         Blocks.largeSolarPanel.addRequirement(steel, 40)
-        Blocks.thoriumReactor.addRequirement(steel, 100)
+        Blocks.thermalGenerator.addRequirement(steel, 60)
+        Blocks.thoriumReactor.addRequirement(steel, 150)
         Blocks.impactReactor.addRequirement(steel, 500)
         Blocks.blastDrill.addRequirement(steel, 25)
         Blocks.plastaniumCompressor.addRequirement(steel, 30)
@@ -73,9 +74,13 @@ fun Ferrum.modifyVanillaContent() {
 
     // Mischmetal
     run {
+        Blocks.mendProjector.addRequirement(mischmetal, 30)
+        Blocks.forceProjector.addRequirement(mischmetal, 40)
+        Blocks.plastaniumCompressor.addRequirement(mischmetal, 50)
+
         Blocks.lancer.addRequirement(mischmetal, 20)
         (Blocks.lancer as PowerTurret).apply {
-            shootType.damage += 10
+            shootType.damage *= 1.25f
         }
 
         Blocks.parallax.addRequirement(mischmetal, 60)
