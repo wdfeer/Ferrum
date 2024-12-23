@@ -117,7 +117,7 @@ fun Ferrum.modifyFerrumTechTree() {
         researchCost = ItemStack.with(Items.copper, 100000, Items.lead, 50000, Items.titanium, 30000, steel, 20000)
         alwaysUnlocked = false
         techNode = TechNode(canna.techNode, this, researchCost).also {
-            it.objectives = Seq.with(Research(steel))
+            it.objectives = Seq.with(Research(steel), SectorComplete(SectorPresets.navalFortress))
         }
     }
 
@@ -127,6 +127,13 @@ fun Ferrum.modifyFerrumTechTree() {
         alwaysUnlocked = false
         techNode = TechNode(Blocks.overdriveDome.techNode, this, researchCost).also {
             it.objectives = Seq.with(Research(mischmetal))
+        }
+    }
+    ironDome.apply {
+        researchCost = ItemStack.with(Items.thorium, 15000, Items.titanium, 15000, steel, 15000, mischmetal, 10000)
+        alwaysUnlocked = false
+        techNode = TechNode(Blocks.segment.techNode, this, researchCost).also {
+            it.objectives = Seq.with(Research(mischmetal), SectorComplete(SectorPresets.nuclearComplex))
         }
     }
 }
