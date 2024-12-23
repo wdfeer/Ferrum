@@ -59,11 +59,11 @@ fun Ferrum.loadSupportBlocks() {
             stats.add(aoeStat, splashRadius / Vars.tilesize, StatUnit.blocks)
             stats.add(lingerStat, lingeringTime / 60f, StatUnit.seconds)
         }
+
+        val hitSound = Sounds.plasmaboom
     }.apply {
         buildType = Prov {
             object : PointDefenseTurret.PointDefenseBuild() {
-                val hitSound = Sounds.plasmaboom
-
                 var lingeringAreas = mutableMapOf<Vec2, Float>()
 
                 override fun updateTile() {
@@ -74,7 +74,7 @@ fun Ferrum.loadSupportBlocks() {
                     lingeringAreas = lingeringAreas.filter { it.value > 0f }.toMutableMap()
 
                     target = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
-                        .select { it.team !== team && it.type().hittable && it.within(this, range) }
+                        .select { it.isAdded && it.team !== team && it.type().hittable && it.within(this, range) }
                         .max { b: Bullet -> b.damage } ?: return
 
                     val dest = angleTo(target)
