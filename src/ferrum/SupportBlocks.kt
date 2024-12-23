@@ -49,7 +49,17 @@ fun Ferrum.loadSupportBlocks() {
             object : PointDefenseTurret.PointDefenseBuild() {
                 val hitSound = Sounds.plasmaboom
                 val splashRadius = 80f
+
+                val lingeringTime = 40f
+                var lingeringAreas = mutableMapOf<Vec2, Float>()
+
                 override fun updateTile() {
+                    lingeringAreas.keys.forEach { pos ->
+                        lingeringAreas[pos] = lingeringAreas[pos]!! - delta()
+                        splash(pos.x, pos.y)
+                    }
+                    lingeringAreas = lingeringAreas.filter { it.value > 0f }.toMutableMap()
+
                     target = Groups.bullet.intersect(x - range, y - range, range * 2, range * 2)
                         .select { it.team !== team && it.type().hittable && it.within(this, range) }
                         .max { b: Bullet -> b.damage } ?: return
@@ -72,6 +82,8 @@ fun Ferrum.loadSupportBlocks() {
                     hitSound.at(target)
                     shootSound.at(x + Tmp.v1.x, y + Tmp.v1.y, Mathf.random(0.9f, 1.1f))
                     reloadCounter = 0f
+
+                    lingeringAreas[Vec2(target.x, target.y)] = lingeringTime
                 }
 
                 fun splash(x: Float, y: Float) {
