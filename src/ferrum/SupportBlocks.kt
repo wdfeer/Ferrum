@@ -9,6 +9,7 @@ import arc.math.Mathf
 import arc.math.geom.Vec2
 import arc.util.Tmp
 import ferrum.util.noneBuilt
+import mindustry.Vars
 import mindustry.content.Blocks
 import mindustry.content.Items
 import mindustry.content.Liquids
@@ -24,6 +25,9 @@ import mindustry.type.ItemStack
 import mindustry.world.blocks.defense.OverdriveProjector
 import mindustry.world.blocks.defense.turrets.PointDefenseTurret
 import mindustry.world.blocks.defense.turrets.Turret
+import mindustry.world.meta.Stat
+import mindustry.world.meta.StatCat
+import mindustry.world.meta.StatUnit
 
 fun Ferrum.loadSupportBlocks() {
     ceriumOverdriver = OverdriveProjector("cerium-overdriver").apply {
@@ -44,13 +48,22 @@ fun Ferrum.loadSupportBlocks() {
         override fun isPlaceable(): Boolean {
             return super.isPlaceable() && noneBuilt()
         }
+
+        val splashRadius = 80f
+        val lingeringTime = 40f
+        val aoeStat = Stat("aoe-radius", StatCat.function)
+        val lingerStat = Stat("lingering-duration", StatCat.function)
+        override fun setStats() {
+            super.setStats()
+
+            stats.add(aoeStat, splashRadius / Vars.tilesize, StatUnit.blocks)
+            stats.add(lingerStat, lingeringTime / 60f, StatUnit.seconds)
+        }
     }.apply {
         buildType = Prov {
             object : PointDefenseTurret.PointDefenseBuild() {
                 val hitSound = Sounds.plasmaboom
-                val splashRadius = 80f
 
-                val lingeringTime = 40f
                 var lingeringAreas = mutableMapOf<Vec2, Float>()
 
                 override fun updateTile() {
@@ -100,7 +113,7 @@ fun Ferrum.loadSupportBlocks() {
             )
         )
         health = 12000
-        range = (Blocks.foreshadow as Turret).range
+        range = ((Blocks.foreshadow as Turret).range * 1.2f).let { it - it % Vars.tilesize }
         hasPower = true
         consumePower(100f)
         consumeLiquid(Liquids.cryofluid, 0.5f)
