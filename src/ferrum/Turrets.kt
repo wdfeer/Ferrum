@@ -327,6 +327,7 @@ fun Ferrum.loadTurrets() {
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 2f
                 reloadMultiplier = 1.25f
+                homingPower = 0.1f
                 status = StatusEffects.burning
                 makeFire = true
                 incendAmount = 2
@@ -399,6 +400,7 @@ fun Ferrum.loadTurrets() {
                 hitSound = Sounds.explosion
                 hitEffect = Fx.flakExplosion
                 despawnEffect = Fx.hitFlamePlasma
+                homingPower = 0.1f
                 status = StatusEffects.burning
                 hittable = false
                 fragBullets = 4
@@ -410,7 +412,6 @@ fun Ferrum.loadTurrets() {
                     despawnEffect = Fx.hitFlameSmall
                     status = StatusEffects.burning
                     hittable = false
-                    homingPower = 0.1f
                 }
             },
         )
@@ -572,7 +573,7 @@ fun Ferrum.loadTurrets() {
                 lightningLength = 30
             }
             ammoMultiplier = 1f
-        }, mischmetal, DynamicExplosionBulletType(30f, 1600f, 7.5f).apply {
+        }, mischmetal, DynamicExplosionBulletType(22.5f, 1600f, 7.5f).apply {
             lifetime = 400f
             shootEffect = Fx.blastsmoke
             hitEffect = Fx.bigShockwave
@@ -587,13 +588,12 @@ fun Ferrum.loadTurrets() {
             fragBullet = BasicBulletType(18f, 50f).apply {
                 width = 12f
                 height = 21f
-
-                lifetime = 60f
+                lifetime = 80f
                 pierce = true
                 pierceBuilding = true
                 pierceCap = 4
-
-                makeFire
+                homingPower = 0.1f
+                status = StatusEffects.burning
                 incendAmount = 1
             }
             ammoMultiplier = 1f
