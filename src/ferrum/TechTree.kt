@@ -130,7 +130,7 @@ fun Ferrum.modifyFerrumTechTree() {
         }
     }
     ironDome.apply {
-        researchCost = ItemStack.with(Items.thorium, 15000, Items.titanium, 15000, steel, 15000, mischmetal, 10000)
+        researchCost = ItemStack.with(Items.thorium, 15000, Items.titanium, 15000, steel, 15000, mischmetal, 10000, Items.metaglass, 5000)
         alwaysUnlocked = false
         techNode = TechNode(Blocks.segment.techNode, this, researchCost).also {
             it.objectives = Seq.with(Research(mischmetal), SectorComplete(SectorPresets.nuclearComplex))

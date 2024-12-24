@@ -109,12 +109,13 @@ fun Ferrum.loadSupportBlocks() {
         }
         requirements(
             Category.effect, ItemStack.with(
-                steel, 8000, Items.silicon, 6000, Items.thorium, 6000, Items.phaseFabric, 2500, mischmetal, 1600
+                steel, 6000, Items.silicon, 4000, Items.thorium, 4000, Items.phaseFabric, 1500, mischmetal, 1000, Items.metaglass, 500
             )
         )
         health = 12000
         range = ((Blocks.foreshadow as Turret).range * 1.2f).let { it - it % Vars.tilesize }
         hasPower = true
+        liquidCapacity = 300f
         consumePower(100f)
         consumeLiquid(Liquids.cryofluid, 0.5f)
         hitEffect = Effect(40f, 100f) { e: EffectContainer ->
