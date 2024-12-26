@@ -363,7 +363,7 @@ fun Ferrum.loadTurrets() {
         reload = 100f
         recoil = 1.5f
         shake = 0.8f
-        range = mitraille.range
+        range = mitraille.range + 32f
         inaccuracy = 2.25f
         shootCone = 3.5f
         scaledHealth = mitraille.scaledHealth
@@ -375,7 +375,7 @@ fun Ferrum.loadTurrets() {
                 moveY = -1f
             })
         }
-        limitRange(1f)
+        limitRange(4f)
         coolant = consumeCoolant(0.2f)
     }
 
