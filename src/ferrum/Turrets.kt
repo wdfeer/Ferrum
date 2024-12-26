@@ -64,29 +64,36 @@ fun Ferrum.loadTurrets() {
             lifetime = 50f
             height = 14f
             width = height
-
+            fragBullets = 8
             fragBullet = BasicBulletType(6f, 5f).apply {
                 lifetime = 12f
 
                 pierce = true
                 pierceCap = 2
             }
-            fragBullets = 7
-
             reloadMultiplier = 1.3f
+        }, pyrite, BasicBulletType(8f, 17f).apply {
+            knockback = 1.6f
+            lifetime = 30f
+            height = 14f
+            width = height
+            fragBullets = 3
+            fragBullet = BasicBulletType(4f, 13f).apply {
+                lifetime = 12f
+            }
+            reloadMultiplier = 1.5f
         }, iron, BasicBulletType(3f, 22f).apply {
             knockback = 1.6f
             lifetime = 60f
             height = 14f
             width = height
-
+            fragBullets = 5
             fragBullet = BasicBulletType(4f, 8f).apply {
                 lifetime = 12f
 
                 pierce = true
                 pierceCap = 2
             }
-            fragBullets = 5
         })
         reload = 100f
         recoil = 2f
@@ -95,6 +102,7 @@ fun Ferrum.loadTurrets() {
         shootCone = 12f
         health = 320
         shootSound = Sounds.cannon
+        limitRange(4f)
     }
 
     flak = ItemTurret("flak").apply {
