@@ -98,7 +98,7 @@ fun Ferrum.loadTurrets() {
     }
 
     flak = ItemTurret("flak").apply {
-        requirements(Category.turret, ItemStack.with(iron, 125, Items.titanium, 65, Items.silicon, 50))
+        requirements(Category.turret, ItemStack.with(iron, 40, Items.titanium, 40, Items.silicon, 40))
         Blocks.scatter
         ammo(pyrite, FlakBulletType(9f, 6f).apply {
             lifetime = 40f
@@ -119,7 +119,7 @@ fun Ferrum.loadTurrets() {
             splashDamageRadius = 8f
             pierceArmor = true
             fragBullets = 4
-            fragBullet = BasicBulletType(3f, 8f).apply {
+            fragBullet = BasicBulletType(3f, 12f).apply {
                 lifetime = 12f
                 collidesGround = false
                 pierceArmor = true
@@ -134,6 +134,24 @@ fun Ferrum.loadTurrets() {
             splashDamage = 100f
             splashDamageRadius = 40f
             status = StatusEffects.blasted
+        }, mischmetal, FlakBulletType(6f, 30f).apply {
+            lifetime = 40f
+            ammoMultiplier = 4f
+            shootEffect = Fx.shootSmall
+            width = 6f
+            height = 8f
+            reloadMultiplier = 1.3f
+            homingPower = 0.1f
+            hitEffect = Fx.flakExplosion
+            splashDamage = 65f
+            splashDamageRadius = 24f
+            status = StatusEffects.burning
+            fragBullets = 3
+            fragBullet = BasicBulletType(12f, 20f).apply {
+                lifetime = 5f
+                collidesGround = false
+                status = StatusEffects.burning
+            }
         })
         reload = 11f
         recoil = 2f
