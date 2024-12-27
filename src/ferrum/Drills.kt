@@ -38,7 +38,7 @@ private data class Byproduct(val item: Item, val chance: Float) {
 
 private val Ferrum.byproducts
     get() = mapOf(
-        Items.coal to Byproduct(pyrite, 1 / 3f), Items.titanium to Byproduct(iron, 1 / 2f)
+        Items.coal to Byproduct(pyrite, 1 / 4f), Items.titanium to Byproduct(iron, 1 / 2f)
     )
 
 fun Ferrum.loadDrills() {
@@ -184,8 +184,8 @@ fun Ferrum.loadDrills() {
             it.value.copy(chance = sqrt(it.value.chance))
         } + mapOf(
             Items.sand to Byproduct(Items.titanium, 1 / 9f),
-            Items.copper to Byproduct(iron, 1 / 5f),
-            Items.thorium to Byproduct(mischmetal, 1 / 3f)
+            Items.copper to Byproduct(iron, 1 / 4f),
+            Items.thorium to Byproduct(mischmetal, 1 / 4f)
         )
 
         init {
