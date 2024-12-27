@@ -415,6 +415,24 @@ fun Ferrum.loadTurrets() {
                 lightningLength *= 2
                 reloadMultiplier = 2 / 3f
             },
+            pyrite,
+            BulletType(6f, 40f).apply {
+                ammoMultiplier = 2f
+                hitSize = 7f
+                lifetime = 18f
+                statusDuration = 60f * 10
+                trailInterval = 1.2f
+                trailEffect = Fx.hitFlameSmall
+                hitSound = Sounds.explosion
+                hitEffect = Fx.flakExplosion
+                despawnEffect = Fx.hitFlamePlasma
+                status = StatusEffects.burning
+                hittable = false
+                splashDamage = 30f
+                splashDamageRadius = 16f
+                splashDamagePierce = true
+                reloadMultiplier = 1.4f
+            },
             mischmetal,
             BulletType(6f, 50f).apply {
                 ammoMultiplier = 4f
