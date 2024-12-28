@@ -5,7 +5,7 @@ import mindustry.content.Items
 import mindustry.type.Item
 
 fun Ferrum.loadItems() {
-    nickel = Item("nickel", Color.valueOf("eccd9e")) // TODO: get color
+    nickel = Item("nickel", Color.valueOf("e3dfd3"))
 
     pyrite = Item("pyrite", Color.valueOf("eccd9e")).apply {
         cost = 0.8f
