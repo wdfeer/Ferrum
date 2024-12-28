@@ -1,16 +1,15 @@
 package ferrum
 
+import arc.func.Prov
 import mindustry.content.Blocks
-import mindustry.content.Items
 import mindustry.entities.bullet.LiquidBulletType
 import mindustry.type.Item
 import mindustry.type.ItemStack
 import mindustry.world.Block
-import mindustry.world.blocks.defense.turrets.ItemTurret
 import mindustry.world.blocks.defense.turrets.LiquidTurret
+import mindustry.world.blocks.defense.turrets.PowerTurret
+import mindustry.world.blocks.defense.turrets.TractorBeamTurret
 import mindustry.world.blocks.power.PowerGenerator
-import mindustry.world.blocks.production.GenericCrafter
-import kotlin.math.round
 
 fun Ferrum.modifyVanillaContent() {
     // Pyrite
@@ -19,40 +18,13 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
         Blocks.solarPanel.addRequirement(pyrite, 1)
+        Blocks.powerNodeLarge.addRequirement(pyrite, 10)
         Blocks.batteryLarge.addRequirement(pyrite, 30)
         Blocks.largeSolarPanel.addRequirement(pyrite, 15)
-        Blocks.phaseWeaver.addRequirement(pyrite, 80)
+        Blocks.pyratiteMixer.addRequirement(pyrite, 80)
+        Blocks.phaseWeaver.addRequirement(pyrite, 100)
         Blocks.foreshadow.addRequirement(pyrite, 400)
         Blocks.multiplicativeReconstructor.addRequirement(pyrite, 300)
-    }
-
-    // Pyratite
-    run {
-        (Blocks.pyratiteMixer as GenericCrafter).consumeItems(ItemStack(pyrite, 1))
-        (Blocks.impactReactor as PowerGenerator).powerProduction *= 1.1f
-        (Blocks.differentialGenerator as PowerGenerator).powerProduction *= 1.25f
-
-        fun ItemTurret.buffAmmo(vararg items: Item) {
-            ammoTypes.forEach { ammo ->
-                if (items.contains(ammo.key)) {
-                    ammo.value.apply {
-                        damage = round(damage * 1.1f)
-                        splashDamage = round(splashDamage * 1.1f)
-                    }
-                }
-            }
-        }
-
-        // Buff pyratite and blast compound as ammo
-        listOf(
-            Blocks.scorch,
-            Blocks.hail,
-            Blocks.salvo,
-            Blocks.ripple,
-            Blocks.swarmer,
-            Blocks.cyclone,
-            Blocks.spectre
-        ).filterIsInstance<ItemTurret>().forEach { it.buffAmmo(Items.pyratite, Items.blastCompound) }
     }
 
     // Iron
@@ -88,7 +60,8 @@ fun Ferrum.modifyVanillaContent() {
         (Blocks.largeSolarPanel as PowerGenerator).powerProduction *= 1.2f
 
         Blocks.largeSolarPanel.addRequirement(steel, 40)
-        Blocks.thoriumReactor.addRequirement(steel, 100)
+        Blocks.thermalGenerator.addRequirement(steel, 60)
+        Blocks.thoriumReactor.addRequirement(steel, 150)
         Blocks.impactReactor.addRequirement(steel, 500)
         Blocks.blastDrill.addRequirement(steel, 25)
         Blocks.plastaniumCompressor.addRequirement(steel, 30)
@@ -99,7 +72,37 @@ fun Ferrum.modifyVanillaContent() {
         Blocks.coreNucleus.addRequirement(steel, 2000)
     }
 
+    // Mischmetal
+    run {
+        Blocks.mendProjector.addRequirement(mischmetal, 30)
+        Blocks.forceProjector.addRequirement(mischmetal, 40)
+        Blocks.plastaniumCompressor.addRequirement(mischmetal, 50)
+
+        Blocks.lancer.addRequirement(mischmetal, 20)
+        (Blocks.lancer as PowerTurret).apply {
+            shootType.damage *= 1.25f
+        }
+
+        Blocks.parallax.addRequirement(mischmetal, 60)
+        (Blocks.parallax as TractorBeamTurret).apply {
+            consPower.usage *= 2f
+            damage *= 8f
+            buildType = Prov { object : TractorBeamTurret.TractorBeamBuild() {
+                val baseDamage = damage
+                override fun updateTile() {
+                    // effectively ignores armor
+                    damage = baseDamage + (target?.armor ?: 0f)
+                    super.updateTile()
+                }
+            } }
+        }
+
+        Blocks.meltdown.addRequirement(mischmetal, 80)
+        Blocks.foreshadow.addRequirement(mischmetal, 120)
+    }
+
     modifyVanillaTechTree()
+    byproductifyVanillaDrills()
 }
 
 private fun Block.addRequirement(item: Item, amount: Int) {

@@ -3,7 +3,6 @@ package ferrum
 import arc.graphics.Color
 import mindustry.content.Items
 import mindustry.type.Item
-import mindustry.world.blocks.environment.OreBlock
 
 fun Ferrum.loadItems() {
     nickel = Item("nickel", Color.valueOf("eccd9e")) // TODO: get color
@@ -21,5 +20,7 @@ fun Ferrum.loadItems() {
         cost = 1.2f
     }
 
-    oreIron = OreBlock(iron)
+    mischmetal = Item("mischmetal", Color.valueOf("698c69")).apply {
+        cost = 2f
+    }
 }

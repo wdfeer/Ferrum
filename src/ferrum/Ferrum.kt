@@ -3,7 +3,9 @@ package ferrum
 import mindustry.mod.Mod
 import mindustry.type.Item
 import mindustry.type.Liquid
+import mindustry.world.blocks.defense.OverdriveProjector
 import mindustry.world.blocks.defense.turrets.ItemTurret
+import mindustry.world.blocks.defense.turrets.PointDefenseTurret
 import mindustry.world.blocks.environment.OreBlock
 import mindustry.world.blocks.production.Drill
 import mindustry.world.blocks.production.GenericCrafter
@@ -13,12 +15,12 @@ class Ferrum : Mod() {
     lateinit var iron: Item
     lateinit var pyrite: Item
     lateinit var steel: Item
+    lateinit var mischmetal: Item
     lateinit var so2: Liquid
     lateinit var h2so4: Liquid
-    lateinit var oreIron: OreBlock
 
-    lateinit var pyriteExtractor: Drill
-    lateinit var ironExtractor: Drill
+    lateinit var smartDrill: Drill
+    lateinit var traceDrill: Drill
 
     lateinit var ironworks: GenericCrafter
     lateinit var steelForge: GenericCrafter
@@ -28,16 +30,21 @@ class Ferrum : Mod() {
     lateinit var canna: ItemTurret
     lateinit var clyster: ItemTurret
     lateinit var flak: ItemTurret
+    lateinit var mitraille: ItemTurret
     lateinit var houf: ItemTurret
+    lateinit var spark: ItemTurret
     lateinit var gustav: ItemTurret
     lateinit var krupp: ItemTurret
+
+    lateinit var oreIron: OreBlock
+
+    lateinit var ceriumOverdriver: OverdriveProjector
+    lateinit var ironDome: PointDefenseTurret
 
     override fun loadContent() {
         loadItems()
         loadLiquids()
-        loadDrills()
-        loadCrafters()
-        loadTurrets()
+        loadBlocks()
         modifyFerrumTechTree()
         modifyVanillaContent()
     }
