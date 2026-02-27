@@ -244,6 +244,6 @@ fun Ferrum.byproductifyVanillaDrills() {
     }
 
     Vars.content.blocks().filterIsInstance<Drill>().filter {
-        it.isVanilla && it.isVisibleOn(Planets.serpulo)
+        it.isVanilla && it.isVisible
     }.forEach { it.apply(Drill::addByproducts) }
 }

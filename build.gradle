@@ -4,7 +4,7 @@ buildscript{
     }
 
     ext{
-        mindustryVersion = "v146"
+        mindustryVersion = "v154"
         kotlinVersion = "2.0.20"
         sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
     }

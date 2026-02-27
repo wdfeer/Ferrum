@@ -39,7 +39,7 @@ fun Ferrum.loadCrafters() {
         hasLiquids = true
         ignoreLiquidFullness = true
         drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
-        ambientSound = Sounds.smelter
+        ambientSound = Sounds.loopSmelter
         ambientSoundVolume = 0.08f
 
         consumeItems(*ItemStack.with(Items.graphite, 1, pyrite, 2))
@@ -54,7 +54,7 @@ fun Ferrum.loadCrafters() {
         size = 2
         hasLiquids = false
         drawer = DrawMulti(DrawDefault(), DrawGlowRegion())
-        ambientSound = Sounds.smelter
+        ambientSound = Sounds.loopSmelter
         ambientSoundVolume = 0.08f
 
         consumeItems(*ItemStack.with(Items.coal, 5, iron, 3))
@@ -104,7 +104,7 @@ fun Ferrum.loadCrafters() {
         hasPower = true
         hasLiquids = true
         drawer = DrawMulti(DrawDefault(), DrawFlame())
-        ambientSound = Sounds.smelter
+        ambientSound = Sounds.loopSmelter
         ambientSoundVolume = 0.1f
 
         consumeItems(*ItemStack.with(Items.coal, 1, iron, 3))

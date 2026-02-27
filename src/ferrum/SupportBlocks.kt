@@ -60,7 +60,7 @@ fun Ferrum.loadSupportBlocks() {
             stats.add(lingerStat, lingeringTime / 60f, StatUnit.seconds)
         }
 
-        val hitSound = Sounds.plasmaboom
+        val hitSound = Sounds.explosionPlasmaSmall
     }.apply {
         buildType = Prov {
             object : PointDefenseTurret.PointDefenseBuild() {

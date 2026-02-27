@@ -55,7 +55,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 2.5f
         shootCone = 8f
         health = 360
-        shootSound = Sounds.cannon
+        shootSound = Sounds.shootAfflict
     }
 
     clyster = ItemTurret("clyster").apply {
@@ -101,7 +101,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 4f
         shootCone = 12f
         health = 320
-        shootSound = Sounds.cannon
+        shootSound = Sounds.shootAfflict
         limitRange(4f)
     }
 
@@ -167,7 +167,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 7f
         shootCone = 10f
         scaledHealth = 320f
-        shootSound = Sounds.shootAlt
+        shootSound = Sounds.shootBreach
         size = 2
         targetGround = false
         coolant = consumeCoolant(0.2f)
@@ -251,7 +251,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 16f
         shootCone = 24f
         scaledHealth = 350f
-        shootSound = Sounds.shootAlt
+        shootSound = Sounds.shootBreach
         drawer = DrawTurret().apply {
             parts.add(RegionPart("-mid").apply {
                 progress = DrawPart.PartProgress.recoil
@@ -317,7 +317,7 @@ fun Ferrum.loadTurrets() {
                 splashDamage = 260f
                 splashDamageRadius = 56f
                 hitShake = 2f
-                hitSound = Sounds.dullExplosion
+                hitSound = Sounds.explosionDull
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 2f
                 reloadMultiplier = 0.6f
@@ -349,7 +349,7 @@ fun Ferrum.loadTurrets() {
                 splashDamage = 40f
                 splashDamageRadius = 36f
                 hitShake = 2f
-                hitSound = Sounds.dullExplosion
+                hitSound = Sounds.explosionDull
                 shootEffect = Fx.shootSmall
                 ammoMultiplier = 2f
                 reloadMultiplier = 1.25f
@@ -367,7 +367,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 2.25f
         shootCone = 3.5f
         scaledHealth = mitraille.scaledHealth
-        shootSound = Sounds.mediumCannon
+        shootSound = Sounds.shootMissile
         drawer = DrawTurret().apply {
             parts.add(RegionPart("-mid").apply {
                 progress = DrawPart.PartProgress.recoil
@@ -467,7 +467,7 @@ fun Ferrum.loadTurrets() {
         shootCone = 30f
         ammoUseEffect = Fx.none
         scaledHealth = 400f
-        shootSound = Sounds.flame
+        shootSound = Sounds.shootFlame
         coolant = consumeCoolant(0.1f)
         consumePower(2f)
         limitRange(8f)
@@ -542,7 +542,7 @@ fun Ferrum.loadTurrets() {
         inaccuracy = 0.2f
         shootCone = 1f
         size = 4
-        shootSound = Sounds.largeCannon
+        shootSound = Sounds.shootConquer
         health = 3000
         limitRange(3f)
         coolantMultiplier = 0.25f
@@ -655,7 +655,7 @@ fun Ferrum.loadTurrets() {
         shake = 14f
         size = 5
         shootCone = 0.5f
-        shootSound = Sounds.largeCannon
+        shootSound = Sounds.shootConquer
         health = 8000
         limitRange(6f)
         consumePower(5f)
